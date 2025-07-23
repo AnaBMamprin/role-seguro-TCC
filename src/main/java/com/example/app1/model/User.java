@@ -1,9 +1,15 @@
 package com.example.app1.model;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 @Entity
-public class User {
+public class User implements UserDetails {
 	
 	@Id
 	Long id;
@@ -11,7 +17,7 @@ public class User {
 	String email;
 	String senha;
 	String endereco;
-	
+	private List<GrantedAuthority> authorities;
 	public User() {}
 
 	public User(Long id, String nome, String email, String senha, String endereco) {
@@ -63,5 +69,42 @@ public class User {
 		this.endereco = endereco;
 	}
 	
+	  @Override
+	    public boolean isAccountNonExpired() {
+	        return true;
+	    }
+
+	    @Override
+	    public boolean isAccountNonLocked() {
+	        return true;
+	    }
+
+	    @Override
+	    public boolean isCredentialsNonExpired() {
+	        return true;
+	    }
+
+	    @Override
+	    public boolean isEnabled() {
+	        return true;
+	    }
+
+		@Override
+		public Collection<? extends GrantedAuthority> getAuthorities() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getPassword() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getUsername() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	
 }
