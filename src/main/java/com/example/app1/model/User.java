@@ -6,23 +6,38 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 @Entity
+@Table(name = "user")
 public class User implements UserDetails {
 	
-	@Id
-	Long id;
-	String nome;
-	String email;
-	String senha;
-	String endereco;
-	private List<GrantedAuthority> authorities;
-	public User() {}
+	 @Id
+	 @GeneratedValue(strategy = GenerationType.IDENTITY)
+	 @Column(name = "id_User")
+	 private Long id;
+	
+		@Column(name = "Nome_User")
+		private String nome;
 
-	public User(Long id, String nome, String email, String senha, String endereco) {
-		super();
-		this.id = id;
+		@Column(name = "Email_User")
+		private String email;
+
+		@Column(name = "Senha_hash")
+		private String senha;
+
+		@Column(name = "Endereco_User")
+		private String endereco;
+		
+		
+		public User() {}
+
+		public User( String nome, String email, String senha, String endereco) {
 		this.nome = nome;
 		this.email = email;
 		this.senha = senha;
@@ -98,13 +113,13 @@ public class User implements UserDetails {
 		@Override
 		public String getPassword() {
 			// TODO Auto-generated method stub
-			return null;
+			return senha;
 		}
 
 		@Override
 		public String getUsername() {
 			// TODO Auto-generated method stub
-			return null;
+			return email;
 		}
 	
 }

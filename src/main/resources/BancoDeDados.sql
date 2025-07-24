@@ -1,4 +1,6 @@
-Create TABLE tb_User (
+USE db_app1
+
+Create TABLE user (
 	id_User BIGINT NOT NULL AUTO_INCREMENT,
 	Nome_User VARCHAR (50) NOT NULL,
 	Email_User VARCHAR (50) NOT NULL,

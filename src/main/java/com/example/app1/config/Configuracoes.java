@@ -28,11 +28,13 @@ public class Configuracoes {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/cadastro").permitAll() // libera acesso ao cadastro
-                .anyRequest().authenticated()
-            )
+    	http
+    			.authorizeHttpRequests(auth -> auth
+        	    .requestMatchers("/cadastro").permitAll()
+        	   	.requestMatchers("/cadastro/**").permitAll() // cobre casos de subcaminhos
+        	   	.anyRequest().authenticated()
+        		)
+
             .formLogin(form -> form
                 .loginPage("/login") // sua página personalizada
                 .permitAll()         // permite acesso a ela sem login
