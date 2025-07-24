@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class Configuracoes {
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+    public UserDetailsService userDe(PasswordEncoder encoder) {
         // Cria usuário com senha codificada
         UserDetails user = User.builder()
                 .username("meuusuario") // seu usuário
