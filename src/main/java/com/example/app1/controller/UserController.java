@@ -26,15 +26,17 @@ public class UserController {
 		                                         @RequestParam String email,
 		                                         @RequestParam String endereco,
 		                                         @RequestParam String senha) {
+		    	
+		    	System.out.println("Método cadastrarCliente chamado");
 
-		    	User user = new User(nome, email, senha, endereco);
+		    	User user = new User(nome, email, endereco, senha);
 		        usrep.save(user);
 
 		        return new RedirectView("/login"); 
 		    }
 		
 		
-		
+		    
 		@GetMapping ("api/{id}")
 		public User findByid (@PathVariable Long id) {
 			
@@ -46,5 +48,5 @@ public class UserController {
 			return usrep.findAll();
 		}
 		
-	
+	 
 }

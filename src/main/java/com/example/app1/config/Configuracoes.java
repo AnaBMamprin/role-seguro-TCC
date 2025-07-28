@@ -2,6 +2,7 @@ package com.example.app1.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,36 +15,23 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class Configuracoes {
 
-    @Bean
-    public UserDetailsService userDe(PasswordEncoder encoder) {
-        // Cria usuário com senha codificada
-        UserDetails user = User.builder()
-                .username("meuusuario") // seu usuário
-                .password(encoder.encode("minhasenha")) // sua senha (codificada!)
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
-
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    	http
-    			.authorizeHttpRequests(auth -> auth
-        	    .requestMatchers("/cadastro").permitAll()
-        	   	.requestMatchers("/cadastro/**").permitAll() // cobre casos de subcaminhos
-        	   	.anyRequest().authenticated()
-        		)
-
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.GET, "/cadastro").permitAll()
+                .requestMatchers(HttpMethod.POST, "/cadastro").permitAll()
+                .anyRequest().authenticated()
+            )
             .formLogin(form -> form
-                .loginPage("/login") // sua página personalizada
-                .permitAll()         // permite acesso a ela sem login
+                .loginPage("/login")
+                .permitAll()
             )
             .logout();
 
         return http.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
