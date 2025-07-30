@@ -32,16 +32,18 @@ public class User implements UserDetails {
 		@Column(name = "Email_User")
 		private String email;
 
+		@Column(name = "Endereco_User")
+		private String endereco;
+		
 		@Column(name = "Senha_hash")
 		private String senha;
 
-		@Column(name = "Endereco_User")
-		private String endereco;
+		
 		
 		
 		public User() {}
 
-		public User( String nome, String email, String senha, String endereco) {
+		public User( String nome, String email, String endereco, String senha) {
 		this.nome = nome;
 		this.email = email;
 		this.senha = senha;

@@ -36,10 +36,5 @@ public class UserController {
 		
 		
 		
-		@GetMapping	("api/listar")
-		public List<User> listarUsuarios() {
-			return userrepository.findAll();
-		}
-		
-	
+	 
 }

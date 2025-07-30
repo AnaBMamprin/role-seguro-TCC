@@ -2,6 +2,7 @@ package com.example.app1.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,48 +17,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 @Configuration
 public class Configuracoes {
 
-    @Bean
-    public UserDetailsService userDe(PasswordEncoder encoder) {
-        // Cria usuário com senha codificada
-        UserDetails user = User.builder()
-                .username("meuusuario")
-                .password(encoder.encode("minhasenha"))
-                .roles("USER")
-                .build();
 
-        return new InMemoryUserDetailsManager(user);
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/home", "/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/cadastro", "/cadastro/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/perform_login")
-                .successHandler(authenticationSuccessHandler()) // Manipulador de sucesso personalizado
-                .failureUrl("/login?error=true")
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/perform_logout")
-                .logoutSuccessUrl("/login?logout=true")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll()
-            )
-            .sessionManagement(session -> session
-                .maximumSessions(1)
-                .expiredUrl("/login?expired=true")
-            );
-        
-        return http.build();
-    }
-    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
