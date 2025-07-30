@@ -1,7 +1,6 @@
 package com.example.app1.model;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +16,12 @@ import jakarta.persistence.Table;
 @Table(name = "user")
 public class User implements UserDetails {
 	
-	 @Id
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 @Column(name = "id_User")
 	 private Long id;
