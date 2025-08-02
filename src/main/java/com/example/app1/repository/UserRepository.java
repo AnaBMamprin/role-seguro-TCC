@@ -4,10 +4,10 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.app1.model.User;
+import com.example.app1.model.Usuario;
 
-public interface UserRepository extends JpaRepository <User, Long> {
+public interface UserRepository extends JpaRepository <Usuario, Long> {
 
-	Optional<User> findByEmail(String username);
+	Optional<Usuario> findByEmailLocal(String username);
 	
 }

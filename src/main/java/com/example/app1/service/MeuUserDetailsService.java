@@ -3,13 +3,14 @@ package com.example.app1.service;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.app1.model.User;
+import com.example.app1.model.Usuario;
 import com.example.app1.repository.UserRepository;
 
 @Service
@@ -19,14 +20,19 @@ public class MeuUserDetailsService implements UserDetailsService {
     private UserRepository usuarioRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User usuario = usuarioRepo.findByEmail(username)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        
+        Usuario usuario = usuarioRepo.findByEmailLocal(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
+        
+        GrantedAuthority authority = new SimpleGrantedAuthority(usuario.getRole());
+
+        
         return new org.springframework.security.core.userdetails.User(
-            usuario.getEmail(),
-            usuario.getSenha(),
-            Collections.singletonList(new SimpleGrantedAuthority("USER"))
+                usuario.getEmailLocal(), // Identificador do login (DEVE ser o mesmo usado no formulário)
+                usuario.getSenhaLocal(), // Senha já criptografada
+                Collections.singletonList(authority) // Roles do usuário
         );
     }
 }
