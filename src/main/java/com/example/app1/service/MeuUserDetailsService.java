@@ -30,9 +30,9 @@ public class MeuUserDetailsService implements UserDetailsService {
 
         
         return new org.springframework.security.core.userdetails.User(
-                usuario.getEmailLocal(), // Identificador do login (DEVE ser o mesmo usado no formulário)
-                usuario.getSenhaLocal(), // Senha já criptografada
-                Collections.singletonList(authority) // Roles do usuário
+                usuario.getEmailLocal(), 
+                usuario.getSenhaLocal(), 
+                Collections.singletonList(authority) 
         );
     }
 }

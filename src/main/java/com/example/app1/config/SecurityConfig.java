@@ -1,6 +1,7 @@
 package com.example.app1.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,15 +15,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // APIs REST não precisam de CSRF
+        	.csrf(Customizer.withDefaults()) 
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/cadastro", "/login").permitAll() // Público
-                .requestMatchers("/admin/**").hasRole("ADMIN") // Exige ROLE_ADMIN
+                .requestMatchers("/admin/**").hasRole("USER") // Exige ROLE_USER
                 .anyRequest().authenticated() // Exige login para outras rotas
             )
             .formLogin(form -> form
                 .loginPage("/login") // Página de login personalizada (se tiver)
-                .defaultSuccessUrl("/") // Rota após login bem-sucedido
+                .defaultSuccessUrl("/Inicial") // Rota após login bem-sucedido
                 .permitAll()
             );
 

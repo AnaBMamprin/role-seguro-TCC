@@ -11,4 +11,6 @@ public record UserRecordDTO(
     @NotBlank(message = "O endereço é obrigatório") String enderecoLocal,
     @NotBlank(message = "A senha é obrigatória")
     @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres") String senhaLocal
-) {}
+) {
+
+	}

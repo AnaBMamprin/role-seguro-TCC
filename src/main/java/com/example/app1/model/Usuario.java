@@ -37,7 +37,7 @@ public class Usuario implements UserDetails {
 		@Column(name = "SenhaUsuario")
 	    private String senhaLocal;
 
-		private String role = "ROLE_USER";
+		private String role = "USER";
 
 		
 		
@@ -108,13 +108,13 @@ public class Usuario implements UserDetails {
 		@Override
 		public String getPassword() {
 			// TODO Auto-generated method stub
-			return null;
+			return senhaLocal;
 		}
 
 		@Override
 		public String getUsername() {
 			// TODO Auto-generated method stub
-			return null;
+			return emailLocal;
 		}
 		
 		
