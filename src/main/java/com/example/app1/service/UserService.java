@@ -25,8 +25,7 @@ public class UserService {
 	        user.setNomeLocal(userDTO.nomeLocal());
 	        user.setEmailLocal(userDTO.emailLocal());
 	        user.setEnderecoLocal(userDTO.enderecoLocal());
-	        user.setSenhaLocal(passwordEncoder.encode(userDTO.senhaLocal())); // Criptografa a senha!
-	        user.setRole("ROLE_USER");
+	        user.setSenhaLocal(passwordEncoder.encode(userDTO.senhaLocal())); // Criptografa a senha
 
 	        userRepository.save(user);
 	    }

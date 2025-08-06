@@ -3,11 +3,16 @@ package com.example.app1.model;
 import java.util.Collection;
 
 
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.app1.usuarioEnums.UserEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,8 +41,12 @@ public class Usuario implements UserDetails {
 		
 		@Column(name = "SenhaUsuario")
 	    private String senhaLocal;
-
-		private String role = "USER";
+		
+		
+		@Enumerated(EnumType.STRING)
+		
+		@Column(nullable = false)
+		private UserEnum role = UserEnum.USER;
 
 		
 		
@@ -91,14 +100,11 @@ public class Usuario implements UserDetails {
 			this.senhaLocal = senhaLocal;
 		}
 
-		public String getRole() {
+		public UserEnum getRole() {
 			return role;
 		}
 
-		public void setRole(String role) {
-			this.role = role;
-		}
-
+		
 		@Override
 		public Collection<? extends GrantedAuthority> getAuthorities() {
 			// TODO Auto-generated method stub

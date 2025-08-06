@@ -1,7 +1,5 @@
 package com.example.app1.service;
 
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,13 +24,13 @@ public class MeuUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
         
-        GrantedAuthority authority = new SimpleGrantedAuthority(usuario.getRole());
+        GrantedAuthority authority = new SimpleGrantedAuthority(usuario.getRole().name());
 
         
-        return new org.springframework.security.core.userdetails.User(
-                usuario.getEmailLocal(), 
-                usuario.getSenhaLocal(), 
-                Collections.singletonList(authority) 
-        );
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(usuario.getEmailLocal())
+                .password(usuario.getSenhaLocal())
+                .authorities(usuario.getRole().name())
+                .build();
     }
-}
+   }
