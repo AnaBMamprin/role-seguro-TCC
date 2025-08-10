@@ -4,7 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.app1.model.Usuario;
-import com.example.app1.records.UserRecordDTO;
+import com.example.app1.records.UserDTO;
 import com.example.app1.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -18,12 +18,12 @@ public class UserService {
 	    private PasswordEncoder passwordEncoder;
 
 		@Transactional
-	    public void registerUser(UserRecordDTO userDTO) {
+	    public void registerUser(UserDTO userDTO) {
 	        Usuario user = new Usuario();
-	        user.setNomeLocal(userDTO.nomeLocal());
-	        user.setEmailLocal(userDTO.emailLocal());
-	        user.setEnderecoLocal(userDTO.enderecoLocal());
-	        user.setSenhaLocal(passwordEncoder.encode(userDTO.senhaLocal()));
+	        user.setNomeLocal(userDTO.getNome());  
+	        user.setEmailLocal(userDTO.getEmail());
+	        user.setEnderecoLocal(userDTO.getEndereco());
+	        user.setSenhaLocal(passwordEncoder.encode(userDTO.getSenha()));
 	        userRepository.save(user);
 	    }
 	

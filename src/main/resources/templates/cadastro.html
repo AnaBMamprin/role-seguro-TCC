@@ -75,17 +75,14 @@
 
   <div class="cadastro-container">
     <h2>Cadastro de Cliente</h2>
-    <form action="/cadastro" method="post" th:action="@{/cadastro}" th:object="${userRecordDTO}">
-	  <input type="text" th:field="*{nome}" placeholder= "Nome completo" required>
-      <input type="email" th:field="*{email}" placeholder="E-mail" required>
-      <input type="text" name="*{endereco}" placeholder="Endereco" required>
-      <input type="password" name="*{senha}" placeholder="Senha (mínimo 6 caracteres)" required>
-      <button type="submit">Cadastrar</button>
-    </form>
-    
-	<div th:if="${#fields.hasErrors('*')}" style="color:red; margin-top: 15px;">
-	     <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
-	   </div>
+	<form th:action="@{/cadastro}" method="post" th:object="${userRecordDTO}">
+	    <input type="text" th:field="*{nome}" placeholder="Nome" required>
+	    <input type="email" th:field="*{email}" placeholder="Email" required>
+	    <input type="text" th:field="*{endereco}" placeholder="Endereço" required>
+	    <input type="password" th:field="*{senha}" placeholder="Senha" required>
+	    <button type="submit">Cadastrar</button>
+	</form>
+
 	
 	   <p>Já possui uma conta? <a href="/login">Faça login</a></p>   
   </div>

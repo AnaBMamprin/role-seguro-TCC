@@ -44,7 +44,7 @@ public class SecurityConfig {
 	  	@Bean
 	    public InMemoryUserDetailsManager userDetailsService() {
 	        UserDetails user = User.withDefaultPasswordEncoder()
-	            .username("luis@gmail.com")
+	            .username("luis")
 	            .password(passwordEncoder().encode("toma"))
 	            .roles("USER")
 	            .build();

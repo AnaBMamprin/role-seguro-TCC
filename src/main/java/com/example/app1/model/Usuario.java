@@ -60,13 +60,6 @@ public class Usuario implements UserDetails {
 		this.enderecoLocal = endereco;
 	}
 
-		public Long getIdLocal() {
-			return idLocal;
-		}
-
-		public void setIdLocal(Long idLocal) {
-			this.idLocal = idLocal;
-		}
 
 		public String getNomeLocal() {
 			return nomeLocal;
