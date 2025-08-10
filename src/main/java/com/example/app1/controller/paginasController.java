@@ -1,11 +1,10 @@
 package com.example.app1.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.example.app1.records.UserRecordDTO;
-
-import ch.qos.logback.core.model.Model;
 
 
 
@@ -16,20 +15,19 @@ public class paginasController {
 	
 	@GetMapping ("/")
 	public String home () {
-		return "home";
+		return "login";
 	}
 	
 	 @GetMapping("/login")
     public String mostrarTelaLogin() {
-        return "login"; // vai procurar login.html em /templates
+        return "login";
     }
 	  
 	 @GetMapping("/cadastro")
-	 public String mostrarPaginaCadastro(Model model) {
-	     model.addAttribute("userRecordDTO", new UserRecordDTO("", "", "", "")); // Objeto vazio
+	 public String mostrarFormulario(Model model) {
+	     model.addAttribute("userRecordDTO", new UserRecordDTO()); // agora funciona
 	     return "cadastro";
 	 }
-	 
 	/*
 	@GetMapping ("/home")
 	public String home () {
