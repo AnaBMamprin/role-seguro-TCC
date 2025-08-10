@@ -1,11 +1,13 @@
 package com.example.app1.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.example.app1.model.Usuario;
 import com.example.app1.records.UserRecordDTO;
+
+import ch.qos.logback.core.model.Model;
+
+
 
 
 
@@ -22,11 +24,12 @@ public class paginasController {
         return "login"; // vai procurar login.html em /templates
     }
 	  
-	/* @GetMapping("/cadastro")
-	 public String mostrarFormulario(Model model) {
-	     model.addAttribute("userRecordDTO", new UserRecordDTO(null, null, null, null));
-	     return "cadastro"; 
+	 @GetMapping("/cadastro")
+	 public String mostrarPaginaCadastro(Model model) {
+	     model.addAttribute("userRecordDTO", new UserRecordDTO("", "", "", "")); // Objeto vazio
+	     return "cadastro";
 	 }
+	 
 	/*
 	@GetMapping ("/home")
 	public String home () {

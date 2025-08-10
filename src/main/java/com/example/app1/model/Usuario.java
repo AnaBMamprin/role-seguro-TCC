@@ -1,10 +1,10 @@
 package com.example.app1.model;
 
 import java.util.Collection;
-
-
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.app1.usuarioEnums.UserEnum;
@@ -106,10 +106,9 @@ public class Usuario implements UserDetails {
 
 		
 		@Override
-		public Collection<? extends GrantedAuthority> getAuthorities() {
-			// TODO Auto-generated method stub
-			return null;
-		}
+	    public Collection<? extends GrantedAuthority> getAuthorities() {
+	        return List.of(new SimpleGrantedAuthority("USER")); // Papel padrão
+	    }
 
 		@Override
 		public String getPassword() {

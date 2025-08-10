@@ -7,26 +7,23 @@ import com.example.app1.model.Usuario;
 import com.example.app1.records.UserRecordDTO;
 import com.example.app1.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserService {
 		@Autowired
-	    private final UserRepository userRepository;
+	    private UserRepository userRepository;
 		
 		@Autowired
-	    private final PasswordEncoder passwordEncoder;
+	    private PasswordEncoder passwordEncoder;
 
-	    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-	        this.userRepository = userRepository;
-	        this.passwordEncoder = passwordEncoder;
-	    }
-
+		@Transactional
 	    public void registerUser(UserRecordDTO userDTO) {
 	        Usuario user = new Usuario();
 	        user.setNomeLocal(userDTO.nomeLocal());
 	        user.setEmailLocal(userDTO.emailLocal());
 	        user.setEnderecoLocal(userDTO.enderecoLocal());
-	        user.setSenhaLocal(passwordEncoder.encode(userDTO.senhaLocal())); // Criptografa a senha
-
+	        user.setSenhaLocal(passwordEncoder.encode(userDTO.senhaLocal()));
 	        userRepository.save(user);
 	    }
 	
