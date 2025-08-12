@@ -100,7 +100,7 @@ public class Usuario implements UserDetails {
 		
 		@Override
 	    public Collection<? extends GrantedAuthority> getAuthorities() {
-	        return List.of(new SimpleGrantedAuthority("USER")); // Papel padrão
+	        return List.of(new SimpleGrantedAuthority("ROLE_USER")); // Papel padrão
 	    }
 
 		@Override
@@ -114,6 +114,13 @@ public class Usuario implements UserDetails {
 			// TODO Auto-generated method stub
 			return emailLocal;
 		}
+		
+		@Override public boolean isAccountNonExpired() { return true; }
+	    @Override public boolean isAccountNonLocked() { return true; }
+	    @Override public boolean isCredentialsNonExpired() { return true; }
+	    @Override public boolean isEnabled() { return true; }
+		
+		
 		
 		
 		
