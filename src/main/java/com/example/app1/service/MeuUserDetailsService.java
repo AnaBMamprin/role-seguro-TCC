@@ -17,9 +17,13 @@ public class MeuUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("Tentando autenticar com: " + email);
         
         Usuario usuario = usuarioRepo.findByEmailLocal(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
-        		return usuario;
+        
+        System.out.println("Usuário encontrado: " + usuario.getEmailLocal());
+        return usuario;
     }
+
    }

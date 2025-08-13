@@ -34,5 +34,10 @@ public class paginasController {
 	public String mostrarhome(){
 		return "home";
 	}
+	
+	@GetMapping("/inicial")
+	public String mostrarTelaInicial() {
+	   return "Inicial";
+	  }
 
 }

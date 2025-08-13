@@ -26,12 +26,13 @@ public class SecurityConfig {
 	            .anyRequest().authenticated()
 	        )
 	        .formLogin(form -> form
-	            .loginPage("/login") 
-	            .defaultSuccessUrl("/home") 
+	            .loginPage("/login")
+	            .loginProcessingUrl("/login")
+	            .defaultSuccessUrl("/inicial", true) 
 	            .permitAll()
 	        )
 	        .logout(logout -> logout
-	        	    .logoutUrl("/logout")  // 👈 Correto: URL para trigger do logout
+	        	    .logoutUrl("/logout")  // Correto: URL para trigger do logout
 	        	    .logoutSuccessUrl("/login?logout")  // Página após logout
 	        	    .invalidateHttpSession(true)  // Encerra a sessão
 	        	    .deleteCookies("JSESSIONID")  // Remove cookies
@@ -41,18 +42,9 @@ public class SecurityConfig {
 	}
        
 	
-	  	@Bean
-	    public InMemoryUserDetailsManager userDetailsService() {
-	        UserDetails user = User.withDefaultPasswordEncoder()
-	            .username("luis")
-	            .password(passwordEncoder().encode("toma"))
-	            .roles("USER")
-	            .build();
-	        return new InMemoryUserDetailsManager(user);
-	    }
-	
+	 
 
-    // Mantenha o PasswordEncoder (necessário para criptografia de senhas)
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

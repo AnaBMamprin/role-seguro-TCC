@@ -106,13 +106,13 @@ public class Usuario implements UserDetails {
 		@Override
 		public String getPassword() {
 			// TODO Auto-generated method stub
-			return senhaLocal;
+			return this.senhaLocal;
 		}
 
 		@Override
 		public String getUsername() {
 			// TODO Auto-generated method stub
-			return emailLocal;
+			return this.emailLocal;
 		}
 		
 		@Override public boolean isAccountNonExpired() { return true; }
