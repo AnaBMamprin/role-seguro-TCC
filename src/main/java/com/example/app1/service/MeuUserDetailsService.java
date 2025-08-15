@@ -1,6 +1,7 @@
 package com.example.app1.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,14 +17,27 @@ public class MeuUserDetailsService implements UserDetailsService {
     private UserRepository usuarioRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        System.out.println("Tentando autenticar com: " + email);
+    public UserDetails loadUserByUsername(String emaillocal) throws UsernameNotFoundException {
         
-        Usuario usuario = usuarioRepo.findByEmailLocal(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        Usuario usuario = usuarioRepo.findByEmailLocal(emaillocal);
+                
         
-        System.out.println("Usuário encontrado: " + usuario.getEmailLocal());
-        return usuario;
+        if (usuario != null) {
+        	var springUser = User.withUsername(emaillocal)
+        			.password(usuario.getPassword())
+        			.roles(usuario.getRole().name())
+        			.build();
+        			
+        	
+        	
+        	
+        	return usuario;
+        }
+        
+        
+        return null;
+        
+        
     }
 
    }

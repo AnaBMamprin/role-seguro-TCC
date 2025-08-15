@@ -33,7 +33,7 @@ public class Usuario implements UserDetails {
 		@Column(name = "nomeUsuario")
 		private String nomeLocal;
 
-		@Column(name = "emailUsuario")
+		@Column(unique = true, name = "emailUsuario")
 		private String emailLocal;
 
 		@Column(name = "EnderecoUsuario")

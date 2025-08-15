@@ -19,14 +19,14 @@ public class SecurityConfig {
 	    
 	    	.csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(authz -> authz
-	        		.requestMatchers("/", "/login", "/cadastro", "/home", "/css/**", "/js/**", "/images/**").permitAll()
+	        		.requestMatchers("/", "/login", "/cadastro", "/css/**", "/js/**", "/images/**").permitAll()
 	            .anyRequest().authenticated()
 	        )
 	        .formLogin(form -> form
 	            .loginPage("/login")
-	            .usernameParameter("nomeUsuario")
-	            .passwordParameter("SenhaUsuario")
-	            .defaultSuccessUrl("/inicial", true) 
+	            .usernameParameter("emailLocal")
+	            .passwordParameter("SenhaLocal")
+	            .defaultSuccessUrl("/home", true) 
 	            .permitAll()
 	        )
 	        .logout(logout -> logout
