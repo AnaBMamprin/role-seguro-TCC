@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selecione Seu Cardápio</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .menu-card {
+            background: rgba(45, 52, 54, 0.7);
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+        }
+        
+        .menu-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .menu-card h3 {
+            margin: 0.5rem 0;
+        }
+        
+        .menu-card p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Qual cardápio você deseja?</h1>
+        
+        <div class="menu-grid">
+            <!-- Card 1 -->
+            <div class="menu-card" onclick="selectMenu('entradas')">
+                <i class="fas fa-utensils"></i>
+                <h3>Entradas</h3>
+                <p>Petiscos, saladas e aperitivos para começar</p>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="menu-card" onclick="selectMenu('principais')">
+                <i class="fas fa-drumstick-bite"></i>
+                <h3>Pratos Principais</h3>
+                <p>Carnes, massas e refeições completas</p>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="menu-card" onclick="selectMenu('bebidas')">
+                <i class="fas fa-glass-cheers"></i>
+                <h3>Bebidas</h3>
+                <p>Drinks, vinhos e refrigerantes</p>
+            </div>
+            
+            <!-- Card 4 -->
+            <div class="menu-card" onclick="selectMenu('sobremesas')">
+                <i class="fas fa-ice-cream"></i>
+                <h3>Sobremesas</h3>
+                <p>Doces e finalizações especiais</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectMenu(menuType) {
+            // Aqui você pode redirecionar ou carregar o cardápio selecionado
+            console.log(`Cardápio selecionado: ${menuType}`);
+            
+            // Exemplo: Redirecionamento
+            // window.location.href = `/cardapio?tipo=${menuType}`;
+            
+            // Feedback visual (opcional)
+            const cards = document.querySelectorAll('.menu-card');
+            cards.forEach(card => card.style.borderColor = '#2d3436');
+            event.currentTarget.style.borderColor = '#6c5ce7';
+            
+            // Adicione aqui a lógica para carregar o cardápio escolhido
+            alert(`Você selecionou: ${getMenuName(menuType)}`);
+        }
+        
+        function getMenuName(type) {
+            const menus = {
+                'entradas': 'Entradas',
+                'principais': 'Pratos Principais',
+                'bebidas': 'Bebidas',
+                'sobremesas': 'Sobremesas'
+            };
+            return menus[type] || type;
+        }
+    </script>
+</body>
+</html>

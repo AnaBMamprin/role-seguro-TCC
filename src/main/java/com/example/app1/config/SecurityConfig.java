@@ -26,7 +26,7 @@ public class SecurityConfig {
 	            .loginPage("/login")
 	            .usernameParameter("emailLocal")
 	            .passwordParameter("SenhaLocal")
-	            .defaultSuccessUrl("/home", true) 
+	            .defaultSuccessUrl("/inicial", true) 
 	            .permitAll()
 	        )
 	        .logout(logout -> logout

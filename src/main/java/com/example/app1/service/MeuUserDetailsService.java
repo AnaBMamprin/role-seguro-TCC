@@ -1,5 +1,7 @@
 package com.example.app1.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,25 +19,17 @@ public class MeuUserDetailsService implements UserDetailsService {
     private UserRepository usuarioRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String emaillocal) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String emailLocal) throws UsernameNotFoundException {
         
-        Usuario usuario = usuarioRepo.findByEmailLocal(emaillocal);
+        Optional<Usuario> usuario = usuarioRepo.findByEmailLocal(emailLocal);
                 
         
-        if (usuario != null) {
-        	var springUser = User.withUsername(emaillocal)
-        			.password(usuario.getPassword())
-        			.roles(usuario.getRole().name())
-        			.build();
-        			
-        	
-        	
-        	
-        	return usuario;
-        }
+        return User.builder()
+                .username(usuario.get().getUsername()) // Ou outro campo único
+                .password(usuario.get().getPassword())
+                .roles(usuario.get().getRole().name())
+                .build();
         
-        
-        return null;
         
         
     }
