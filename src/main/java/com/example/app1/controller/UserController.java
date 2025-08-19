@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.app1.records.RestauranteDTO;
 import com.example.app1.records.UserDTO;
 import com.example.app1.service.UserService;
 
@@ -24,6 +25,11 @@ public class UserController {
 		     return "Usuario cadastrado com sucesso"; 
 		 }
 		
+		 @PostMapping("/cadastrorestaurante")
+		 public String salvarRestaurante(@ModelAttribute RestauranteDTO userRecordDTO) {
+		     //mexer
+		     return "Usuario cadastrado com sucesso"; 
+		 }
 		 
 		    
 		    
