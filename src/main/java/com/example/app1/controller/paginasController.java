@@ -3,11 +3,8 @@ package com.example.app1.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import com.example.app1.records.UserDTO;
-
-
-
-
 
 
 @Controller
@@ -28,7 +25,5 @@ public class paginasController {
 	public String mostrarPerfil() {
 		return "perfil";
 	}
-	
-	
 
 }

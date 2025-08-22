@@ -14,7 +14,6 @@ public class DataLoader implements CommandLineRunner {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
 
-    // Construtor correto (sem void)
     public DataLoader(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
@@ -27,9 +26,9 @@ public class DataLoader implements CommandLineRunner {
             admin.setNomeLocal("ADMIN");
             admin.setEmailLocal("admin@email.com");
             admin.setSenhaLocal(passwordEncoder.encode("senha123")); // Senha criptografada
-            admin.setRole(UserEnum.ADMIN); // Define como administrador
+           admin.setRole(UserEnum.ADMIN); // Define como administrador
             repository.save(admin);
         }
-    }
+    } 
 }
 

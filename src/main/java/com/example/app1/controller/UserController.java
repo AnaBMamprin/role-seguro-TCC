@@ -1,41 +1,45 @@
 package com.example.app1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import com.example.app1.model.Usuario;
+import com.example.app1.records.RestauranteDTO;
 import com.example.app1.records.UserDTO;
-import com.example.app1.repository.UserRepository;
+import com.example.app1.service.UserService;
+
+
 
 @Controller
 public class UserController {
+		
 
-    @Autowired
-    private UserRepository repository;
+		@Autowired
+		private UserService userservice;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @PostMapping("/cadastrar")
-    public String cadastrarUsuario(@ModelAttribute UserDTO userDTO, Model model) {
-        if (userDTO.getSenha() == null || userDTO.getSenha().isEmpty()) {
-            model.addAttribute("mensagem", "Senha não pode ser vazia!");
-            return "usuarioExistente";
-        }
-
-        Usuario usuario = new Usuario();
-        usuario.setNomeLocal(userDTO.getNome());
-        usuario.setEmailLocal(userDTO.getEmail());
-        usuario.setEnderecoLocal(userDTO.getEndereco());
-        usuario.setSenhaLocal(passwordEncoder.encode(userDTO.getSenha()));
-
-        repository.save(usuario);
-        return "redirect:/login";
-    }
-
+		 
+		 @PostMapping("/cadastrar")
+		 public String salvarCadastro(@ModelAttribute UserDTO userDTO) {
+		     userservice.registerUser(userDTO);
+		     return "login"; 
+		 }
+		
+		 @GetMapping("/cadastro")
+		 public String mostrarFormulario(Model model) {
+		     model.addAttribute("userDTO", new UserDTO()); // agora funciona
+		     return "cadastro";
+		 }
+		 
+		 
+		 @PostMapping("/cadastrorestaurante")
+		 public String salvarRestaurante(@ModelAttribute RestauranteDTO userRecordDTO) {
+		     return "login"; 
+		 }
+		 
+		    
+		    
+		
+	 
 }
