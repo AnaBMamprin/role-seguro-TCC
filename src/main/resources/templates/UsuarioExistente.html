@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuário já existe</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #2d3436;
+            color: #f5f6fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .emoji {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #e17055;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: #6c5ce7;
+            font-weight: bold;
+            border: 2px solid #6c5ce7;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #6c5ce7;
+            color: #f5f6fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="emoji">😬</div>
+    <h1>Xiiii! Usuário já existe</h1>
+    <p th:text="${mensagem}">Este usuário já existe!</p>
+    <a href="/cadastro">Voltar para cadastro</a>
+</body>
+</html>
