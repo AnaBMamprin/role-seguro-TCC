@@ -14,7 +14,6 @@ public class DataLoader implements CommandLineRunner {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
 
-    // Construtor correto (sem void)
     public DataLoader(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
