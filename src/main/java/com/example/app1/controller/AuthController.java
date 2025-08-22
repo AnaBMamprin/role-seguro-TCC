@@ -18,7 +18,7 @@ public class AuthController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName(); // pega o "username" (no seu caso email)
         model.addAttribute("email", email);
-        return "/Inicial"; // página inicial após login
+        return "inicial"; // página inicial após login
     }
 
     @GetMapping("/logout-success")
