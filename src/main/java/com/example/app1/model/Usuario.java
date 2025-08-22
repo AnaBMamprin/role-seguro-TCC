@@ -99,13 +99,11 @@ public class Usuario implements UserDetails {
 		
 		public void setRole(UserEnum role) {
 		    this.role = role;
-		}
+		   }
 
 		
-		@Override
-	    public Collection<? extends GrantedAuthority> getAuthorities() {
-	        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name())); // Papel padrão
-	    }
+		@Override public Collection<? extends GrantedAuthority> getAuthorities() 
+		{ return List.of(new SimpleGrantedAuthority("ROLE_USER")); }
 
 		@Override
 		public String getPassword() {

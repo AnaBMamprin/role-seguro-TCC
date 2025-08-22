@@ -18,11 +18,6 @@ public class paginasController {
 		return "login";
 	}
 	
-	 @GetMapping("/cadastro")
-	 public String mostrarFormulario(Model model) {
-	     model.addAttribute("userRecordDTO", new UserDTO()); // agora funciona
-	     return "/cadastro";
-	 }
 	
 	@GetMapping ("/home")
 	public String mostrarhome(){

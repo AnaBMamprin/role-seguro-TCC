@@ -18,15 +18,19 @@ public class UserService {
 	    private PasswordEncoder passwordEncoder;
 
 		@Transactional
-	    public void registerUser(UserDTO userDTO) {
-	        Usuario user = new Usuario();
-	        user.setNomeLocal(userDTO.getNome());  
-	        user.setEmailLocal(userDTO.getEmail());
-	        user.setEnderecoLocal(userDTO.getEndereco());
-	        user.setSenhaLocal(passwordEncoder.encode(userDTO.getSenha()));
-	        userRepository.save(user);
-	    }
-	
+		public boolean registerUser(UserDTO userDTO) {
+		    if(userRepository.findByEmailLocal(userDTO.getEmail()).isPresent()) {
+		        return false; // já existe
+		    }
+
+		    Usuario user = new Usuario();
+		    user.setNomeLocal(userDTO.getNome());  
+		    user.setEmailLocal(userDTO.getEmail());
+		    user.setEnderecoLocal(userDTO.getEndereco());
+		    user.setSenhaLocal(passwordEncoder.encode(userDTO.getSenha()));
+		    userRepository.save(user);
+		    return true; // cadastrado com sucesso
+		}
 	
 
 }
