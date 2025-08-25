@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.example.app1.records.RestauranteDTO;
 import com.example.app1.records.UserDTO;
 import com.example.app1.service.UserService;
@@ -21,8 +23,9 @@ public class UserController {
 
 		 
 		 @PostMapping("/cadastrar")
-		 public String salvarCadastro(@ModelAttribute UserDTO userDTO) {
+		 public String salvarCadastro(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
 		     userservice.registerUser(userDTO);
+		     redirectAttributes.addFlashAttribute("mensagem", "Cadastro realizado com sucesso!");
 		     return "login"; 
 		 }
 		

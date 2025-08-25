@@ -1,73 +1,101 @@
-<!-- /src/main/resources/templates/login.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cadastro de Cliente</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
+    body {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #f4f4f4;
+      height: 100vh;
+      color: #fff;
     }
 
     .cadastro-container {
-      background-color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 15px;
       padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 500px;
+      width: 400px;
       text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 1s ease-in-out;
     }
 
     .cadastro-container h2 {
+      font-size: 2rem;
       margin-bottom: 20px;
-      color: #333;
+      color: #aee1f9;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
 
     .cadastro-container input {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      margin: 12px 0;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .cadastro-container input::placeholder {
+      color: #e0e0e0;
     }
 
     .cadastro-container button {
       width: 100%;
       padding: 12px;
-      background-color: #28a745;
+      background: #2a5298;
       color: white;
       border: none;
-      border-radius: 5px;
-      font-size: 16px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: 0.3s ease;
     }
 
     .cadastro-container button:hover {
-      background-color: #218838;
+      background: #1e3c72;
     }
 
     .cadastro-container p {
       margin-top: 15px;
       font-size: 14px;
+      color: #d9e4f5;
     }
 
     .cadastro-container a {
-      color: #007BFF;
+      color: #aee1f9;
       text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .cadastro-container a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
@@ -75,17 +103,30 @@
 
   <div class="cadastro-container">
     <h2>Cadastro de Cliente</h2>
-	<form th:action="@{/cadastrar}" method="post" th:object="${userDTO}">
-	    <input type="text" th:field="*{nome}" placeholder="Nome" required>
-	    <input type="email" th:field="*{email}" placeholder="Email" required>
-	    <input type="text" th:field="*{endereco}" placeholder="Endereço" required>
-	    <input type="password" th:field="*{senha}" placeholder="Senha" required>
-	    <button type="submit">Cadastrar</button>
-	</form>
-
-	
-	   <p>Já possui uma conta? <a href="/login">Faça login</a></p>   
+    <form th:action="@{/cadastrar}" method="post" th:object="${userDTO}">
+        <input type="text" th:field="*{nome}" placeholder="Nome" required>
+        <input type="email" th:field="*{email}" placeholder="Email" required>
+        <input type="text" th:field="*{endereco}" placeholder="Endereço" required>
+        <input type="password" th:field="*{senha}" placeholder="Senha" required>
+        <button type="submit">Cadastrar</button>
+    </form>
+    <p>Já possui uma conta? <a href="/login">Faça login</a></p>
   </div>
 
+  <input type="hidden" id="mensagemPopup" th:value="${mensagem}" />
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+      window.onload = function() {
+          var mensagem = document.getElementById("mensagemPopup").value;
+          if (mensagem && mensagem !== "") {
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Sucesso!',
+                  text: mensagem
+              });
+          }
+      }
+  </script>
 </body>
 </html>
