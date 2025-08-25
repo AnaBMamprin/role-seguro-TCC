@@ -1,5 +1,6 @@
 package com.example.app1.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -23,5 +24,16 @@ public class paginasController {
 	public String mostrarPerfil() {
 		return "perfil";
 	}
+	
+	  @PreAuthorize("hasRole('ADMIN')")
+	  @GetMapping("/adm")
+	  public String adminPage() {
+	     return "adm";
+	  }
+	
+	  @GetMapping ("/restaurantes")
+		public String mostrarRestaurantes() {
+			return "restaurantes";
+		}
 
 }

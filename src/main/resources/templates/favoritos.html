@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Restaurantes Favoritos</title>
+</head>
+<body>
+    <h2>Meus Restaurantes Favoritos</h2>
+    <ul>
+        <li th:each="restaurante : ${favoritos}" th:text="${restaurante.nome}"></li>
+    </ul>
+</body>
+</html>
