@@ -59,47 +59,49 @@
 			      <h1>Qual culinária você prefere?</h1>
 			      
 			      <div class="menu-grid">
-			          <!-- Card 1 -->
-			          <div class="menu-card" th:onclick="'window.location.href=\'/catalogo/japonesa\''">
-			              <i class="fas fa-fish"></i>
-			              <h3>Japonesa</h3>
-			              <p>Sushi, sashimi e pratos típicos do Japão</p>
-			          </div>
-			          
-			          <!-- Card 2 -->
-			         <div class="menu-card" onclick="window.location.href='/restaurantes?culinaria=Italiana'">
-			              <i class="fas fa-pizza-slice"></i>
-			              <h3>Italiana</h3>
-			              <p>Massas, pizzas e receitas tradicionais da Itália</p>
-			          </div>
+					<div class="menu-card"
+					     onclick="window.location.href='/restaurantes?culinaria=Japonesa&cidade=Guarulhos'">
+					    <i class="fas fa-fish"></i>
+					    <h3>Japonesa</h3>
+					    <p>Sushis, sashimis e delícias orientais</p>
+					</div>
+					
+					  <div class="menu-card" 
+					       onclick="window.location.href='/restaurantes?culinaria=Italiana&cidade=Guarulhos'">
+					      <i class="fas fa-pizza-slice"></i>
+					      <h3>Italiana</h3>
+					      <p>Massas, pizzas e receitas tradicionais da Itália</p>
+					  </div>
 			          
 			          <!-- Card 3 -->
-			          <div class="menu-card" th:onclick="|window.location.href='@{/catalogo/americana}'|">
-			              <i class="fas fa-hamburger"></i>
-			              <h3>Americana</h3>
-			              <p>Burgers, hot dogs e comfort food típica dos EUA</p>
-			          </div>
-			          
+					  <div class="menu-card"
+					       onclick="window.location.href='/restaurantes?culinaria=Americana&cidade=Guarulhos'">
+					    <i class="fas fa-hamburger"></i>
+					    <h3>Americana</h3>
+					    <p>Burgers, hot dogs e comfort food típica dos EUA</p>
+					  </div>
+					  
 			          <!-- Card 4 -->
-			          <div class="menu-card" th:onclick="'window.location.href=\'/catalogo/mexicana\''">
-			              <i class="fas fa-pepper-hot"></i>
-			              <h3>Mexicana</h3>
-			              <p>Tacos, nachos e pratos apimentados do México</p>
-			          </div>
-
+					  <div class="menu-card"
+					       onclick="window.location.href='/restaurantes?culinaria=Mexicana&cidade=Guarulhos'">
+					      <i class="fas fa-pepper-hot"></i>
+					      <h3>Mexicana</h3>
+					      <p>Tacos, burritos e comidas picantes</p>
+					  </div>
 			          <!-- Card 5 -->
-			          <div class="menu-card" th:onclick="'window.location.href=\'/catalogo/brasileira\''">
-			              <i class="fas fa-drumstick-bite"></i>
-			              <h3>Brasileira</h3>
-			              <p>Feijoada, churrasco e pratos típicos do Brasil</p>
-			          </div>
-
+					  <div class="menu-card"
+					       onclick="window.location.href='/restaurantes?culinaria=Brasileira&cidade=Guarulhos'">
+					      <i class="fas fa-drumstick-bite"></i>
+					      <h3>Brasileira</h3>
+					      <p>Feijoada, churrasco e pratos típicos do Brasil</p>
+					  </div>
 			          <!-- Card 6 -->
-			          <div class="menu-card" th:onclick="'window.location.href=\'/catalogo/arabe\''">
-			              <i class="fas fa-bread-slice"></i>
-			              <h3>Árabe</h3>
-			              <p>Kibe, esfihas e delícias do Oriente Médio</p>
-			          </div>				  
+			           <div class="menu-card"
+					       onclick="window.location.href='/restaurantes?culinaria=Arabe&cidade=Guarulhos'">
+					    <i class="fas fa-bread-slice"></i>
+					    <h3>Árabe</h3>
+					    <p>Kibe, esfihas e delícias do Oriente Médio</p>
+					  </div>				  
 			      </div>
 			  </div>
 			</div>
