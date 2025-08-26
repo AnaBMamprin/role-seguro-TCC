@@ -33,6 +33,25 @@ public class RestauranteController {
     }
     */
     
+    @GetMapping("/Listarrestaurantes")
+    public String mostrarRestaurantes(
+            @RequestParam(name = "culinaria", required = false) String culinaria,
+            Model model) {
+
+        List<Restaurante> restaurantes;
+        if (culinaria != null && !culinaria.isEmpty()) {
+            restaurantes = reposi.findByCulinaria(culinaria);
+        } else {
+            restaurantes = reposi.findAll();
+        }
+
+        model.addAttribute("restaurantes", restaurantes);
+        model.addAttribute("culinaria", culinaria);
+
+        return "restaurantes"; 
+    }
+   
+    
     @PostMapping("/restauranteCadastrar")
     public String cadastroRestaurante(@ModelAttribute RestauranteDTO restauranteDTO) {
     	service.converteRestaurantes(restauranteDTO);

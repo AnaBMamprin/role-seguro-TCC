@@ -36,7 +36,10 @@ public class SecurityConfig {
 	        	    .logoutSuccessUrl("/login?logout")  // Página após logout
 	        	    .invalidateHttpSession(true)  // Encerra a sessão
 	        	    .deleteCookies("JSESSIONID")  // Remove cookies
-	        	    .permitAll()  // Permite acesso sem autenticação
+	        	    .permitAll() 
+	        	    )
+	        .exceptionHandling(ex -> ex
+	          .accessDeniedPage("/erro403") 
 	        	);
 	    return http.build();
 	}

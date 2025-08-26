@@ -67,14 +67,14 @@
 			          </div>
 			          
 			          <!-- Card 2 -->
-			          <div class="menu-card" th:onclick="'window.location.href=\'/catalogo/italiana\''">
+			         <div class="menu-card" onclick="window.location.href='/restaurantes?culinaria=Italiana'">
 			              <i class="fas fa-pizza-slice"></i>
 			              <h3>Italiana</h3>
 			              <p>Massas, pizzas e receitas tradicionais da Itália</p>
 			          </div>
 			          
 			          <!-- Card 3 -->
-			          <div class="menu-card" th:onclick="'window.location.href=\'/catalogo/americana\''">
+			          <div class="menu-card" th:onclick="|window.location.href='@{/catalogo/americana}'|">
 			              <i class="fas fa-hamburger"></i>
 			              <h3>Americana</h3>
 			              <p>Burgers, hot dogs e comfort food típica dos EUA</p>
