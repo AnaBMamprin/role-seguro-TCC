@@ -122,33 +122,33 @@
     </div>
 
     <!-- Modal Restaurante -->
-    <div class="modal fade" id="modalRestaurante" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Adicionar / Editar Restaurante</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <form id="formRestaurante">
-                <input class="form-control mb-2" type="text" placeholder="Nome" required>
-                <input class="form-control mb-2" type="text" placeholder="Horário de funcionamento" required>
-                <input class="form-control mb-2" type="text" placeholder="Culinária" required>
-				<input class="form-control mb-2" type="text" placeholder="Cidade" required>
-                <div class="mb-2">
-                    <label>Tipos de prato:</label><br>
-                    <input type="checkbox" value="Rodízio"> Rodízio
-                    <input type="checkbox" value="Self Service"> Self Service
-                    <input type="checkbox" value="A la Carte"> A la Carte
-                </div>
-                <input class="form-control mb-2" type="text" placeholder="Endereço" required>
-                <input class="form-control mb-2" type="url" placeholder="Site">
-                <button class="btn btn-primary w-100">Salvar</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+	<form id="formRestaurante" method="post" th:action="@{/restauranteCadastrar}">
+	  <div class="modal fade" id="modalRestaurante" tabindex="-1">
+	    <div class="modal-dialog">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h5 class="modal-title">Adicionar / Editar Restaurante</h5>
+	          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	        </div>
+	        <div class="modal-body">
+	          <input class="form-control mb-2" type="text" name="nome" placeholder="Nome" required>
+	          <input class="form-control mb-2" type="text" name="horario" placeholder="Horário de funcionamento" required>
+	          <input class="form-control mb-2" type="text" name="culinaria" placeholder="Culinária" required>
+	          <input class="form-control mb-2" type="text" name="cidade" placeholder="Cidade" required>
+	          <div class="mb-2">
+	            <label>Tipos de prato:</label><br>
+	            <input type="checkbox" name="tipodePrato" value="Rodízio"> Rodízio
+	            <input type="checkbox" name="tipodePrato" value="Self Service"> Self Service
+	            <input type="checkbox" name="tipodePrato" value="A la Carte"> A la Carte
+	          </div>
+	          <input class="form-control mb-2" type="text" name="endereco" placeholder="Endereço" required>
+	          <input class="form-control mb-2" type="url" name="site" placeholder="Site">
+	          <button class="btn btn-primary w-100" type="submit">Salvar</button>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</form>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

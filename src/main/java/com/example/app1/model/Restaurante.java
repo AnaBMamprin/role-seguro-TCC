@@ -21,56 +21,100 @@ public class Restaurante {
 	private String cidade;
 	@Column (name = "culinaria")
 	private String culinaria;
-	@Column  (name = "tipoDecardapio")
-	private String tipoDecardapio;
+	@Column  (name = "tipodeprato")
+	private String tipodeprato;
+	@Column  (name = "horario")
+	private String horario;
+	@Column  (name = "endereco")
+	private String endereco;
+	@Column  (name = "site")
+	private String site;
 	
 	
 	public Restaurante() {}
 	
-	
-	
-	
-	
-	
-	public Restaurante(String nome, String cidade, String culinaria, String tipoDecardapio) {
-		
+
+	public Restaurante( String nome, String cidade, String culinaria, String tipodeprato, String horario,
+			String endereco, String site) {
 		this.nome = nome;
 		this.cidade = cidade;
 		this.culinaria = culinaria;
-		this.tipoDecardapio = tipoDecardapio;
+		this.tipodeprato = tipodeprato;
+		this.horario = horario;
+		this.endereco = endereco;
+		this.site = site;
 	}
-
-
-
-
 
 
 	public String getNome() {
 		return nome;
 	}
+
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
+
 	public String getCidade() {
 		return cidade;
 	}
+
+
 	public void setCidade(String cidade) {
 		this.cidade = cidade;
 	}
+
+
 	public String getCulinaria() {
 		return culinaria;
 	}
+
+
 	public void setCulinaria(String culinaria) {
 		this.culinaria = culinaria;
 	}
-	public String getTipodecardapio() {
-		return tipoDecardapio;
+
+
+	public String getTipodeprato() {
+		return tipodeprato;
 	}
-	public void setTipodecardapio(String tipodecardapio) {
-		tipoDecardapio = tipodecardapio;
+
+
+	public void setTipodeprato(String tipodeprato) {
+		this.tipodeprato = tipodeprato;
 	}
-	
-	
+
+
+	public String getHorario() {
+		return horario;
+	}
+
+
+	public void setHorario(String horario) {
+		this.horario = horario;
+	}
+
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+
+
+	public String getSite() {
+		return site;
+	}
+
+
+	public void setSite(String site) {
+		this.site = site;
+	}
+
 	
 	
 

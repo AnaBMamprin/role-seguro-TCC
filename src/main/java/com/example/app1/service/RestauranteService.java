@@ -21,7 +21,10 @@ public class RestauranteService {
 				restaurante.setNome(restauranteDTO.getNome());
 				restaurante.setCidade(restauranteDTO.getCidade());
 				restaurante.setCulinaria(restaurante.getCulinaria());
-				restaurante.setTipodecardapio(restauranteDTO.getTipodeCardapio());
+				restaurante.setTipodeprato(restauranteDTO.getTipodePrato());
+				restaurante.setHorario(restauranteDTO.getHorario());
+				restaurante.setEndereco(restauranteDTO.getEndereco());
+				restaurante.setSite(restauranteDTO.getSite());
 				repo.save(restaurante);
 	}
 	

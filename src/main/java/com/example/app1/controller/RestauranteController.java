@@ -2,6 +2,7 @@ package com.example.app1.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +17,11 @@ import com.example.app1.service.RestauranteService;
 
 @Controller
 public class RestauranteController {
-
+	
+	
+	@Autowired
     private RestauranteRepository reposi;
+	@Autowired
     private RestauranteService service;
 
     public RestauranteController(RestauranteRepository repository) {
@@ -57,6 +61,7 @@ public class RestauranteController {
     	service.converteRestaurantes(restauranteDTO);
     	return "redirect:/adm";		
        	}
+    
 }
 
 
