@@ -13,6 +13,9 @@
 
   <!-- Font Awesome (para os ícones dos cards) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Bootstrap Bundle com Popper (necessário para navbar mobile) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- Seu CSS -->
   <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -20,8 +23,16 @@
 <body>
 
 	<!-- Navbar Principal -->
-		    <nav class="navbar navbar-expand-lg bg-body-tertiary main-navbar">
+		    <nav class="navbar navbar-expand-lg main-navbar">
 		      <div class="container-fluid">
+				
+				<!-- LOGO -->
+				   <a class="navbar-brand text-white fw-bold" href="/">TCHOMP</a>
+
+				   <!-- BOTÃO TOGGLER (MOBILE) -->
+				   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+				     <span class="navbar-toggler-icon"></span>
+				   </button>
 
 		        <!-- Links centralizados + barra de pesquisa -->
 		        <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
