@@ -24,10 +24,5 @@ public class paginasController {
 	public String mostrarPerfil() {
 		return "perfil";
 	}
-	
-	  @GetMapping ("/restaurantes")
-		public String mostrarRestaurantes() {
-			return "restaurantes";
-		}
 
 }

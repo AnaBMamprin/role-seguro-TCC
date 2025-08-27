@@ -19,6 +19,8 @@ public class Restaurante {
 	private String nome;
 	@Column (name = "cidade")
 	private String cidade;
+
+
 	@Column (name = "culinaria")
 	private String culinaria;
 	@Column  (name = "tipodeprato")
@@ -45,6 +47,14 @@ public class Restaurante {
 		this.site = site;
 	}
 
+	public long getId() {
+		return id;
+	}
+
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public String getNome() {
 		return nome;

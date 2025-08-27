@@ -30,7 +30,7 @@ public class RestauranteController {
 
     // =================== LISTA PÚBLICA ===================
     // Lista restaurantes para os usuários (com filtro opcional por culinária)
-    @GetMapping("/listarRestaurantes")
+    @GetMapping("/restaurantes")
     public String mostrarRestaurantes(
             @RequestParam(name = "culinaria", required = false) String culinaria,
             Model model) {
