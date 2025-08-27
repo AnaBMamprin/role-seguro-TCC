@@ -25,12 +25,6 @@ public class paginasController {
 		return "perfil";
 	}
 	
-	  @PreAuthorize("hasRole('ADMIN')")
-	  @GetMapping("/adm")
-	  public String adminPage() {
-	     return "adm";
-	  }
-	
 	  @GetMapping ("/restaurantes")
 		public String mostrarRestaurantes() {
 			return "restaurantes";

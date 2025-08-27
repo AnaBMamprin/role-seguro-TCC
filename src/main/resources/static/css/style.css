@@ -1,10 +1,10 @@
 /* ==================== VARIÁVEIS DE CORES ==================== */
 :root {
-  --primary: #1e3c72;
-  --secondary: #2a5298;
-  --accent: #ff4757;
-  --light: #ffffff;
-  --dark: #2c3e50;
+  --primary: #D84315;   /* vermelho terroso */
+  --secondary: #FF7043; /* laranja apetite */
+  --accent: #FBC02D;    /* amarelo mostarda */
+  --light: #FAFAFA;     /* branco gelo */
+  --dark: #2C2C2C;      /* quase preto */
 }
 
 /* ==================== RESET BÁSICO ==================== */
@@ -13,21 +13,13 @@ body, html {
   padding: 0;
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: #FAFAFA;
   color: var(--light);
-}
-
-/* ========== VARIÁVEIS GERAIS (se ainda não tiver) ========== */
-:root{
-  --primary:#1e3c72;
-  --secondary:#2a5298;
-  --accent:#ff4757;
-  --light:#ffffff;
 }
 
 /* ========== NAVBAR ========== */
 .main-navbar{
-  background: linear-gradient(135deg, darkslateblue, mediumslateblue);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   padding: .8rem 1rem;
 }
 
@@ -39,7 +31,7 @@ body, html {
 }
 
 .main-navbar .nav-link:hover{
-  color: rgb(128, 255, 128) !important;
+  color: var(--accent) !important;
   transform: scale(1.05);
 }
 
@@ -50,7 +42,8 @@ body, html {
 }
 
 .main-navbar .btn-favorite{
-  background-color: var(--accent);
+background: linear-gradient(135deg, var(--accent), var(--secondary));
+color: var(--light);
   color: var(--light);
   border-radius: 8px;
   padding: .45rem .8rem;
@@ -58,7 +51,7 @@ body, html {
 }
 
 .btn-favorite:hover {
-  background-color: #c0392b;
+  background: var(--primary);
   transform: translateY(-2px);
 }
 
@@ -104,7 +97,7 @@ body, html {
 }
 
 .menu-card{
-  background: linear-gradient(135deg, darkslateblue, mediumslateblue);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0,0,0,.1);
@@ -118,12 +111,12 @@ body, html {
 .menu-card i{
   font-size: 2rem;
   margin-bottom: 10px;
-  color: rgb(151, 149, 217);
+  color: var(--accent);
 }
 .menu-card h3{
   margin: 10px 0;
   font-size: 1.35rem;
-  color: rgb(176, 176, 217);
+  color: var(--light);
 }
 .menu-card p{
   font-size: .95rem;
@@ -182,7 +175,7 @@ body, html {
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  background: linear-gradient(135deg, darkslateblue, mediumslateblue);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
 }
 
 .profile-card h2 {
@@ -240,11 +233,11 @@ body, html {
 }
 
 .btn-salvar {
-  background: #28a745;
-  color: #fff;
+	background: linear-gradient(135deg, var(--accent), var(--secondary));
+	color: var(--light);
 }
 .btn-salvar:hover {
-  background: #218838;
+  background: var(--primary);
 }
 
 .btn-excluir {
@@ -310,7 +303,7 @@ body, html {
   justify-content: center;
   align-items: center; /* centraliza vertical */
   min-height: 100vh;
-  background: linear-gradient(135deg, darkslateblue, mediumslateblue);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
 }
 
 .cadastro-container {
@@ -356,7 +349,7 @@ body, html {
   border: none;
   font-weight: bold;
   font-size: 1.1rem;
-  background: var(--primary);
+  background: linear-gradient(135deg, #FBC02D, #FF7043);
   color: var(--light);
   cursor: pointer;
   transition: 0.3s;
@@ -392,7 +385,7 @@ body, html {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, darkslateblue, mediumslateblue);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   font-family: 'Poppins', sans-serif;
   color: #fff;
 }
@@ -446,7 +439,7 @@ body, html {
   padding: 0.8rem;
   border: none;
   border-radius: 10px;
-  background-color: #ff4757;
+  background:linear-gradient(135deg, #FBC02D, #FF7043);
   color: #fff;
   font-size: 1.1rem;
   font-weight: 600;
@@ -534,4 +527,69 @@ body, html {
 .btn-home:hover {
   background-color: #e84118;
   transform: scale(1.05);
+}
+
+/* ==================== RESTAURANTES ==================== */
+.restaurantes-page {
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #FDF6E3, #FFDAB9);
+  min-height: 100vh;
+}
+
+.restaurantes-page h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #ff6347; /* Tom de vermelho/apetite */
+}
+
+/* Grid de cards */
+.restaurantes-page .cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Card do restaurante */
+.restaurantes-page .menu-card {
+  background: linear-gradient(135deg, #FFB347, #FF7E5F); /* gradiente amarelo-laranja */
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: transform .3s ease, box-shadow .3s ease;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.restaurantes-page .menu-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+/* Conteúdo do card */
+.restaurantes-page .menu-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.restaurantes-page .menu-card p {
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Link do site */
+.restaurantes-page .menu-card a {
+  margin-top: 0.8rem;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: underline;
+  transition: 0.3s;
+}
+
+.restaurantes-page .menu-card a:hover {
+  color: #ffeb3b;
+  text-decoration: none;
 }

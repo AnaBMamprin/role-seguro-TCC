@@ -21,11 +21,11 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (repository.findByEmailLocal("admin@email.com").isEmpty()) {
+        if (repository.findByEmailUsuario("admin@email.com").isEmpty()) {
             Usuario admin = new Usuario();
-            admin.setNomeLocal("ADMIN");
-            admin.setEmailLocal("admin@email.com");
-            admin.setSenhaLocal(passwordEncoder.encode("senha123")); // Senha criptografada
+            admin.setNomeUsuario("ADMIN");
+            admin.setEmailUsuario("admin@email.com");
+            admin.setSenhaUsuario(passwordEncoder.encode("senha123")); // Senha criptografada
            admin.setRole(UserEnum.ADMIN); // Define como administrador
             repository.save(admin);
         }

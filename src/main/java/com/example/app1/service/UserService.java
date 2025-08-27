@@ -19,15 +19,15 @@ public class UserService {
 
 		@Transactional
 		public boolean registerUser(UserDTO userDTO) {
-		    if(userRepository.findByEmailLocal(userDTO.getEmail()).isPresent()) {
+		    if(userRepository.findByEmailUsuario(userDTO.getEmail()).isPresent()) {
 		        return false; // já existe
 		    }
 
 		    Usuario user = new Usuario();
-		    user.setNomeLocal(userDTO.getNome());  
-		    user.setEmailLocal(userDTO.getEmail());
-		    user.setEnderecoLocal(userDTO.getEndereco());
-		    user.setSenhaLocal(passwordEncoder.encode(userDTO.getSenha()));
+		    user.setNomeUsuario(userDTO.getNome());  
+		    user.setEmailUsuario(userDTO.getEmail());
+		    user.setEnderecoUsuario(userDTO.getEndereco());
+		    user.setSenhaUsuario(passwordEncoder.encode(userDTO.getSenha()));
 		    userRepository.save(user);
 		    return true; // cadastrado com sucesso
 		}

@@ -50,7 +50,6 @@
 			        </div>
 			      </div>
 			    </nav>
-    </nav>
 
     <div class="container my-5">
         <h2 class="text-center mb-4">Administração do Sistema</h2>
@@ -80,10 +79,11 @@
                         <td th:text="${restaurante.nome}"></td>
                         <td th:text="${restaurante.horario}"></td>
                         <td th:text="${restaurante.culinaria}"></td>
-                        <td th:text="${restaurante.tiposPrato}"></td>
+                        <td th:text="${restaurante.tipodeprato}"></td>
 						<td th:text="${restaurante.cidade}"></td>
                         <td th:text="${restaurante.endereco}"></td>
-                        <td><a th:href="${restaurante.site}" target="_blank">Site</a></td>
+						<a th:if="${restaurante.site != null}" th:href="${restaurante.site}" target="_blank">Site</a>
+						<span th:if="${restaurante.site == null}">-</span>
                         <td>
                             <button class="btn btn-sm btn-warning">Editar</button>
                             <button class="btn btn-sm btn-danger">Excluir</button>
@@ -107,10 +107,10 @@
                 </thead>
                 <tbody>
                     <tr th:each="user : ${usuarios}">
-                        <td th:text="${user.nome}"></td>
-                        <td th:text="${user.email}"></td>
+                        <td th:text="${user.nomeUsuario}"></td>
+                        <td th:text="${user.emailUsuario}"></td>
                         <td>
-                            <input type="checkbox" th:checked="${user.adm}" th:data-userid="${user.id}" class="toggle-adm">
+							<input type="checkbox" th:checked="${user.role == T(com.example.app1.usuarioEnums.UserEnum).ADMIN}" th:data-userid="${user.idUsuario}" class="toggle-adm">
                         </td>
                         <td>
                             <button class="btn btn-sm btn-danger">Excluir</button>
@@ -137,9 +137,9 @@
 	          <input class="form-control mb-2" type="text" name="cidade" placeholder="Cidade" required>
 	          <div class="mb-2">
 	            <label>Tipos de prato:</label><br>
-	            <input type="checkbox" name="tipodePrato" value="Rodízio"> Rodízio
-	            <input type="checkbox" name="tipodePrato" value="Self Service"> Self Service
-	            <input type="checkbox" name="tipodePrato" value="A la Carte"> A la Carte
+	            <input type="checkbox" name="tipodeprato" value="Rodízio"> Rodízio
+	            <input type="checkbox" name="tipodeprato" value="Self Service"> Self Service
+	            <input type="checkbox" name="tipodeprato" value="A la Carte"> A la Carte
 	          </div>
 	          <input class="form-control mb-2" type="text" name="endereco" placeholder="Endereço" required>
 	          <input class="form-control mb-2" type="url" name="site" placeholder="Site">

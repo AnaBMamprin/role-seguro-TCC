@@ -19,9 +19,9 @@ public class MeuUserDetailsService implements UserDetailsService {
     private UserRepository usuarioRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String emailLocal) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String emailUsuario) throws UsernameNotFoundException {
         
-        Optional<Usuario> usuario = usuarioRepo.findByEmailLocal(emailLocal);
+        Optional<Usuario> usuario = usuarioRepo.findByEmailUsuario(emailUsuario);
                 
         
         return User.builder()

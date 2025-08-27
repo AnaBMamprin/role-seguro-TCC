@@ -5,7 +5,7 @@ public class RestauranteDTO {
 	private String nome;
 	private String cidade;
 	private String culinaria;
-	private String tipodePrato;
+	private String tipodeprato;
 	private String horario;
 	private String endereco;
 	private String site;
@@ -14,12 +14,12 @@ public class RestauranteDTO {
 	public RestauranteDTO() {}
 
 
-	public RestauranteDTO(String nome, String cidade, String culinaria, String tipodePrato, String horario,
+	public RestauranteDTO(String nome, String cidade, String culinaria, String tipodeprato, String horario,
 			String endereco, String site) {
 		this.nome = nome;
 		this.cidade = cidade;
 		this.culinaria = culinaria;
-		this.tipodePrato = tipodePrato;
+		this.tipodeprato = tipodeprato;
 		this.horario = horario;
 		this.endereco = endereco;
 		this.site = site;
@@ -56,13 +56,13 @@ public class RestauranteDTO {
 	}
 
 
-	public String getTipodePrato() {
-		return tipodePrato;
+	public String getTipodeprato() {
+		return tipodeprato;
 	}
 
 
-	public void setTipodePrato(String tipodePrato) {
-		this.tipodePrato = tipodePrato;
+	public void setTipodeprato(String tipodeprato) {
+		this.tipodeprato = tipodeprato;
 	}
 
 

@@ -9,124 +9,130 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.app1.usuarioEnums.UserEnum;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Usuario")
 public class Usuario implements UserDetails {
-	
-	 
-	private static final long serialVersionUID = 1L;
 
-	@Id
-	 @GeneratedValue(strategy = GenerationType.IDENTITY)
-	 @Column(name = "idUsuario")
-	 private Long idLocal;
-	
-		@Column(name = "nomeUsuario")
-		private String nomeLocal;
+    private static final long serialVersionUID = 1L;
 
-		@Column(unique = true, name = "emailUsuario")
-		private String emailLocal;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idUsuario")
+    private Long idUsuario;
 
-		@Column(name = "EnderecoUsuario")
-		private String enderecoLocal;
-		
-		@Column(name = "SenhaUsuario")
-	    private String senhaLocal;
-		
-		
-		@Enumerated(EnumType.STRING)
-		
-		@Column(nullable = false)
-		private UserEnum role = UserEnum.USER;
+    @Column(name = "nomeUsuario")
+    private String nomeUsuario;
 
-		
-		
-		
-		public Usuario() {}
+    @Column(unique = true, name = "emailUsuario")
+    private String emailUsuario;
 
-		public Usuario( String nome, String email, String endereco, String senha) {
-		this.nomeLocal = nome;
-		this.emailLocal = email;
-		this.senhaLocal = senha;
-		this.enderecoLocal = endereco;
-	}
+    @Column(name = "EnderecoUsuario")
+    private String enderecoUsuario;
 
+    @Column(name = "SenhaUsuario")
+    private String senhaUsuario;
 
-		public String getNomeLocal() {
-			return nomeLocal;
-		}
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserEnum role = UserEnum.USER;
 
-		public void setNomeLocal(String nomeLocal) {
-			this.nomeLocal = nomeLocal;
-		}
+    public Usuario() {}
 
-		public String getEmailLocal() {
-			return emailLocal;
-		}
+    public Usuario(String nome, String email, String endereco, String senha, UserEnum role) {
+        this.nomeUsuario = nome;
+        this.emailUsuario = email;
+        this.enderecoUsuario = endereco;
+        this.senhaUsuario = senha;
+        this.role = role;
+    }
 
-		public void setEmailLocal(String emailLocal) {
-			this.emailLocal = emailLocal;
-		}
+    // Getters e Setters
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
 
-		public String getEnderecoLocal() {
-			return enderecoLocal;
-		}
+    public void setIdUsuario(Long Usuario) {
+        this.idUsuario = idUsuario;
+    }
 
-		public void setEnderecoLocal(String enderecoLocal) {
-			this.enderecoLocal = enderecoLocal;
-		}
+    public String getNomeUsuario() {
+        return nomeUsuario;
+    }
 
-		public String getSenhaLocal() {
-			return senhaLocal;
-		}
+    public void setNomeUsuario(String nomeUsuario) {
+        this.nomeUsuario = nomeUsuario;
+    }
 
-		public void setSenhaLocal(String senhaLocal) {
-			this.senhaLocal = senhaLocal;
-		}
+    public String getEmailUsuario() {
+        return emailUsuario;
+    }
 
-		public UserEnum getRole() {
-			return role;
-		}
-		
-		public void setRole(UserEnum role) {
-		    this.role = role;
-		   }
+    public void setEmailUsuario(String emailUsuario) {
+        this.emailUsuario = emailUsuario;
+    }
 
-		
-		@Override public Collection<? extends GrantedAuthority> getAuthorities() 
-		{ return List.of(new SimpleGrantedAuthority("ROLE_USER")); }
+    public String getEnderecoUsuario() {
+        return enderecoUsuario;
+    }
 
-		@Override
-		public String getPassword() {
-			// TODO Auto-generated method stub
-			return this.senhaLocal;
-		}
+    public void setEnderecoUsuario(String enderecoUsuario) {
+        this.enderecoUsuario = enderecoUsuario;
+    }
 
-		@Override
-		public String getUsername() {
-			// TODO Auto-generated method stub
-			return this.emailLocal;
-		}
-		
-		@Override public boolean isAccountNonExpired() { return true; }
-	    @Override public boolean isAccountNonLocked() { return true; }
-	    @Override public boolean isCredentialsNonExpired() { return true; }
-	    @Override public boolean isEnabled() { return true; }
-		
-		
-		
-		
-		
+    public String getSenhaUsuario() {
+        return senhaUsuario;
+    }
 
-	
-	
+    public void setSenhaUsuario(String senhaUsuario) {
+        this.senhaUsuario = senhaUsuario;
+    }
+
+    public UserEnum getRole() {
+        return role;
+    }
+
+    public void setRole(UserEnum role) {
+        this.role = role;
+    }
+
+    // =========================
+    // Spring Security Methods
+    // =========================
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Retorna ROLE_USER ou ROLE_ADMIN de acordo com o atributo role
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senhaUsuario;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.emailUsuario;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

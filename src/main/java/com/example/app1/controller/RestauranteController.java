@@ -17,32 +17,26 @@ import com.example.app1.service.RestauranteService;
 
 @Controller
 public class RestauranteController {
-	
-	
-	@Autowired
+
+    @Autowired
     private RestauranteRepository reposi;
-	@Autowired
+
+    @Autowired
     private RestauranteService service;
 
     public RestauranteController(RestauranteRepository repository) {
         this.reposi = repository;
     }
 
-  /*  @GetMapping("/restaurantes")
-    public String mostrarRestaurantes(@RequestParam("culinaria") String culinaria, Model model) {
-        List<Restaurante> restaurantes = reposi.findByCulinaria(culinaria);
-        model.addAttribute("restaurantes", restaurantes);
-        model.addAttribute("culinaria", culinaria);
-        return "restaurantes"; // nome do arquivo Thymeleaf: restaurantes.html
-    }
-    */
-    
-    @GetMapping("/Listarrestaurantes")
+    // =================== LISTA PÚBLICA ===================
+    // Lista restaurantes para os usuários (com filtro opcional por culinária)
+    @GetMapping("/listarRestaurantes")
     public String mostrarRestaurantes(
             @RequestParam(name = "culinaria", required = false) String culinaria,
             Model model) {
 
         List<Restaurante> restaurantes;
+
         if (culinaria != null && !culinaria.isEmpty()) {
             restaurantes = reposi.findByCulinaria(culinaria);
         } else {
@@ -52,16 +46,8 @@ public class RestauranteController {
         model.addAttribute("restaurantes", restaurantes);
         model.addAttribute("culinaria", culinaria);
 
-        return "restaurantes"; 
+        return "restaurantes"; // renderiza restaurantes.html
     }
-   
-    
-    @PostMapping("/restauranteCadastrar")
-    public String cadastroRestaurante(@ModelAttribute RestauranteDTO restauranteDTO) {
-    	service.converteRestaurantes(restauranteDTO);
-    	return "redirect:/adm";		
-       	}
-    
 }
 
 

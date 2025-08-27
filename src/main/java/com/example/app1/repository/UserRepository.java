@@ -9,7 +9,7 @@ import com.example.app1.model.Usuario;
 
 public interface UserRepository extends JpaRepository <Usuario, Long> {
 
-	 Optional<Usuario> findByEmailLocal(String email);
+	 Optional<Usuario> findByEmailUsuario(String email);
 	 
 	
 }

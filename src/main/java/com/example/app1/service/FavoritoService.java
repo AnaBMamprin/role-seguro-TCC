@@ -21,7 +21,7 @@ public class FavoritoService {
     private UserRepository usuarioRepository;
 
     public List<Restaurante> listarFavoritos(String emailUsuario) {
-        Usuario usuario = usuarioRepository.findByEmailLocal(emailUsuario)
+        Usuario usuario = usuarioRepository.findByEmailUsuario(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         return favoritoRepository.findByUsuario(usuario)

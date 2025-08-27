@@ -143,16 +143,23 @@
 			        </div>
 			      </div>
 			    </nav>
-  <!-- API Loader -->
-  <gmpx-api-loader key="AIzaSyBRI7ZceA6yJv4QB0BrxL8aYchCMWoXeE4" solution-channel="GMP_GE_mapsandplacesautocomplete_v2">
-  </gmpx-api-loader>
-
-  <!-- Mapa -->
-  <gmp-map center="-23.4545,-46.5333" zoom="13" map-id="DEMO_MAP_ID">
-    <div slot="control-block-start-inline-start" class="place-picker-container">
-      <gmpx-place-picker placeholder="Buscar outro local"></gmpx-place-picker>
-    </div>
-    <gmp-advanced-marker></gmp-advanced-marker>
-  </gmp-map>
+				
+				<!-- Página de restaurantes -->
+				  <div class="restaurantes-page container">
+				    <h1>Restaurantes Cadastrados</h1>
+				    <div class="cards-grid">
+				      <!-- Loop Thymeleaf para exibir cada restaurante -->
+				      <div class="menu-card" th:each="restaurante : ${restaurantes}">
+				        <h3 th:text="${restaurante.nome}">Nome do Restaurante</h3>
+				        <p><strong>Cidade:</strong> <span th:text="${restaurante.cidade}">Cidade</span></p>
+				        <p><strong>Culinária:</strong> <span th:text="${restaurante.culinaria}">Culinária</span></p>
+				        <p><strong>Tipo de prato:</strong> <span th:text="${restaurante.tipodeprato}">Tipo de prato</span></p>
+				        <p><strong>Horário:</strong> <span th:text="${restaurante.horario}">Horário</span></p>
+				        <p><strong>Endereço:</strong> <span th:text="${restaurante.endereco}">Endereço</span></p>
+				        <a th:href="@{/modelo-restaurante(id=${restaurante.id})}">Ver detalhes</a>
+				      </div>
+				    </div>
+				  </div>
+ 
 </body>
 </html>
