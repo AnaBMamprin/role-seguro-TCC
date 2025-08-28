@@ -20,18 +20,14 @@ public class MeuUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String emailUsuario) throws UsernameNotFoundException {
-        
-        Optional<Usuario> usuario = usuarioRepo.findByEmailUsuario(emailUsuario);
-                
-        
+        Usuario usuario = usuarioRepo.findByEmailUsuario(emailUsuario)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + emailUsuario));
+
         return User.builder()
-                .username(usuario.get().getUsername()) // Ou outro campo único
-                .password(usuario.get().getPassword())
-                .roles(usuario.get().getRole().name())
+                .username(usuario.getUsername())
+                .password(usuario.getPassword())
+                .roles(usuario.getRole().name())
                 .build();
-        
-        
-        
     }
 
    }

@@ -22,12 +22,13 @@ public class SecurityConfig {
 	    	.csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(authz -> authz
 	        		.requestMatchers("/", "/login", "/cadastro", "cadastrar", "/css/**", "/js/**", "/images/**").permitAll()
+	        		.requestMatchers("/adm/**").hasRole("ADMIN") // 🔒 só admin acessa
 	            .anyRequest().authenticated()
 	        )
 	        .formLogin(form -> form
 	            .loginPage("/login")
-	            .usernameParameter("emailLocal")
-	            .passwordParameter("SenhaLocal")
+	            .usernameParameter("emailUsuario")
+	            .passwordParameter("senhaUsuario")
 	            .defaultSuccessUrl("/inicial", true) 
 	            .permitAll()
 	        )

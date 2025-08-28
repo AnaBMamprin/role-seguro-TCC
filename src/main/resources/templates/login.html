@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" 
+	xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,11 +29,11 @@
 	    <form action="/login" method="post">
 	        <div class="input-group">
 	          <i class="fas fa-envelope"></i>
-	          <input type="text" name="emailLocal" placeholder="Email" required>
+	          <input type="text" name="emailUsuario" placeholder="Email" required>
 	        </div>
 	        <div class="input-group">
 	          <i class="fas fa-lock"></i>
-	          <input type="password" name="SenhaLocal" placeholder="Senha" required>
+	          <input type="password" name="senhaUsuario" placeholder="Senha" required>
 	        </div>
 	        <button type="submit">Entrar</button>
 	    </form>
