@@ -26,7 +26,7 @@ public class DataLoader implements CommandLineRunner {
             admin.setNomeUsuario("ADMIN");
             admin.setEmailUsuario("admin@email.com");
             admin.setSenhaUsuario(passwordEncoder.encode("senha123")); // Senha criptografada
-           admin.setRole(UserEnum.ADMIN); // Define como administrador
+           admin.setRole(UserEnum.ROLE_ADMIN); // Define como administrador
             repository.save(admin);
         }
     } 

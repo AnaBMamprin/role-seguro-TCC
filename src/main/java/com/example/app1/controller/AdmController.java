@@ -34,8 +34,15 @@ public class AdmController {
     public String paginaAdm(Model model) {
         List<Restaurante> restaurantes = restauranteRepository.findAll();
         List<Usuario> usuarios = userRepository.findAll();
+
+        // Contar quantos admins existem
+        long totalAdmins = usuarios.stream()
+                .filter(u -> u.getRole() == UserEnum.ROLE_ADMIN)
+                .count();
+
         model.addAttribute("restaurantes", restaurantes);
         model.addAttribute("usuarios", usuarios);
+        model.addAttribute("totalAdmins", totalAdmins); // <-- aqui
         return "adm";
     }
 
@@ -73,19 +80,13 @@ public class AdmController {
     public String toggleAdm(@RequestParam("id") Long id) {
         Usuario usuario = userRepository.findById(id).orElse(null);
         if (usuario != null) {
-            if (usuario.getRole() == UserEnum.USER) {
-                usuario.setRole(UserEnum.ADMIN);
+            if (usuario.getRole() == UserEnum.ROLE_USER) {
+                usuario.setRole(UserEnum.ROLE_ADMIN);
             } else {
-                usuario.setRole(UserEnum.USER);
+                usuario.setRole(UserEnum.ROLE_USER);
             }
             userRepository.save(usuario);
         }
-        return "redirect:/adm";
-    }
-
-    @PostMapping("/usuarioExcluir")
-    public String excluirUsuario(@RequestParam("id") Long id) {
-        userRepository.deleteById(id);
         return "redirect:/adm";
     }
 }

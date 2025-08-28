@@ -1,8 +1,11 @@
 package com.example.app1.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,18 +19,20 @@ import com.example.app1.repository.UserRepository;
 public class MeuUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserRepository usuarioRepo;
+    private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String emailUsuario) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepo.findByEmailUsuario(emailUsuario)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + emailUsuario));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Usuario user = userRepository.findByEmailUsuario(email)
+                        .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        return User.builder()
-                .username(usuario.getUsername())
-                .password(usuario.getPassword())
-                .roles(usuario.getRole().name())
-                .build();
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmailUsuario(),
+                user.getSenhaUsuario(),
+                authorities
+        );
     }
 
    }

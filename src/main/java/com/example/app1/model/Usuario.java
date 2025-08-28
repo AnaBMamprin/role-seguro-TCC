@@ -36,7 +36,7 @@ public class Usuario implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserEnum role = UserEnum.USER;
+    private UserEnum role = UserEnum.ROLE_USER;
 
     public Usuario() {}
 

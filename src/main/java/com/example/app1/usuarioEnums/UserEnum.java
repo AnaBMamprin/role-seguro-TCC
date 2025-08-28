@@ -1,5 +1,6 @@
 package com.example.app1.usuarioEnums;
 
 public enum UserEnum {
-	 USER, ADMIN
+	ROLE_USER,
+    ROLE_ADMIN;
 }

@@ -2,24 +2,36 @@ package com.example.app1.records;
 
 public class UserDTO {
 
+	private Long id;
     private String nome;
     private String email;
     private String endereco;
     private String senha;
+    private boolean admin; // checkbox admin
 
     // Construtor vazio
     public UserDTO() {
     }
 
     // Construtor com parâmetros
-    public UserDTO(String nome, String email, String endereco, String senha) {
+    public UserDTO(Long id, String nome, String email, String endereco, String senha, boolean admin) {
+    	this.id = id;
         this.nome = nome;
         this.email = email;
         this.endereco = endereco;
         this.senha = senha;
+        this.admin = admin;
     }
 
     // Getters e setters
+    
+    public Long getId() {
+    	return id; 
+    }
+    
+    public void setId(Long id) { 
+    	this.id = id; 
+    }
 
     public String getNome() {
         return nome;
@@ -51,5 +63,13 @@ public class UserDTO {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+    
+    public boolean isAdmin() { 
+    	return admin; 
+    }
+    
+    public void setAdmin(boolean admin) { 
+    	this.admin = admin; 
     }
 }
