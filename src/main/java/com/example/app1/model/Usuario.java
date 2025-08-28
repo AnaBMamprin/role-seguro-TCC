@@ -36,7 +36,7 @@ public class Usuario implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserEnum role = UserEnum.ROLE_USER;
+    private UserEnum role = UserEnum.USER;
 
     public Usuario() {}
 
@@ -51,10 +51,6 @@ public class Usuario implements UserDetails {
     // Getters e Setters
     public Long getIdUsuario() {
         return idUsuario;
-    }
-
-    public void setIdUsuario(Long Usuario) {
-        this.idUsuario = idUsuario;
     }
 
     public String getNomeUsuario() {

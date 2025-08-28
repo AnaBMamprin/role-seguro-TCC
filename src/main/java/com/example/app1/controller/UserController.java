@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.app1.records.UserDTO;
-import com.example.app1.repository.UserRepository;
 import com.example.app1.service.UserService;
 
 

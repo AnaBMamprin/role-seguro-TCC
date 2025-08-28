@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR" 
 	xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
 		            <a class="nav-link" th:href="@{/restaurantes}">Restaurantes</a>
 		            <a class="nav-link" th:href="@{/perfil}">Perfil</a>
 					<!-- Só aparece se o usuário tiver ROLE_ADMIN -->
-					<a class="nav-link" th:href="@{/adm}" sec:authorize="hasRole('ADMIN')">Administração</a>
+					<a class="nav-link" th:href="@{/adm}" sec:authorize="hasAuthority('ROLE_ADMIN')">Administração</a>
 		            <a class="nav-link" th:href="@{/sobre}">Sobre</a>
 		          </div>
 				  

@@ -31,7 +31,7 @@ public class UserService {
         user.setEmailUsuario(userDTO.getEmail());
         user.setEnderecoUsuario(userDTO.getEndereco());
         user.setSenhaUsuario(passwordEncoder.encode(userDTO.getSenha()));
-        user.setRole(userDTO.isAdmin() ? UserEnum.ROLE_ADMIN : UserEnum.ROLE_USER);
+        user.setRole(userDTO.isAdmin() ? UserEnum.ADMIN : UserEnum.USER);
 
         userRepository.save(user);
         return true;
@@ -55,7 +55,7 @@ public class UserService {
             user.setSenhaUsuario(passwordEncoder.encode(userDTO.getSenha()));
         }
 
-        user.setRole(userDTO.isAdmin() ? UserEnum.ROLE_ADMIN : UserEnum.ROLE_USER);
+        user.setRole(userDTO.isAdmin() ? UserEnum.ADMIN : UserEnum.USER);
 
         userRepository.save(user);
         return true;
