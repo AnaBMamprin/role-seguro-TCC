@@ -35,9 +35,9 @@ public class Usuario implements UserDetails {
     private String senhaUsuario;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserEnum role = UserEnum.USER;
-
+    @Column(nullable = false, length = 20)
+    private UserEnum role = UserEnum.ROLE_USER;
+    
     public Usuario() {}
 
     public Usuario(String nome, String email, String endereco, String senha, UserEnum role) {
@@ -98,8 +98,8 @@ public class Usuario implements UserDetails {
     // =========================
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Retorna ROLE_USER ou ROLE_ADMIN de acordo com o atributo role
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
+        
+        return List.of(new SimpleGrantedAuthority(this.role.name()));
     }
 
     @Override

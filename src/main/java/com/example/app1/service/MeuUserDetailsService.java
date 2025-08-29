@@ -25,7 +25,7 @@ public class MeuUserDetailsService implements UserDetailsService {
         Usuario user = userRepository.findByEmailUsuario(email)
                         .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority( user.getRole().name()));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmailUsuario(),

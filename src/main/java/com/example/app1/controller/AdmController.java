@@ -37,7 +37,7 @@ public class AdmController {
 
         // Contar quantos admins existem
         long totalAdmins = usuarios.stream()
-                .filter(u -> u.getRole() == UserEnum.ADMIN)
+                .filter(u -> u.getRole() == UserEnum.ROLE_ADMIN)
                 .count();
 
         model.addAttribute("restaurantes", restaurantes);
@@ -80,10 +80,10 @@ public class AdmController {
     public String toggleAdm(@RequestParam("id") Long id) {
         Usuario usuario = userRepository.findById(id).orElse(null);
         if (usuario != null) {
-            if (usuario.getRole() == UserEnum.USER) {
-                usuario.setRole(UserEnum.ADMIN);
+            if (usuario.getRole() == UserEnum.ROLE_USER) {
+                usuario.setRole(UserEnum.ROLE_ADMIN);
             } else {
-                usuario.setRole(UserEnum.USER);
+                usuario.setRole(UserEnum.ROLE_USER);
             }
             userRepository.save(usuario);
         }
