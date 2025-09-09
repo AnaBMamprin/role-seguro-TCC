@@ -160,9 +160,39 @@
 				        <p><strong>Horário:</strong> <span th:text="${restaurante.horario}">Horário</span></p>
 				        <p><strong>Endereço:</strong> <span th:text="${restaurante.endereco}">Endereço</span></p>
 				        <a th:href="@{/modelo-restaurante(id=${restaurante.id})}">Ver detalhes</a>
+						<form th:action="@{/cupons/gerar}" method="post">
+						    <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
+						    <button type="submit" class="btn btn-success mt-2">Gerar Cupom</button>
+						</form>
 				      </div>
 				    </div>
 				  </div>
+				  
+				  <!-- Modal Cupom -->
+				  <div class="modal fade" id="cupomModal" tabindex="-1">
+				    <div class="modal-dialog modal-dialog-centered">
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <h5 class="modal-title">Seu Cupom</h5>
+				          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				        </div>
+				        <div class="modal-body">
+				          <p th:if="${cupom != null}">
+				            🎉 Cupom gerado com sucesso! <br>
+				            Código: <strong th:text="${cupom.codigo}"></strong><br>
+				            Desconto: <span th:text="${cupom.desconto}"></span>%
+				          </p>
+				          <p th:if="${erro != null}" class="text-danger" th:text="${erro}"></p>
+				        </div>
+				      </div>
+				    </div>
+				  </div>
+
+				  <!-- Script para abrir o modal automaticamente se existir cupom ou erro -->
+				  <script th:if="${cupom != null or erro != null}">
+				    var modal = new bootstrap.Modal(document.getElementById('cupomModal'));
+				    modal.show();
+				  </script>
  
 </body>
 </html>
