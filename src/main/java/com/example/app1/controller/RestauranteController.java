@@ -1,6 +1,7 @@
 package com.example.app1.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,13 +17,15 @@ import com.example.app1.service.RestauranteService;
 public class RestauranteController {
 
     @Autowired
-    private RestauranteRepository reposi;
+    private final RestauranteRepository reposi;
 
     @Autowired
-    private RestauranteService service;
+    private final RestauranteService service;
 
-    public RestauranteController(RestauranteRepository repository) {
-        this.reposi = repository;
+    @Autowired
+    public RestauranteController(RestauranteRepository repository, RestauranteService service) {
+    	this.reposi = repository;
+        this.service = service;
     }
 
     // =================== LISTA PÚBLICA ===================
@@ -45,6 +48,17 @@ public class RestauranteController {
 
         return "restaurantes"; // renderiza restaurantes.html
     }
+    
+    @GetMapping("/modelo-restaurante")
+    public String detalhesRestaurante(@RequestParam("id") Long id, Model model) {
+        
+        Optional<Restaurante> restauranteOpt = reposi.findById(id);
+
+        if (restauranteOpt.isPresent()) {
+            model.addAttribute("restaurante", restauranteOpt.get());
+            return "modelo-restaurante"; 
+        } else {
+            return "redirect:/restaurantes";
+        }
+    }
 }
-
-
