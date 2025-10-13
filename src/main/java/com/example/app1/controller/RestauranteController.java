@@ -22,7 +22,6 @@ public class RestauranteController {
     @Autowired
     private final RestauranteService service;
 
-    @Autowired
     public RestauranteController(RestauranteRepository repository, RestauranteService service) {
     	this.reposi = repository;
         this.service = service;

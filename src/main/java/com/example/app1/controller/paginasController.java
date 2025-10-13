@@ -24,5 +24,10 @@ public class paginasController {
 	public String mostrarPerfil() {
 		return "perfil";
 	}
+	
+	@GetMapping ("/sobre")
+	public String mostrarsobre() {
+		return "sobre";
+	}
 
 }

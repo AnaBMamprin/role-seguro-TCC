@@ -27,24 +27,7 @@ public class CupomController {
     @Autowired
     private RestauranteRepository restauranteRepository; 
     
-
     @PostMapping("/gerar")
-    public String gerarCupom(@RequestParam Long usuarioId,
-                             @RequestParam Long restauranteId,
-                             Model model) {
-        try {
-            Cupom cupom = cupomService.gerarCupom(usuarioId, restauranteId);
-            model.addAttribute("cupom", cupom);
-            model.addAttribute("mensagem", "Cupom gerado com sucesso!");
-        } catch (RuntimeException e) {
-            model.addAttribute("erro", e.getMessage());
-        }
-
-        // volta para a página adm.html
-        return "adm";
-    }
-    
-    @PostMapping("/cupons/gerar")
     public String gerarCupom(@RequestParam Long restauranteId,
                              Principal principal,
                              Model model) {
@@ -65,6 +48,12 @@ public class CupomController {
         model.addAttribute("restaurantes", restauranteRepository.findAll());
         return "restaurantes";
     }
+    
+    @GetMapping("/gerar")
+    public String gerarCupom () {
+    	return "restaurantes";
+    }
+    
     
 }
 
