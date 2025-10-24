@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.app1.model.Restaurante;
+import com.example.app1.records.RestauranteDTO;
 import com.example.app1.repository.RestauranteRepository;
 import com.example.app1.service.RestauranteService;
 
@@ -26,9 +29,9 @@ public class RestauranteController {
     	this.reposi = repository;
         this.service = service;
     }
+    
+    
 
-    // =================== LISTA PÚBLICA ===================
-    // Lista restaurantes para os usuários (com filtro opcional por culinária)
     @GetMapping("/restaurantes")
     public String mostrarRestaurantes(
             @RequestParam(name = "culinaria", required = false) String culinaria,
