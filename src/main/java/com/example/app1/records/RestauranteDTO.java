@@ -9,6 +9,7 @@ public class RestauranteDTO {
 	private String horario;
 	private String endereco;
 	private String site;
+	private Long id;
 	
 	
 	public RestauranteDTO() {}
@@ -23,6 +24,16 @@ public class RestauranteDTO {
 		this.horario = horario;
 		this.endereco = endereco;
 		this.site = site;
+	}
+	
+
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 
