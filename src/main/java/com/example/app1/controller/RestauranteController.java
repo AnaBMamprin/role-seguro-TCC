@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.example.app1.model.Restaurante;
 import com.example.app1.records.RestauranteDTO;
@@ -62,5 +64,22 @@ public class RestauranteController {
         } else {
             return "redirect:/restaurantes";
         }
+    }
+    
+    @GetMapping("/inicial")
+    public String paginaInicial(Model model) {
+        
+        // --- Lógica de Culinárias (que já fizemos) ---
+        List<String> culinariasDisponiveis = reposi.findDistinctCulinarias();
+        model.addAttribute("culinarias", culinariasDisponiveis);
+        
+        // --- Lógica de Usuário (copiada do AuthController) ---
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated()) {
+             String email = auth.getName(); 
+             model.addAttribute("email", email);
+        }
+        
+        return "inicial"; 
     }
 }

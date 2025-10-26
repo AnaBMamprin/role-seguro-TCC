@@ -72,53 +72,39 @@
 			  <div class="container">
 			      <h1>Qual culinária você prefere?</h1>
 			      
-			      <div class="menu-grid">
-					<div class="menu-card"
-					     onclick="window.location.href='/restaurantes?culinaria=Japonesa&cidade=Guarulhos'">
-					    <i class="fas fa-fish"></i>
-					    <h3>Japonesa</h3>
-					    <p>Sushis, sashimis e delícias orientais</p>
-					</div>
-					
-					  <div class="menu-card" 
-					       onclick="window.location.href='/restaurantes?culinaria=Italiana&cidade=Guarulhos'">
-					      <i class="fas fa-pizza-slice"></i>
-					      <h3>Italiana</h3>
-					      <p>Massas, pizzas e receitas tradicionais da Itália</p>
-					  </div>
-			          
-			          <!-- Card 3 -->
-					  <div class="menu-card"
-					       onclick="window.location.href='/restaurantes?culinaria=Americana&cidade=Guarulhos'">
-					    <i class="fas fa-hamburger"></i>
-					    <h3>Americana</h3>
-					    <p>Burgers, hot dogs e comfort food típica dos EUA</p>
-					  </div>
-					  
-			          <!-- Card 4 -->
-					  <div class="menu-card"
-					       onclick="window.location.href='/restaurantes?culinaria=Mexicana&cidade=Guarulhos'">
-					      <i class="fas fa-pepper-hot"></i>
-					      <h3>Mexicana</h3>
-					      <p>Tacos, burritos e comidas picantes</p>
-					  </div>
-			          <!-- Card 5 -->
-					  <div class="menu-card"
-					       onclick="window.location.href='/restaurantes?culinaria=Brasileira&cidade=Guarulhos'">
-					      <i class="fas fa-drumstick-bite"></i>
-					      <h3>Brasileira</h3>
-					      <p>Feijoada, churrasco e pratos típicos do Brasil</p>
-					  </div>
-			          <!-- Card 6 -->
-			           <div class="menu-card"
-					       onclick="window.location.href='/restaurantes?culinaria=Arabe&cidade=Guarulhos'">
-					    <i class="fas fa-bread-slice"></i>
-					    <h3>Árabe</h3>
-					    <p>Kibe, esfihas e delícias do Oriente Médio</p>
-					  </div>				  
-			      </div>
+				  <div class="menu-grid">
+
+				      <div class="menu-card" 
+				           th:each="culinaria : ${culinarias}"
+				           th:data-culinaria="${culinaria}"  
+				           onclick="irParaCulinaria(this)">
+				          
+				          <i class="fas fa-utensils"></i> <h3 th:text="${culinaria}">Nome da Culinária</h3>
+				          
+				          <p th:text="'Veja todos os restaurantes de culinária ' + ${culinaria}">
+				              Descrição da culinária
+				          </p>
+				      </div>
+
+				  </div>
 			  </div>
 			</div>
+			
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+			  <script>
+			    function irParaCulinaria(elementoCard) {
+			        // 1. Pega o nome da culinária (ex: "Japonesa") do atributo "data-culinaria"
+			        const culinaria = elementoCard.getAttribute('data-culinaria');
+
+			        // 2. Constrói a URL de forma segura
+			        // (encodeURIComponent previne erros se a culinária tiver espaços ou acentos)
+			        const url = '/restaurantes?culinaria=' + encodeURIComponent(culinaria) + '&cidade=Guarulhos';
+
+			        // 3. Redireciona o usuário
+			        window.location.href = url;
+			    }
+			  </script>
 
   <!-- Bootstrap JS (bundle com Popper) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -97,6 +97,7 @@ color: var(--light);
 }
 
 .menu-card{
+	position: relative;
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   border-radius: 15px;
   padding: 20px;
