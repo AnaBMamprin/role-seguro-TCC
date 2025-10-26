@@ -13,14 +13,6 @@ public class AuthController {
         return "login"; // página HTML do login
     }
 
-    @GetMapping("/inicial")
-    public String inicialPage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName(); // pega o "username" (no seu caso email)
-        model.addAttribute("email", email);
-        return "inicial"; // página inicial após login
-    }
-
     @GetMapping("/logout-success")
     public String logoutPage() {
         return "logout"; // página de confirmação de logout
