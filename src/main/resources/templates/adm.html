@@ -145,7 +145,7 @@
 		                
 		                <td>
 		                    <input type="text" class="form-control form-control-sm" name="endereco"
-		                           th:value="${user.enderecoUsuario}" placeholder="Endereço">
+		                           th:value="${user.enderecoUsuario}" placeholder="CEP">
 		                </td>
 
 		                <td class="text-center">
@@ -201,7 +201,9 @@
 			      <input class="form-control mb-2" type="text" name="horario" id="modalRestauranteHorario" placeholder="Horário de funcionamento" required>
 			      <input class="form-control mb-2" type="text" name="culinaria" id="modalRestauranteCulinaria" placeholder="Culinária" required>
 			      <input class="form-control mb-2" type="text" name="cidade" id="modalRestauranteCidade" placeholder="Cidade" required>
-			      
+				  <input class="form-control mb-2" type="email" name="email" id="modalRestauranteEmail" placeholder="Email de login" required>
+				  <input class="form-control mb-2" type="password" name="senha" id="modalRestauranteSenha" placeholder="Senha">
+				  
 			      <div class="mb-2">
 			          <label class="form-label" style="color: black;">Tipos de prato:</label><br>
 			          <div class="form-check form-check-inline">
@@ -218,7 +220,7 @@
 			          </div>
 			      </div>
 			      
-			      <input class="form-control mb-2" type="text" name="endereco" id="modalRestauranteEndereco" placeholder="Endereço" required>
+			      <input class="form-control mb-2" type="text" name="endereco" id="modalRestauranteEndereco" placeholder="CEP" required>
 			      <input class="form-control mb-2" type="url" name="site" id="modalRestauranteSite" placeholder="Site">
 			      <button class="btn btn-primary w-100" type="submit">Salvar</button>
 			    </div>
