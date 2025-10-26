@@ -31,6 +31,10 @@ public class Restaurante {
 	private String endereco;
 	@Column  (name = "site")
 	private String site;
+	@Column (name = "latitude") 
+	private double latitude;
+	@Column (name = "longitude") 
+	private double longitude;
 	
 	
 	public Restaurante() {}
@@ -125,7 +129,20 @@ public class Restaurante {
 		this.site = site;
 	}
 
-	
-	
+	public double getLatitude() {
+        return latitude;
+    }
 
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+	
 }

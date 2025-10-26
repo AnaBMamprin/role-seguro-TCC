@@ -26,47 +26,43 @@ public class AdmController {
     private UserRepository userRepository;
 
     @Autowired
-    private RestauranteService restauranteService;
+    private RestauranteService restauranteService; // <-- O Serviço
 
     // ================== RESTAURANTES ==================
     
     @GetMapping
     public String paginaAdm(Model model) {
+        // ... (seu método está OK)
         List<Restaurante> restaurantes = restauranteRepository.findAll();
         List<Usuario> usuarios = userRepository.findAll();
-
-        // Contar quantos admins existem
         long totalAdmins = usuarios.stream()
-                .filter(u -> u.getRole() == UserEnum.ROLE_ADMIN)
-                .count();
-
+               .filter(u -> u.getRole() == UserEnum.ROLE_ADMIN)
+               .count();
         model.addAttribute("restaurantes", restaurantes);
         model.addAttribute("usuarios", usuarios);
-        model.addAttribute("totalAdmins", totalAdmins); // <-- aqui
+        model.addAttribute("totalAdmins", totalAdmins);
         return "adm";
     }
 
     @PostMapping("/restauranteCadastrar")
     public String cadastrarRestaurante(@ModelAttribute RestauranteDTO dto) {
+        // MÉTODO DE CADASTRO (ESTÁ CORRETO)
         restauranteService.converteRestaurantes(dto);
         return "redirect:/adm";
     }
 
+    // ==============================================================
+    // PARTE 2: MÉTODO DE EDIÇÃO CORRIGIDO
+    // ==============================================================
     @PostMapping("/restauranteEditar")
     public String editarRestaurante(@ModelAttribute RestauranteDTO dto, @RequestParam("id") Long id) {
-        Restaurante restaurante = restauranteRepository.findById(id).orElse(null);
-        if (restaurante != null) {
-            restaurante.setNome(dto.getNome());
-            restaurante.setCidade(dto.getCidade());
-            restaurante.setCulinaria(dto.getCulinaria());
-            restaurante.setTipodeprato(dto.getTipodeprato());
-            restaurante.setHorario(dto.getHorario());
-            restaurante.setEndereco(dto.getEndereco());
-            restaurante.setSite(dto.getSite());
-            restauranteRepository.save(restaurante);
-        }
+        
+        // AGORA A LÓGICA DE EDIÇÃO (COM GEOCODING) ESTÁ NO SERVIÇO!
+        restauranteService.atualizarRestaurante(id, dto);
+        
         return "redirect:/adm";
     }
+    // ==============================================================
 
     @PostMapping("/restauranteExcluir")
     public String excluirRestaurante(@RequestParam("id") Long id) {
@@ -78,6 +74,7 @@ public class AdmController {
 
     @PostMapping("/usuarioToggleAdm")
     public String toggleAdm(@RequestParam("id") Long id) {
+        // ... (seu método está OK)
         Usuario usuario = userRepository.findById(id).orElse(null);
         if (usuario != null) {
             if (usuario.getRole() == UserEnum.ROLE_USER) {
