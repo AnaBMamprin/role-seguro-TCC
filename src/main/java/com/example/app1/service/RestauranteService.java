@@ -1,13 +1,17 @@
 package com.example.app1.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value; 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate; 
 
 import com.example.app1.model.Restaurante;
+import com.example.app1.model.Usuario;
 import com.example.app1.records.RestauranteDTO;
 import com.example.app1.repository.RestauranteRepository;
+import com.example.app1.repository.UserRepository;
+import com.example.app1.usuarioEnums.UserEnum;
 import com.fasterxml.jackson.databind.JsonNode; 
 import com.fasterxml.jackson.databind.ObjectMapper; 
 
@@ -20,6 +24,10 @@ public class RestauranteService {
 	
 	@Autowired
 	RestauranteRepository repo;
+	@Autowired
+	private PasswordEncoder passwordEncoder; // Você DEVE ter isso
+	@Autowired
+	private UserRepository usuarioRepository;
 
     @Value("${google.maps.api.key}")
     private String apiKey;
@@ -127,4 +135,49 @@ public class RestauranteService {
         // Salva o restaurante atualizado
         repo.save(restaurante);
     }
+    
+    public void salvarRestaurante(RestauranteDTO dto) {
+        
+        Restaurante restaurante;
+        Usuario contaUsuario;
+
+        if (dto.getId() != null && dto.getId() > 0) {
+            // MODO EDIÇÃO
+            restaurante = repo.findById(dto.getId()).orElseThrow();
+            contaUsuario = restaurante.getUsuario(); 
+            
+            contaUsuario.setEmailUsuario(dto.getEmail());
+            contaUsuario.setNomeUsuario(dto.getNome());  
+          
+            if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
+                contaUsuario.setSenhaUsuario(passwordEncoder.encode(dto.getSenha()));
+            }
+
+        } else {
+            restaurante = new Restaurante();
+            contaUsuario = new Usuario();
+
+            // Dados da conta
+            contaUsuario.setEmailUsuario(dto.getEmail());
+            contaUsuario.setSenhaUsuario(passwordEncoder.encode(dto.getSenha())); // CRIPTOGRAFA A SENHA
+            contaUsuario.setRole(UserEnum.ROLE_RESTAURANTE); // <-- AQUI A MÁGICA ACONTECE
+            contaUsuario.setNomeUsuario(dto.getNome()); 
+            // (outros campos do usuário, se houver)
+        }
+
+        // Preenche/Atualiza os dados do Restaurante
+        restaurante.setNome(dto.getNome());
+        restaurante.setCulinaria(dto.getCulinaria());
+        restaurante.setHorario(dto.getHorario());
+        // ... (etc.) ...
+
+        // ASSOCIAR a conta ao restaurante
+        restaurante.setUsuario(contaUsuario);
+        
+        // Salvar o Restaurante (O Cascade.ALL salva o Usuário junto)
+        repo.save(restaurante);
+    }
+    
+    
+    
 }

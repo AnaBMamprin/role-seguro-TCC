@@ -1,11 +1,15 @@
 package com.example.app1.model;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Restaurante {
@@ -32,9 +36,13 @@ public class Restaurante {
 	@Column  (name = "site")
 	private String site;
 	@Column (name = "latitude") 
-	private double latitude;
+	private Double latitude;
 	@Column (name = "longitude") 
-	private double longitude;
+	private Double longitude;
+	
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "Usuario_id", referencedColumnName = "idUsuario") // IMPORTANTE: Verifique o nome da PK do seu UsuarioModel
+    private Usuario usuario;
 	
 	
 	public Restaurante() {}
@@ -50,6 +58,18 @@ public class Restaurante {
 		this.endereco = endereco;
 		this.site = site;
 	}
+	
+	
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
 
 	public long getId() {
 		return id;
@@ -129,19 +149,19 @@ public class Restaurante {
 		this.site = site;
 	}
 
-	public double getLatitude() {
+	public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 	

@@ -10,6 +10,8 @@ public class RestauranteDTO {
 	private String endereco;
 	private String site;
 	private Long id;
+	private String email;
+	private String senha;
 	
 	
 	public RestauranteDTO() {}
@@ -26,6 +28,28 @@ public class RestauranteDTO {
 		this.site = site;
 	}
 	
+	
+	
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getSenha() {
+		return senha;
+	}
+
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
 
 	public Long getId() {
 		return id;
