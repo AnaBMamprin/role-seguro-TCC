@@ -38,9 +38,11 @@ public class AdmController {
         long totalAdmins = usuarios.stream()
                .filter(u -> u.getRole() == UserEnum.ROLE_ADMIN)
                .count();
+        List<String> culinarias = restauranteRepository.findDistinctCulinarias();
         model.addAttribute("restaurantes", restaurantes);
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("totalAdmins", totalAdmins);
+        model.addAttribute("culinariasUnicas", culinarias);
         return "adm";
     }
 
