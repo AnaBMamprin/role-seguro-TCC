@@ -15,10 +15,12 @@ public class RestauranteDTO {
 	
 	
 	public RestauranteDTO() {}
-
-
+	
+	
+	
 	public RestauranteDTO(String nome, String cidade, String culinaria, String tipodeprato, String horario,
-			String endereco, String site) {
+			String endereco, String site, Long id, String email, String senha) {
+		
 		this.nome = nome;
 		this.cidade = cidade;
 		this.culinaria = culinaria;
@@ -26,10 +28,16 @@ public class RestauranteDTO {
 		this.horario = horario;
 		this.endereco = endereco;
 		this.site = site;
+		this.id = id;
+		this.email = email;
+		this.senha = senha;
 	}
-	
-	
-	
+
+
+
+
+
+
 
 	public String getEmail() {
 		return email;

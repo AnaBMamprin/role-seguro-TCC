@@ -29,5 +29,11 @@ public class paginasController {
 	public String mostrarsobre() {
 		return "sobre";
 	}
+	
+	@GetMapping ("/avaliacao")
+	public String avaliacoes() {
+		return "avaliacao";
+	}
+	
 
 }
