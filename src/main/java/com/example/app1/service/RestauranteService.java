@@ -38,12 +38,17 @@ public class RestauranteService {
     // ========================================================================
     // SEU MÉTODO DE CADASTRO (QUE JÁ FIZEMOS - ESTÁ CORRETO)
     // ========================================================================
-	@Transactional
+    @Transactional
 	public void converteRestaurantes( RestauranteDTO restauranteDTO ) {
+    	
+    	System.out.println("--- [SERVICE] INICIANDO CONVERSÃO ---");
+        // PONTO CRÍTICO 3: O DTO chegou no service?
+        System.out.println("[SERVICE] DTO recebido. Foto no DTO: " + restauranteDTO.getCaminhoFoto());
 		
         double latitude = 0.0;
         double longitude = 0.0;
-
+        
+        // (Lógica do Geocoding - está correta)
         try {
             String endereco = restauranteDTO.getEndereco();
             String enderecoFormatado = URLEncoder.encode(endereco, StandardCharsets.UTF_8);
@@ -67,16 +72,27 @@ public class RestauranteService {
             System.err.println("Falha ao chamar a API de Geocoding.");
         }
         
+        // 1. Cria o objeto
 		Restaurante restaurante = new Restaurante();
+        
+        // 2. Seta todos os dados do DTO
         restaurante.setNome(restauranteDTO.getNome());
         restaurante.setCidade(restauranteDTO.getCidade());
-        restaurante.setCulinaria(restauranteDTO.getCulinaria()); // Correção do bug anterior
+        restaurante.setCulinaria(restauranteDTO.getCulinaria()); 
         restaurante.setTipodeprato(restauranteDTO.getTipodeprato());
         restaurante.setHorario(restauranteDTO.getHorario());
         restaurante.setEndereco(restauranteDTO.getEndereco());
         restaurante.setSite(restauranteDTO.getSite());
+        
+        // 3. Seta as coordenadas
         restaurante.setLatitude(latitude);
         restaurante.setLongitude(longitude);
+        
+        if (restauranteDTO.getCaminhoFoto() != null && !restauranteDTO.getCaminhoFoto().isEmpty()) {
+            restaurante.setCaminhoFoto(restauranteDTO.getCaminhoFoto());
+        }
+        
+        // 5. Salva no banco
         repo.save(restaurante);
 	}
 	
@@ -98,41 +114,77 @@ public class RestauranteService {
         restaurante.setTipodeprato(dto.getTipodeprato());
         restaurante.setHorario(dto.getHorario());
         restaurante.setSite(dto.getSite());
-
-        // ==============================================================
-        // VERIFICA SE O ENDEREÇO MUDOU ANTES DE FAZER GEOCODING
-        // ==============================================================
-        if (!restaurante.getEndereco().equals(dto.getEndereco())) {
-            // O endereço mudou! Precisamos buscar novas coordenadas.
-            restaurante.setEndereco(dto.getEndereco()); // Atualiza o endereço
-
-            try {
-                String enderecoFormatado = URLEncoder.encode(dto.getEndereco(), StandardCharsets.UTF_8);
-                String url = "https://maps.googleapis.com/maps/api/geocode/json" +
-                             "?address=" + enderecoFormatado +
-                             "&key=" + apiKey;
-
-                String jsonResponse = restTemplate.getForObject(url, String.class);
-                JsonNode root = objectMapper.readTree(jsonResponse);
-                JsonNode status = root.path("status");
-
-                if (status.asText().equals("OK")) {
-                    JsonNode location = root.path("results").get(0).path("geometry").path("location");
-                    restaurante.setLatitude(location.path("lat").asDouble());
-                    restaurante.setLongitude(location.path("lng").asDouble());
-                } else {
-                    restaurante.setLatitude(0.0);
-                    restaurante.setLongitude(0.0);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                restaurante.setLatitude(0.0);
-                restaurante.setLongitude(0.0);
-            }
+        
+        if (dto.getCaminhoFoto() != null && !dto.getCaminhoFoto().isEmpty()) {
+            // (Aqui você poderia deletar a foto antiga antes de setar a nova)
+            restaurante.setCaminhoFoto(dto.getCaminhoFoto());
         }
-        // Se o endereço NÃO mudou, as coordenadas antigas são mantidas.
 
-        // Salva o restaurante atualizado
+     // ==============================================================
+     // VERIFICA SE O ENDEREÇO MUDOU ANTES DE FAZER GEOCODING (CORRIGIDO)
+     // ==============================================================
+
+     String enderecoNovo = dto.getEndereco();
+     
+     String enderecoAntigo = restaurante.getEndereco();
+
+     // SÓ executa o Geocoding se:
+     // 1. O endereço novo NÃO for nulo ou vazio
+     // 2. O endereço novo for DIFERENTE do endereço antigo
+     if (enderecoNovo != null && !enderecoNovo.isEmpty() && !java.util.Objects.equals(enderecoAntigo, enderecoNovo)) {
+
+         System.out.println("[SERVICE ATUALIZAR] Endereço mudou. Buscando novas coordenadas...");
+         restaurante.setEndereco(enderecoNovo); 
+
+         try {
+             String enderecoFormatado = URLEncoder.encode(dto.getEndereco(), StandardCharsets.UTF_8);
+             String url = "https://maps.googleapis.com/maps/api/geocode/json" +
+                          "?address=" + enderecoFormatado +
+                          "&key=" + apiKey;
+
+             // --- LOG DE DEPURAÇÃO 1 ---
+             // Veja qual endereço você está enviando
+             System.out.println("[GOOGLE API] Enviando endereço: " + dto.getEndereco());
+             // Veja a URL completa (CUIDADO: não exponha sua API key)
+             // System.out.println("[GOOGLE API] URL: " + url); 
+
+             String jsonResponse = restTemplate.getForObject(url, String.class);
+             
+             // --- LOG DE DEPURAÇÃO 2 ---
+             // Veja a resposta COMPLETA do Google
+             System.out.println("[GOOGLE API] Resposta JSON: " + jsonResponse);
+
+             JsonNode root = objectMapper.readTree(jsonResponse);
+             JsonNode status = root.path("status");
+
+             if (status.asText().equals("OK")) {
+                 JsonNode location = root.path("results").get(0).path("geometry").path("location");
+                 restaurante.setLatitude(location.path("lat").asDouble());
+                 restaurante.setLongitude(location.path("lng").asDouble());
+                 
+                 // --- LOG DE DEPURAÇÃO 3 ---
+                 System.out.println("[GOOGLE API] SUCESSO! Lat: " + restaurante.getLatitude() + ", Lng: " + restaurante.getLongitude());
+                 
+             } else {
+                 // --- LOG DE DEPURAÇÃO 4 ---
+                 // O Google respondeu, mas com um status de erro
+                 System.out.println("[GOOGLE API] FALHA! Status: " + status.asText());
+                 
+                 restaurante.setLatitude(0.0);
+                 restaurante.setLongitude(0.0);
+             }
+         } catch (Exception e) {
+             // --- LOG DE DEPURAÇÃO 5 ---
+             // A chamada falhou ANTES de receber uma resposta
+             System.out.println("[GOOGLE API] ERRO GRAVE! Exceção: " + e.getMessage());
+             
+             e.printStackTrace();
+             restaurante.setLatitude(0.0);
+             restaurante.setLongitude(0.0);
+         }
+     }
+     // Se o endereço novo for igual ao antigo, ou se for vazio, 
+     // ele simplesmente ignora este bloco e mantém os dados antigos.
         repo.save(restaurante);
     }
     
@@ -176,8 +228,10 @@ public class RestauranteService {
         
         // Salvar o Restaurante (O Cascade.ALL salva o Usuário junto)
         repo.save(restaurante);
+    } 
+    
+    public String getGoogleMapsApiKey() {
+        return this.apiKey;
     }
-    
-    
     
 }

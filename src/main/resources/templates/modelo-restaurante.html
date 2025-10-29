@@ -94,18 +94,66 @@
 					    </button>
 					</div>		        </div>
 		        <div class="col-md-5">
-		            <div id="mapa" style="height: 100%; min-height: 400px;"></div>
+					<img th:if="${restaurante.caminhoFoto != null AND restaurante.caminhoFoto != ''}"
+					         th:src="@{/uploads/restaurante-fotos/{filename}(filename=${restaurante.caminhoFoto})}"
+					         th:alt="${'Foto de ' + restaurante.nome}"
+					         class="img-fluid rounded shadow-sm w-100 mb-3" 
+					         style="object-fit: cover; height: 350px; border: 3px solid white;">
+
+					    <div th:if="${restaurante.caminhoFoto == null OR restaurante.caminhoFoto == ''}"
+					         class="d-flex align-items-center justify-content-center bg-light rounded shadow-sm w-100 mb-3"
+					         style="height: 350px;">
+					        <span class="text-muted fs-4">Sem foto</span>
+					    </div>
+
+					        <div id="mapa" style="height: 400px; width: 100%;"></div>
 		        </div>
 		    </div>
 		    <div class="mt-5">...</div>
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-		<script th:inline="javascript"> /* Script Mapa Lat/Lng */ </script>
-		<script> /* Script initMap */ </script>
-		<script async src="https://maps.googleapis.com/maps/api/js?key=SUA_CHAVE&callback=initMap"></script>
-		<script th:inline="javascript"> /* Script toggleFavorito */ </script>
+
+		    <script th:inline="javascript">
+		        /*<![CDATA[*/
+		        
+		        // Passa as coordenadas do restaurante (do Model) para variáveis JS
+		        const restauranteLat = /*[[${restaurante.latitude}]]*/ 0;
+		        const restauranteLng = /*[[${restaurante.longitude}]]*/ 0;
+		        const restauranteNome = /*[[${restaurante.nome}]]*/ "Restaurante";
+
+		        // Script do toggleFavorito (você já tinha, mas sem o CDATA)
+		        async function toggleFavorito(element, restauranteId) {
+		            // ... (toda a sua lógica do fetch do toggleFavorito) ...
+		        }
+		        
+		        /*]]>*/
+		    </script>
+
+		    <script>
+		        // Esta função é chamada pela API do Google (callback=initMap)
+		        function initMap() {
+		            // 1. Cria o objeto de localização
+		            const localizacao = { lat: restauranteLat, lng: restauranteLng };
+
+		            // 2. Cria o mapa, centralizado no restaurante
+		            const map = new google.maps.Map(document.getElementById("mapa"), {
+		                zoom: 16, // Nível de zoom (15-17 é bom para endereços)
+		                center: localizacao,
+		            });
+
+		            // 3. Cria um marcador (pin) no local
+		            const marker = new google.maps.Marker({
+		                position: localizacao,
+		                map: map,
+		                title: restauranteNome, // Texto que aparece ao passar o mouse
+		            });
+		        }
+		    </script>
+
+		    <script async
+		        th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey} + '&callback=initMap'}">
+		    </script>
 
 	</body>
 	</html>
-</html>
