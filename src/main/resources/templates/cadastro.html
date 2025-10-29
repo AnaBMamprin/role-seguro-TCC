@@ -1,55 +1,57 @@
 <!DOCTYPE html>
-<html lang="pt-BR" 
-	xmlns:th="http://www.thymeleaf.org">
-	<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cadastro de Cliente</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-  <!-- Bootstrap CSS (estável) -->
-  	  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  	  
-  	  <!-- Bootstrap Icons -->
-  	    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-  	  <!-- Font Awesome (para os ícones dos cards) -->
-  	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-	  
-	  <!-- Bootstrap Bundle com Popper (necessário para navbar mobile) -->
-	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  	  <!-- Seu CSS -->
-  	  <link rel="stylesheet" th:href="@{/css/style.css}">
-  	</head>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Cadastro de Cliente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .btn-google {
+            background-color: #fff; color: #757575; border: 1px solid #dadce0;
+            padding: 10px 15px; border-radius: 4px; font-weight: 500;
+            display: inline-flex; align-items: center; justify-content: center;
+            text-decoration: none; transition: background-color 0.3s;
+            width: 100%; margin-top: 15px;
+        }
+        .btn-google:hover { background-color: #f8f9fa; border-color: #c6c6c6; color: #757575;}
+        .btn-google img { width: 18px; height: 18px; margin-right: 10px;}
+        /* Adiciona um separador "OU" */
+        .separator { display: flex; align-items: center; text-align: center; margin: 20px 0; }
+        .separator::before, .separator::after {
+            content: ''; flex: 1; border-bottom: 1px solid #ccc;
+        }
+        .separator:not(:empty)::before { margin-right: .25em; }
+        .separator:not(:empty)::after { margin-left: .25em; }
+    </style>
+</head>
 <body>
 <div class="cadastro-page">
-  <div class="cadastro-container">
-    <h2>Cadastro de Cliente</h2>
-    <form th:action="@{/cadastrar}" method="post" th:object="${userDTO}">
-        <input type="text" th:field="*{nome}" placeholder="Nome" required>
-        <input type="email" th:field="*{email}" placeholder="Email" required>
-        <input type="text" th:field="*{endereco}" placeholder="Endereço" required>
-        <input type="password" th:field="*{senha}" placeholder="Senha" required>
-        <button type="submit">Cadastrar</button>
-    </form>
-    <p>Já possui uma conta? <a href="/login">Faça login</a></p>
-  </div>
+    <div class="cadastro-container">
+        <h2>Cadastro de Cliente</h2>
+        <form th:action="@{/cadastrar}" method="post" th:object="${userDTO}">
+            <input type="text" th:field="*{nome}" placeholder="Nome" required>
+            <input type="email" th:field="*{email}" placeholder="Email" required>
+            <input type="text" th:field="*{endereco}" placeholder="Endereço" required>
+            <input type="password" th:field="*{senha}" placeholder="Senha" required>
+            <button type="submit">Cadastrar</button>
+        </form>
+
+        <div class="separator">OU</div>
+        <a href="/oauth2/authorization/google" class="btn-google">
+            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
+            Cadastrar com sua conta Google
+        </a>
+        <p class="mt-3">Já possui uma conta? <a href="/login">Faça login</a></p>
+    </div>
 </div>
 
-  <input type="hidden" id="mensagemPopup" th:value="${mensagem}" />
-
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-      window.onload = function() {
-          var mensagem = document.getElementById("mensagemPopup").value;
-          if (mensagem && mensagem !== "") {
-              Swal.fire({
-                  icon: 'success',
-                  title: 'Sucesso!',
-                  text: mensagem
-              });
-          }
-      }
-  </script>
+<input type="hidden" id="mensagemPopup" th:value="${mensagem}" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script> /* Seu script SweetAlert */ </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
