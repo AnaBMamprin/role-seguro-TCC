@@ -21,7 +21,7 @@ public class SecurityConfig {
 	    
 	    	.csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(authz -> authz
-	        		.requestMatchers("/", "/login", "/cadastro", "cadastrar", "/css/**", "/js/**", "/images/**").permitAll()
+	        		.requestMatchers("/", "/login", "/cadastro", "/cadastrar", "/inicial", "/css/**", "/js/**", "/images/**").permitAll()
 	        		.requestMatchers("/adm/**").hasRole("ADMIN") // 🔒 só admin acessa
 	            .anyRequest().authenticated()
 	        )

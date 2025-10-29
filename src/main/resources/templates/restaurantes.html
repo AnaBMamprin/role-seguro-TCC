@@ -1,205 +1,177 @@
 <!DOCTYPE html>
-<html lang="pt-BR" 
+<html lang="pt-BR"
 	xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <title>Tchomp Restaurantes</title>
-  <script>
-    async function init() {
-      await customElements.whenDefined('gmp-map');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tchomp Restaurantes</title>
 
-      const map = document.querySelector('gmp-map');
-      const marker = document.querySelector('gmp-advanced-marker');
-      const placePicker = document.querySelector('gmpx-place-picker');
-      const infowindow = new google.maps.InfoWindow();
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}"> <meta name="_csrf" th:content="${_csrf?.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
 
-      map.innerMap.setOptions({
-        mapTypeControl: false
-      });
-
-      // Captura de parâmetros da URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const culinaria = urlParams.get('culinaria');
-      const cidade = urlParams.get('cidade');
-
-      // Função para buscar restaurantes usando Text Search
-      function buscarRestaurantes(query) {
-        const service = new google.maps.places.PlacesService(map.innerMap);
-
-        service.textSearch({ query: query }, (results, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            map.innerMap.setCenter(results[0].geometry.location);
-            map.innerMap.setZoom(14);
-
-            results.forEach(place => {
-              const newMarker = new google.maps.Marker({
-                position: place.geometry.location,
-                map: map.innerMap,
-                title: place.name
-              });
-
-              google.maps.event.addListener(newMarker, 'click', () => {
-                infowindow.setContent(
-                  `<strong>${place.name}</strong><br>${place.formatted_address}`
-                );
-                infowindow.open(map.innerMap, newMarker);
-              });
-            });
-          }
-        });
-      }
-
-      // Se culinaria e cidade foram passados, buscar automaticamente
-      if (culinaria && cidade) {
-        buscarRestaurantes(`${culinaria} restaurants in ${cidade}`);
-      }
-
-      // Listener para buscas manuais
-      placePicker.addEventListener('gmpx-placechange', () => {
-        const place = placePicker.value;
-
-        if (!place.location) {
-          window.alert("Nenhum detalhe disponível para: '" + place.name + "'");
-          infowindow.close();
-          marker.position = null;
-          return;
+    <style>
+        /* Garante que o .menu-card funcione com stretched-link e position absolute */
+        .menu-card {
+            position: relative;
+            /* Adicione aqui seus outros estilos para o card (padding, background, border-radius, etc.) */
+            display: flex; /* Para usar mt-auto no form */
+            flex-direction: column; /* Para usar mt-auto no form */
+            height: 100%; /* Para que mt-auto funcione bem em grids */
         }
-
-        if (place.viewport) {
-          map.innerMap.fitBounds(place.viewport);
-        } else {
-          map.center = place.location;
-          map.zoom = 17;
+        /* Defina o layout do seu grid aqui ou no style.css */
+        .cards-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Exemplo responsivo */
+             gap: 1.5rem; /* Espaçamento entre cards */
         }
-
-        marker.position = place.location;
-        infowindow.setContent(
-          `<strong>${place.displayName}</strong><br>
-           <span>${place.formattedAddress}</span>`
-        );
-        infowindow.open(map.innerMap, marker);
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
-
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js"></script>
-
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    .place-picker-container {
-      padding: 20px;
-    }
-  </style>
-
-  <!-- Bootstrap e CSSs adicionais -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="css/style.css">
+    </style>
 </head>
 <body>
-	<!-- Navbar Principal -->
-			    <nav class="navbar navbar-expand-lg main-navbar">
-			      <div class="container-fluid">
-					
-					<!-- LOGO -->
-					   <a class="navbar-brand text-white fw-bold" href="/inicial">TCHOMP</a>
+	<nav class="navbar navbar-expand-lg main-navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white fw-bold" href="/inicial">TCHOMP</a>
+           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+             <span class="navbar-toggler-icon"></span>
+           </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
+          <div class="navbar-nav mx-auto d-flex justify-content-center">
+            <a class="nav-link" th:href="@{/inicial}">Página Inicial</a>
+            <a class="nav-link" th:href="@{/restaurantes}">Restaurantes</a>
+            <a class="nav-link" th:href="@{/perfil}">Perfil</a>
+            <a class="nav-link" th:href="@{/adm}" sec:authorize="hasRole('ADMIN')">Administração</a>
+            <a class="nav-link" th:href="@{/sobre}">Sobre</a>
+          </div>
+          <a th:href="@{/favoritos}" class="btn btn-favorite ms-3">
+              <i class="bi bi-heart me-1"></i> Favoritos
+          </a>
+          <form class="d-flex ms-3 search-box" th:action="@{/buscar}" method="get">
+            <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" name="q">
+            <button class="btn btn-search" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </form>
+          <a href="/logout" class="btn btn-logout ms-3">
+              <i class="bi bi-box-arrow-right me-1"></i> Sair
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div class="container my-5"> <h1 class="mb-4">Restaurantes Cadastrados</h1>
 
-					   <!-- BOTÃO TOGGLER (MOBILE) -->
-					   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-					     <span class="navbar-toggler-icon"></span>
-					   </button>
+		<div th:if="${paginaRestaurantes == null or paginaRestaurantes.isEmpty()}" class="alert alert-warning" role="alert">
+		    Nenhum restaurante cadastrado ainda.
+		</div>
 
-			        <!-- Links centralizados + barra de pesquisa -->
-			        <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
-			          <div class="navbar-nav mx-auto d-flex justify-content-center">
-			            <a class="nav-link" th:href="@{/inicial}">Página Inicial</a>
-			            <a class="nav-link" th:href="@{/restaurantes}">Restaurantes</a>
-			            <a class="nav-link" th:href="@{/perfil}">Perfil</a>
-						<!-- Só aparece se o usuário tiver ROLE_ADMIN -->
-						<a class="nav-link" th:href="@{/adm}" sec:authorize="hasRole('ADMIN')">Administração</a>
-			            <a class="nav-link" th:href="@{/sobre}">Sobre</a>
-			          </div>
-					  
-					  <!-- Botão Favoritos -->
-					  <a th:href="@{/favoritos}" class="btn btn-favorite ms-3">
-					      <i class="bi bi-heart me-1"></i> Favoritos
-					  </a>
+		<div class="cards-grid" th:unless="${paginaRestaurantes == null or paginaRestaurantes.isEmpty()}">
+		    <div class="menu-card" th:each="restaurante : ${paginaRestaurantes.content}"> <h3 class="mb-3">
+                    <a th:href="@{/modelo-restaurante(id=${restaurante.id})}"
+                       class="stretched-link text-decoration-none" style="color: inherit;"
+                       th:text="${restaurante.nome}"> Nome </a>
+                </h3>
+                <span class="favorite-icon" style="position: absolute; top: 15px; right: 15px; z-index: 10; cursor: pointer;"
+                      th:attr="onclick='toggleFavorito(this, ' + ${restaurante.id} + ')'"
+                      th:title="${#sets.contains(idsFavoritos, restaurante.id) ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}">
+                    <i class="bi fs-4" th:classappend="${#sets.contains(idsFavoritos, restaurante.id) ? 'bi-heart-fill text-danger' : 'bi-heart'}"></i>
+                </span>
+                <p><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'N/A'}"></span></p>
+                <p><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'N/A'}"></span></p>
+                <p><strong>Tipo de prato:</strong> <span th:text="${restaurante.tipodeprato ?: 'N/A'}"></span></p>
+                <p><strong>Horário:</strong> <span th:text="${restaurante.horario ?: 'N/A'}"></span></p>
+                <p><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'N/A'}"></span></p>
+                <form th:action="@{/cupons/gerar}" method="post" class="mt-auto pt-3" style="position: relative; z-index: 5;">
+                    <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
+                    <button type="submit" class="btn btn-sm btn-success w-100">Gerar Cupom</button>
+                </form>
+                </div> </div> 
+				<nav aria-label="Navegação das páginas" class="mt-5" 
+				     th:if="${paginaRestaurantes.totalPages > 1}"> <ul class="pagination justify-content-center">
 
-			          <!-- Barra de pesquisa estilizada -->
-			          <form class="d-flex ms-3 search-box" th:action="@{/buscar}" method="get">
-			            <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" name="q">
-			            <button class="btn btn-search" type="submit">
-			              <i class="bi bi-search"></i>
-			            </button>
-			          </form>
-					  <!-- Botão Sair -->
-					  <a href="/logout" class="btn btn-logout ms-3">
-					      <i class="bi bi-box-arrow-right me-1"></i> Sair
-					  </a>
-			        </div>
-			      </div>
-			    </nav>
-				
-				<!-- Página de restaurantes -->
-				  <div class="restaurantes-page container">
-				    <h1>Restaurantes Cadastrados</h1>
-				    <div class="cards-grid">
-				      <!-- Loop Thymeleaf para exibir cada restaurante -->
-					  <div class="menu-card" th:each="restaurante : ${restaurantes}">
-					      
-					      <h3 class="mb-3"> <a th:href="@{/modelo-restaurante(id=${restaurante.id})}" 
-					             class="stretched-link" 
-					             th:text="${restaurante.nome}">
-					              Nome do Restaurante
-					          </a>
-					      </h3>
-					      
-					      <p><strong>Cidade:</strong> <span th:text="${restaurante.cidade}">Cidade</span></p>
-					      <p><strong>Culinária:</strong> <span th:text="${restaurante.culinaria}">Culinária</span></p>
-					      <p><strong>Tipo de prato:</strong> <span th:text="${restaurante.tipodeprato}">Tipo de prato</span></p>
-					      <p><strong>Horário:</strong> <span th:text="${restaurante.horario}">Horário</span></p>
-					      <p><strong>Endereço:</strong> <span th:text="${restaurante.endereco}">Endereço</span></p>
+				        <li class="page-item" th:classappend="${paginaRestaurantes.first ? 'disabled' : ''}">
+				            <a class="page-link" 
+				               th:href="@{/restaurantes(page=${paginaRestaurantes.number - 1}, culinaria=${culinaria})}">
+				               Anterior
+				            </a>
+				        </li>
 
-					      <form th:action="@{/cupons/gerar}" method="post">
-					          <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
-					          <button type="submit" class="btn btn-success mt-2">Gerar Cupom</button>
-					      </form>
-					  </div>
-				    </div>
-				  </div>
-				  
-				  <!-- Modal Cupom -->
-				  <div class="modal fade" id="cupomModal" tabindex="-1">
-				    <div class="modal-dialog modal-dialog-centered">
-				      <div class="modal-content">
-				        <div class="modal-header">
-				          <h5 class="modal-title">Seu Cupom</h5>
-				          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-				        </div>
-				        <div class="modal-body">
-				          <p th:if="${cupom != null}">
-				            🎉 Cupom gerado com sucesso! <br>
-				            Código: <strong th:text="${cupom.codigo}"></strong><br>
-				            Desconto: <span th:text="${cupom.desconto}"></span>%
-				          </p>
-				          <p th:if="${erro != null}" class="text-danger" th:text="${erro}"></p>
-				        </div>
-				      </div>
-				    </div>
-				  </div>
+				        <li class="page-item disabled">
+				            <a class="page-link" href="#">
+				                Página <span th:text="${paginaRestaurantes.number + 1}"></span> de 
+				                <span th:text="${paginaRestaurantes.totalPages}"></span>
+				            </a>
+				        </li>
 
-				  <!-- Script para abrir o modal automaticamente se existir cupom ou erro -->
-				  <script th:if="${cupom != null or erro != null}">
-				    var modal = new bootstrap.Modal(document.getElementById('cupomModal'));
-				    modal.show();
-				  </script>
- 
+				        <li class="page-item" th:classappend="${paginaRestaurantes.last ? 'disabled' : ''}">
+				            <a class="page-link" 
+				               th:href="@{/restaurantes(page=${paginaRestaurantes.number + 1}, culinaria=${culinaria})}">
+				               Próximo
+				            </a>
+				        </li>
+
+				    </ul>
+				</nav>
+			</div> <div class="modal fade" id="cupomModal" tabindex="-1">
+	    <div class="modal-dialog modal-dialog-centered">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h5 class="modal-title">Seu Cupom</h5>
+	          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	        </div>
+	        <div class="modal-body">
+	          <p th:if="${cupom != null}">
+	            🎉 Cupom gerado com sucesso! <br>
+	            Código: <strong th:text="${cupom.codigo}"></strong><br>
+	            Desconto: <span th:text="${cupom.desconto}"></span>%
+	          </p>
+	          <p th:if="${erro != null}" class="text-danger" th:text="${erro}"></p>
+	        </div>
+	      </div>
+	    </div>
+    </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+	<script th:if="${cupom != null or erro != null}">
+	    var modal = new bootstrap.Modal(document.getElementById('cupomModal'));
+	    modal.show();
+	</script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		async function toggleFavorito(element, restauranteId) {
+            const icon = element.querySelector('i');
+            const isFavorito = icon.classList.contains('bi-heart-fill');
+		    const url = isFavorito ? '/favoritos/remove' : '/favoritos/add';
+		    const method = 'POST';
+		    const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+		    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+		    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+		    if (csrfToken && csrfHeader) { headers[csrfHeader] = csrfToken; }
+
+		    try {
+		        const response = await fetch(url, { method: method, headers: headers, body: `restauranteId=${restauranteId}` });
+		        if (response.ok) {
+		            if (isFavorito) {
+		                icon.classList.remove('bi-heart-fill', 'text-danger');
+		                icon.classList.add('bi-heart');
+		                element.setAttribute('title', 'Adicionar aos Favoritos');
+		            } else {
+		                icon.classList.remove('bi-heart');
+		                icon.classList.add('bi-heart-fill', 'text-danger');
+		                element.setAttribute('title', 'Remover dos Favoritos');
+		            }
+                    // Remove o card APENAS se estiver na página /favoritos
+                    if (window.location.pathname === '/favoritos' && isFavorito) {
+                        const cardElement = element.closest('.menu-card');
+                        if (cardElement) cardElement.remove();
+                    }
+		        } else {
+		            const errorMsg = await response.text(); alert(`Erro: ${errorMsg}`);
+		            if (response.status === 401 || response.status === 403) { window.location.href = '/login'; }
+		        }
+		    } catch (error) { console.error('Erro:', error); alert('Erro de conexão.'); }
+		}
+		/*]]>*/
+	</script>
+
 </body>
 </html>
