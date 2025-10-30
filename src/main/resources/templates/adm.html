@@ -188,9 +188,8 @@
 	  <div class="modal fade" id="modalRestaurante" tabindex="-1">
 	    <div class="modal-dialog">
 	      <div class="modal-content">
-			<form id="formRestaurante" method="post" action="/adm/restauranteCadastrar">
+			<form id="formRestaurante" method="post" action="/adm/restauranteCadastrar" enctype="multipart/form-data"> <div class="modal-body">>
 			    <input type="hidden" name="id" id="modalRestauranteId">
-
 			    <div class="modal-header">
 			      <h5 class="modal-title" id="modalRestauranteTitle" style="color: black;">Adicionar Restaurante</h5>
 			      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -265,6 +264,14 @@
 				    <hr>
 				    
 				    <input class="form-control mb-2" type="url" name="site" id="modalRestauranteSite" placeholder="Site (ex: https://www.site.com)">
+					<hr>
+					<div class="mb-3">
+					            <label for="fotoFile" class="form-label" style="color: black;">Foto Principal</label>
+					            <input class="form-control" type="file" id="fotoFile" name="fotoFile" accept="image/png, image/jpeg, image/webp">
+					            <small class="form-text text-muted" style="color: black !important;">
+					                Ao editar, a foto atual será mantida se nenhum novo arquivo for enviado.
+					            </small>
+					        </div>
 				    <button class="btn btn-primary w-100" type="submit">Salvar</button>
 				</div>
 				

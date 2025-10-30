@@ -12,8 +12,11 @@ import com.example.app1.model.Usuario;
 import com.example.app1.records.RestauranteDTO;
 import com.example.app1.repository.RestauranteRepository;
 import com.example.app1.repository.UserRepository;
+import com.example.app1.service.FileStorageService;
 import com.example.app1.service.RestauranteService;
 import com.example.app1.usuarioEnums.UserEnum;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/adm")
@@ -26,7 +29,10 @@ public class AdmController {
     private UserRepository userRepository;
 
     @Autowired
-    private RestauranteService restauranteService; // <-- O Serviço
+    private RestauranteService restauranteService;
+    
+    @Autowired
+    private FileStorageService fileStorageService;
 
     // ================== RESTAURANTES ==================
     
@@ -47,24 +53,88 @@ public class AdmController {
     }
 
     @PostMapping("/restauranteCadastrar")
-    public String cadastrarRestaurante(@ModelAttribute RestauranteDTO dto) {
-        // MÉTODO DE CADASTRO (ESTÁ CORRETO)
-        restauranteService.converteRestaurantes(dto);
-        return "redirect:/adm";
-    }
+    public String cadastrarRestaurante(
+            @ModelAttribute RestauranteDTO dto,
+            @RequestParam("fotoFile") MultipartFile fotoFile,
+            RedirectAttributes redirectAttributes) { 
+    	
+    	System.out.println("--- [ADM CONTROLLER] INICIANDO CADASTRO ---");
 
-    // ==============================================================
-    // PARTE 2: MÉTODO DE EDIÇÃO CORRIGIDO
-    // ==============================================================
-    @PostMapping("/restauranteEditar")
-    public String editarRestaurante(@ModelAttribute RestauranteDTO dto, @RequestParam("id") Long id) {
+        try {
+            // 3. Verifica se a foto foi enviada
+            if (fotoFile != null && !fotoFile.isEmpty()) {
+            	
+            	System.out.println("[ADM CONTROLLER] Foto recebida: " + fotoFile.getOriginalFilename());
+            	
+                // 4. Salva a foto no servidor
+                String nomeArquivo = fileStorageService.salvarFotoRestaurante(fotoFile);
+                
+                System.out.println("[ADM CONTROLLER] Foto salva no servidor com nome: " + nomeArquivo); // <-- PONTO CRÍTICO 1
+                
+                // 5. Coloca o nome do arquivo no DTO
+                dto.setCaminhoFoto(nomeArquivo); 
+                
+                System.out.println("[ADM CONTROLLER] DTO agora tem a foto: " + dto.getCaminhoFoto()); // <-- PONTO CRÍTICO 2
+                
+            } else {
+                System.out.println("[ADM CONTROLLER] Nenhuma foto foi enviada no cadastro.");
+            }
+
+            // 6. Manda o DTO (com ou sem foto) para o service
+            restauranteService.converteRestaurantes(dto);
+            
+            redirectAttributes.addFlashAttribute("sucesso", "Restaurante cadastrado com sucesso!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("erro", "Erro ao cadastrar restaurante: " + e.getMessage());
+        }
         
-        // AGORA A LÓGICA DE EDIÇÃO (COM GEOCODING) ESTÁ NO SERVIÇO!
-        restauranteService.atualizarRestaurante(id, dto);
-        
+        System.out.println("--- [ADM CONTROLLER] FIM CADASTRO ---");
         return "redirect:/adm";
     }
-    // ==============================================================
+    
+            // 3. Verifica se uma NOVA foto foi enviada
+        	@PostMapping("/restauranteEditar")
+        	public String editarRestaurante(
+        	        @ModelAttribute RestauranteDTO dto, 
+        	        @RequestParam("id") Long id,
+        	        @RequestParam("fotoFile") MultipartFile fotoFile,
+        	        RedirectAttributes redirectAttributes) { 
+        	    
+        	    System.out.println("--- [ADM CONTROLLER] INICIANDO EDIÇÃO (ID: " + id + ") ---"); // <-- ADICIONE
+
+        	    try {
+        	        // 3. Verifica se uma NOVA foto foi enviada
+        	        if (fotoFile != null && !fotoFile.isEmpty()) {
+        	            
+        	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Foto recebida: " + fotoFile.getOriginalFilename()); // <-- ADICIONE
+        	            
+        	            // 4. Salva a nova foto
+        	            String nomeArquivo = fileStorageService.salvarFotoRestaurante(fotoFile);
+        	            
+        	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Foto salva no servidor com nome: " + nomeArquivo); // <-- ADICIONE
+        	            
+        	            // 5. Coloca o nome no DTO (o service vai saber o que fazer)
+        	            dto.setCaminhoFoto(nomeArquivo);
+
+        	        } else {
+        	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Nenhuma foto nova foi enviada."); // <-- ADICIONE
+        	        }
+        	        
+        	        // 6. Manda para o service atualizar
+        	        restauranteService.atualizarRestaurante(id, dto);
+        	        
+        	        redirectAttributes.addFlashAttribute("sucesso", "Restaurante atualizado com sucesso!");
+
+        	    } catch (Exception e) {
+        	        e.printStackTrace();
+        	        redirectAttributes.addFlashAttribute("erro", "Erro ao editar restaurante: " + e.getMessage());
+        	    }
+
+        	    System.out.println("--- [ADM CONTROLLER] FIM EDIÇÃO ---"); // <-- ADICIONE
+        	    return "redirect:/adm";
+        	}
 
     @PostMapping("/restauranteExcluir")
     public String excluirRestaurante(@RequestParam("id") Long id) {

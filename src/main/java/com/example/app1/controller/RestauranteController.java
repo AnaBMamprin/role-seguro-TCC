@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,9 @@ public class RestauranteController {
     private final RestauranteService service;
     private final FavoritoService favoritoService;
     private final UserRepository userRepository;
+    
+    @Value("${google.maps.api.key}")
+    private String apiKey;
     
     @Autowired // O @Autowired no construtor é opcional nas versões mais recentes do Spring, mas bom para clareza
     public RestauranteController(RestauranteRepository repository, 
@@ -128,7 +132,8 @@ public class RestauranteController {
             // model.addAttribute("podeAvaliar", podeAvaliar); 
 
             model.addAttribute("restaurante", restaurante);
-            model.addAttribute("isFavorito", isFavorito); // Envia para o Thymeleaf
+            model.addAttribute("isFavorito", isFavorito); 
+            model.addAttribute("googleMapsApiKey", service.getGoogleMapsApiKey());// Envia para o Thymeleaf
 
             return "modelo-restaurante";
         } else {
@@ -160,5 +165,9 @@ public class RestauranteController {
             }
         }
         return null;
+    }
+    
+    public String getGoogleMapsApiKey() {
+        return this.apiKey;
     }
 }

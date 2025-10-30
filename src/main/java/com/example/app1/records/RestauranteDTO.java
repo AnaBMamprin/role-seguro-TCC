@@ -12,6 +12,7 @@ public class RestauranteDTO {
 	private Long id;
 	private String email;
 	private String senha;
+	private String caminhoFoto;
 	
 	
 	public RestauranteDTO() {}
@@ -19,7 +20,7 @@ public class RestauranteDTO {
 	
 	
 	public RestauranteDTO(String nome, String cidade, String culinaria, String tipodeprato, String horario,
-			String endereco, String site, Long id, String email, String senha) {
+			String endereco, String site, Long id, String email, String senha, String caminhoFoto) {
 		
 		this.nome = nome;
 		this.cidade = cidade;
@@ -31,11 +32,18 @@ public class RestauranteDTO {
 		this.id = id;
 		this.email = email;
 		this.senha = senha;
+		this.caminhoFoto = caminhoFoto;
+	}
+
+	public String getCaminhoFoto() {
+		return caminhoFoto;
 	}
 
 
 
-
+	public void setCaminhoFoto(String caminhoFoto) {
+		this.caminhoFoto = caminhoFoto;
+	}
 
 
 

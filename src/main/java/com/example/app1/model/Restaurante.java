@@ -39,6 +39,8 @@ public class Restaurante {
 	private Double latitude;
 	@Column (name = "longitude") 
 	private Double longitude;
+	@Column(name = "caminho_foto")
+	private String caminhoFoto;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "Usuario_id", referencedColumnName = "idUsuario") // IMPORTANTE: Verifique o nome da PK do seu UsuarioModel
@@ -163,6 +165,14 @@ public class Restaurante {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+    
+    public String getCaminhoFoto() {
+        return caminhoFoto;
+    }
+
+    public void setCaminhoFoto(String caminhoFoto) {
+        this.caminhoFoto = caminhoFoto;
     }
 	
 }
