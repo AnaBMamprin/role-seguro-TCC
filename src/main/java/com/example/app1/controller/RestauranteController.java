@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.example.app1.model.Restaurante;
 import com.example.app1.model.Usuario;
@@ -88,12 +89,12 @@ public class RestauranteController {
             @RequestParam(name = "culinaria", required = false) String culinaria,
             @RequestParam(name = "page", defaultValue = "0") int page, // Número da página (começa em 0)
             @RequestParam(name = "size", defaultValue = "9") int size, // Itens por página (ex: 9 para grid 3x3)
-            // @RequestParam(name = "sort", defaultValue = "nome") String sort, // Opcional: Campo de ordenação
-            // @RequestParam(name = "direction", defaultValue = "ASC") String direction, // Opcional: Direção
+            @RequestParam(name = "sort", defaultValue = "nome") String sort, // Opcional: Campo de ordenação
+            @RequestParam(name = "direction", defaultValue = "ASC") String direction, // Opcional: Direção
             Model model) {
 
         // Cria o objeto Pageable
-        // Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort); // Se usar ordenação
+         Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort); // Se usar ordenação
         Pageable pageable = PageRequest.of(page, size); // PageRequest.of(page, size, sortOrder) se usar sort
 
         Page<Restaurante> paginaRestaurantes; // Usa Page<>

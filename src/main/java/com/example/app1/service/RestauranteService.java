@@ -107,101 +107,93 @@ public class RestauranteService {
     // ========================================================================
     @Transactional
     public void atualizarRestaurante(Long id, RestauranteDTO dto) {
-        Restaurante restaurante = repo.findById(id).orElse(null);
-        if (restaurante == null) {
-            // Lidar com o erro (restaurante não encontrado)
-            return; 
-        }
+        
+        // Dica: Usar orElseThrow é mais seguro para garantir que o restaurante existe
+        Restaurante restaurante = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Restaurante não encontrado com ID: " + id));
 
-        // Atualiza os campos normais
+        // 1. Atualiza os campos normais
         restaurante.setNome(dto.getNome());
-        restaurante.setCidade(dto.getCidade());
+        // (Não atualize a cidade aqui, ela deve ser atualizada JUNTO com o endereço)
+        // restaurante.setCidade(dto.getCidade()); 
         restaurante.setCulinaria(dto.getCulinaria());
         restaurante.setTipodeprato(dto.getTipodeprato());
         restaurante.setHorario(dto.getHorario());
         restaurante.setSite(dto.getSite());
         
+        // 2. Atualiza a foto (se foi enviada)
         if (dto.getCaminhoFoto() != null && !dto.getCaminhoFoto().isEmpty()) {
             // (Aqui você poderia deletar a foto antiga antes de setar a nova)
             restaurante.setCaminhoFoto(dto.getCaminhoFoto());
         }
 
-     // ==============================================================
-     // VERIFICA SE O ENDEREÇO MUDOU ANTES DE FAZER GEOCODING (CORRIGIDO)
-     // ==============================================================
+        // ==============================================================
+        // LÓGICA DE ATUALIZAÇÃO DE ENDEREÇO CORRIGIDA
+        // ==============================================================
 
-        String enderecoNovo = dto.getEndereco();
-        String cidadeNova = dto.getCidade();     // <-- Pegue a nova cidade
-        String estadoNovo = dto.getEstado();   // <-- Pegue o novo estado
-        String enderecoAntigo = restaurante.getEndereco();
+        // 3. Verificamos se o usuário preencheu um NOVO endereço (olhando a RUA)
+        if (dto.getRua() != null && !dto.getRua().isEmpty()) {
+            
+            System.out.println("[SERVICE ATUALIZAR] Novo endereço detectado (Rua: " + dto.getRua() + "). Buscando novas coordenadas...");
 
-     // SÓ executa o Geocoding se:
-     // 1. O endereço novo NÃO for nulo ou vazio
-     // 2. O endereço novo for DIFERENTE do endereço antigo
-     if (enderecoNovo != null && !enderecoNovo.isEmpty() && !java.util.Objects.equals(enderecoAntigo, enderecoNovo)) {
+            // 4. Construímos os novos endereços
+            String enderecoParaSalvar = dto.getRua() + ", " + dto.getNumero();
+            
+            String enderecoParaGoogle = String.format(
+                "%s, %s, %s, %s, %s",
+                dto.getRua(),
+                dto.getNumero(),
+                dto.getBairro(),
+                dto.getCidade(), // Cidade nova do DTO
+                dto.getEstado()  // Estado novo do DTO
+            );
 
-         System.out.println("[SERVICE ATUALIZAR] Endereço mudou. Buscando novas coordenadas...");
-         restaurante.setEndereco(enderecoNovo); 
-         restaurante.setCidade(cidadeNova);     // <-- Faltava isso
-         restaurante.setEstado(estadoNovo);
-         try {
-        	 
-        	 String enderecoCompleto = String.format(
-        	            "%s, %s, %s, %s",
-        	            enderecoNovo,
-        	            cidadeNova,
-        	            estadoNovo,
-        	            "Brasil"
-        	        );
-        	 
-             String enderecoFormatado = URLEncoder.encode(enderecoCompleto, StandardCharsets.UTF_8);
-             String url = "https://maps.googleapis.com/maps/api/geocode/json" +
-                          "?address=" + enderecoFormatado +
-                          "&key=" + apiKey;
+            // 5. Atualizamos os dados do restaurante
+            restaurante.setEndereco(enderecoParaSalvar); // Ex: "Rua Augusta, 123"
+            restaurante.setCidade(dto.getCidade());
+            restaurante.setEstado(dto.getEstado());
+            restaurante.setBairro(dto.getBairro());
+            restaurante.setCep(dto.getCep());
+            // (Se sua entidade não tem campos separados, tudo bem, 
+            // mas setEndereco, setCidade e setEstado é o mínimo)
 
-             // --- LOG DE DEPURAÇÃO 1 ---
-             // Veja qual endereço você está enviando
-             System.out.println("[GOOGLE API] Enviando endereço: " + dto.getEndereco());
-             // Veja a URL completa (CUIDADO: não exponha sua API key)
-             // System.out.println("[GOOGLE API] URL: " + url); 
+            // 6. Buscamos as novas coordenadas no Google Maps
+            try {
+                String enderecoFormatado = URLEncoder.encode(enderecoParaGoogle, StandardCharsets.UTF_8);
+                String url = "https://maps.googleapis.com/maps/api/geocode/json" +
+                             "?address=" + enderecoFormatado +
+                             "&key=" + apiKey;
 
-             String jsonResponse = restTemplate.getForObject(url, String.class);
-             
-             // --- LOG DE DEPURAÇÃO 2 ---
-             // Veja a resposta COMPLETA do Google
-             System.out.println("[GOOGLE API] Resposta JSON: " + jsonResponse);
+                System.out.println("[GOOGLE API] Enviando endereço para atualização: " + enderecoParaGoogle);
 
-             JsonNode root = objectMapper.readTree(jsonResponse);
-             JsonNode status = root.path("status");
+                String jsonResponse = restTemplate.getForObject(url, String.class);
+                JsonNode root = objectMapper.readTree(jsonResponse);
+                JsonNode status = root.path("status");
 
-             if (status.asText().equals("OK")) {
-                 JsonNode location = root.path("results").get(0).path("geometry").path("location");
-                 restaurante.setLatitude(location.path("lat").asDouble());
-                 restaurante.setLongitude(location.path("lng").asDouble());
-                 
-                 // --- LOG DE DEPURAÇÃO 3 ---
-                 System.out.println("[GOOGLE API] SUCESSO! Lat: " + restaurante.getLatitude() + ", Lng: " + restaurante.getLongitude());
-                 
-             } else {
-                 // --- LOG DE DEPURAÇÃO 4 ---
-                 // O Google respondeu, mas com um status de erro
-                 System.out.println("[GOOGLE API] FALHA! Status: " + status.asText());
-                 
-                 restaurante.setLatitude(0.0);
-                 restaurante.setLongitude(0.0);
-             }
-         } catch (Exception e) {
-             // --- LOG DE DEPURAÇÃO 5 ---
-             // A chamada falhou ANTES de receber uma resposta
-             System.out.println("[GOOGLE API] ERRO GRAVE! Exceção: " + e.getMessage());
-             
-             e.printStackTrace();
-             restaurante.setLatitude(0.0);
-             restaurante.setLongitude(0.0);
-         }
-     }
-     // Se o endereço novo for igual ao antigo, ou se for vazio, 
-     // ele simplesmente ignora este bloco e mantém os dados antigos.
+                if (status.asText().equals("OK")) {
+                    JsonNode location = root.path("results").get(0).path("geometry").path("location");
+                    restaurante.setLatitude(location.path("lat").asDouble());
+                    restaurante.setLongitude(location.path("lng").asDouble());
+                    System.out.println("[GOOGLE API] SUCESSO! Novas Coordenadas: " + restaurante.getLatitude() + ", " + restaurante.getLongitude());
+                } else {
+                    System.out.println("[GOOGLE API] FALHA! Status: " + status.asText());
+                    restaurante.setLatitude(0.0);
+                    restaurante.setLongitude(0.0);
+                }
+            } catch (Exception e) {
+                System.out.println("[GOOGLE API] ERRO GRAVE! Exceção: " + e.getMessage());
+                e.printStackTrace();
+                restaurante.setLatitude(0.0);
+                restaurante.setLongitude(0.0);
+            }
+            
+        } else {
+            // Se a 'rua' veio vazia, significa que o usuário NÃO quis alterar o endereço.
+            // Não fazemos nada e mantemos os dados antigos.
+            System.out.println("[SERVICE ATUALIZAR] Campo 'rua' vazio. Endereço antigo mantido.");
+        }
+        
+        // 7. Salva o restaurante (com ou sem o endereço novo)
         repo.save(restaurante);
     }
     

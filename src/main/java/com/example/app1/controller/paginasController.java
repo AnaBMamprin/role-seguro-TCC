@@ -19,11 +19,11 @@ public class paginasController {
 	     model.addAttribute("userRecordDTO", new UserDTO()); // agora funciona
 	     return "cadastro";
 	 }
-*/
+	
 	@GetMapping ("/perfil")
 	public String mostrarPerfil() {
 		return "perfil";
-	}
+	} */ 
 	
 	@GetMapping ("/sobre")
 	public String mostrarsobre() {

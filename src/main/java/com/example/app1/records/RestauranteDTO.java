@@ -15,6 +15,7 @@ public class RestauranteDTO {
 	private String rua;
 	private String numero;
 	private String bairro;
+	private String cep;
 	
 	
 	public RestauranteDTO() {}
@@ -22,8 +23,8 @@ public class RestauranteDTO {
 	
 	
 	public RestauranteDTO(String nome, String cidade, String culinaria, String tipodeprato, String horario,
-			String endereco, String site, Long id, String caminhoFoto, String estado, String rua, String numero, String bairro) {
-		
+			String endereco, String site, Long id, String caminhoFoto, String estado, String rua, String numero,
+			String bairro, String cep) {
 		this.nome = nome;
 		this.cidade = cidade;
 		this.culinaria = culinaria;
@@ -37,12 +38,22 @@ public class RestauranteDTO {
 		this.rua = rua;
 		this.numero = numero;
 		this.bairro = bairro;
+		this.cep = cep;
 	}
 
-	
-	
-	
-	
+
+	public String getCep() {
+		return cep;
+	}
+
+
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
+
+
 	public String getBairro() {
 		return bairro;
 	}

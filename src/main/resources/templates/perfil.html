@@ -71,18 +71,19 @@
   <div class="profile-container">
     <div class="profile-card">
       <h2>Perfil do Usuário</h2>
-      <form>
-        <!-- Nome -->
+      
+      <form th:action="@{/perfil/atualizar}" method="post" th:object="${usuario}">
+        
+        <input type="hidden" th:field="*{idUsuario}" />
+
         <label for="nome">Nome</label>
-        <input type="text" id="nome" name="nome" value="João da Silva">
+        <input type="text" id="nome" th:field="*{nomeUsuario}">
 
-        <!-- Email -->
         <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" value="joao@email.com" readonly>
+        <input type="email" id="email" th:field="*{emailUsuario}" readonly>
 
-        <!-- Endereço -->
         <label for="endereco">Endereço</label>
-        <input type="text" id="endereco" name="endereco" value="Rua Exemplo, 123">
+        <input type="text" id="endereco" th:field="*{enderecoUsuario}">
 
         <div class="profile-buttons">
           <a href="/inicial" class="btn-voltar">Voltar</a>
@@ -97,7 +98,11 @@
   <div class="popup" id="popupConfirm">
     <div class="popup-content">
       <p>Tem certeza de que deseja excluir sua conta? Esta ação não pode ser desfeita.</p>
-      <button class="popup-confirm" id="confirmDelete">Excluir</button>
+      
+      <form th:action="@{/perfil/excluir}" method="post" id="formExcluir">
+          <button type="submit" class="popup-confirm" id="confirmDelete">Excluir</button>
+      </form>
+      
       <button class="popup-cancel" id="cancelDelete">Cancelar</button>
     </div>
   </div>
@@ -107,20 +112,21 @@
     const btnExcluir = document.getElementById('btnExcluir');
     const popup = document.getElementById('popupConfirm');
     const cancelDelete = document.getElementById('cancelDelete');
-    const confirmDelete = document.getElementById('confirmDelete');
+    // O botão 'confirmDelete' agora é o submit do formExcluir
+    // Não precisamos mais de um JS para ele.
 
     btnExcluir.addEventListener('click', () => {
       popup.classList.add('active');
     });
 
     cancelDelete.addEventListener('click', () => {
+      // Importante: use 'type="button"' no HTML do 'cancelDelete'
+      // ou adicione e.preventDefault() aqui se ele estiver dentro do form
       popup.classList.remove('active');
     });
 
-    confirmDelete.addEventListener('click', () => {
-      popup.classList.remove('active');
-      alert("Conta excluída!"); // aqui você coloca a exclusão real
-    });
+    // O script 'confirmDelete' não é mais necessário,
+    // pois o botão agora é um 'submit' do formulário de exclusão.
   </script>
 
   <!-- Bootstrap JS -->
