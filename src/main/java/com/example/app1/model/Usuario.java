@@ -39,7 +39,9 @@ public class Usuario implements UserDetails {
     private UserEnum role = UserEnum.ROLE_USER;
     
     public Usuario() {}
-
+    
+    
+    
     public Usuario(String nome, String email, String endereco, String senha, UserEnum role) {
         this.nomeUsuario = nome;
         this.emailUsuario = email;
@@ -47,6 +49,13 @@ public class Usuario implements UserDetails {
         this.senhaUsuario = senha;
         this.role = role;
     }
+    
+    @OneToMany(
+            mappedBy = "usuario", // "usuario" é o nome do campo lá em Restaurante.java
+            cascade = CascadeType.ALL, // Se deletar o Dono, deleta os restaurantes dele
+            orphanRemoval = true // Se remover um restaurante da lista, ele é deletado
+        )
+        private List<Restaurante> restaurantes;
 
     // Getters e Setters
     public Long getIdUsuario() {

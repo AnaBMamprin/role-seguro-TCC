@@ -10,9 +10,11 @@ public class RestauranteDTO {
 	private String endereco;
 	private String site;
 	private Long id;
-	private String email;
-	private String senha;
 	private String caminhoFoto;
+	private String estado;
+	private String rua;
+	private String numero;
+	private String bairro;
 	
 	
 	public RestauranteDTO() {}
@@ -20,7 +22,7 @@ public class RestauranteDTO {
 	
 	
 	public RestauranteDTO(String nome, String cidade, String culinaria, String tipodeprato, String horario,
-			String endereco, String site, Long id, String email, String senha, String caminhoFoto) {
+			String endereco, String site, Long id, String caminhoFoto, String estado, String rua, String numero, String bairro) {
 		
 		this.nome = nome;
 		this.cidade = cidade;
@@ -30,10 +32,64 @@ public class RestauranteDTO {
 		this.endereco = endereco;
 		this.site = site;
 		this.id = id;
-		this.email = email;
-		this.senha = senha;
 		this.caminhoFoto = caminhoFoto;
+		this.estado = estado;
+		this.rua = rua;
+		this.numero = numero;
+		this.bairro = bairro;
 	}
+
+	
+	
+	
+	
+	public String getBairro() {
+		return bairro;
+	}
+
+
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+
+
+	public String getRua() {
+		return rua;
+	}
+
+
+
+	public void setRua(String rua) {
+		this.rua = rua;
+	}
+
+
+
+	public String getNumero() {
+		return numero;
+	}
+
+
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+
+
+	public String getEstado() {
+		return estado;
+	}
+
+
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+
 
 	public String getCaminhoFoto() {
 		return caminhoFoto;
@@ -44,28 +100,6 @@ public class RestauranteDTO {
 	public void setCaminhoFoto(String caminhoFoto) {
 		this.caminhoFoto = caminhoFoto;
 	}
-
-
-
-	public String getEmail() {
-		return email;
-	}
-
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-
-	public String getSenha() {
-		return senha;
-	}
-
-
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
 
 	public Long getId() {
 		return id;

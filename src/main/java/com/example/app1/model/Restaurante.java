@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -23,8 +24,8 @@ public class Restaurante {
 	private String nome;
 	@Column (name = "cidade")
 	private String cidade;
-
-
+	@Column (name = "Estado")
+	private String estado;
 	@Column (name = "culinaria")
 	private String culinaria;
 	@Column  (name = "tipodeprato")
@@ -41,17 +42,22 @@ public class Restaurante {
 	private Double longitude;
 	@Column(name = "caminho_foto")
 	private String caminhoFoto;
+	@Column(name = "rua")
+	private String rua;
+	@Column(name = "numero")
+	private String numero;
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "Usuario_id", referencedColumnName = "idUsuario") // IMPORTANTE: Verifique o nome da PK do seu UsuarioModel
-    private Usuario usuario;
+	
+	@ManyToOne(fetch = FetchType.LAZY) // "MUITOS" Restaurantes para "UM" Usuário
+	@JoinColumn(name = "usuario_id", referencedColumnName = "idUsuario") // O nome da sua FK
+	private Usuario usuario;
 	
 	
 	public Restaurante() {}
 	
 
 	public Restaurante( String nome, String cidade, String culinaria, String tipodeprato, String horario,
-			String endereco, String site) {
+			String endereco, String site, String estado, String rua, String numero) {
 		this.nome = nome;
 		this.cidade = cidade;
 		this.culinaria = culinaria;
@@ -59,9 +65,43 @@ public class Restaurante {
 		this.horario = horario;
 		this.endereco = endereco;
 		this.site = site;
+		this.estado = estado;
+		this.rua = rua;
+		this.numero = numero;
 	}
 	
 	
+	
+	
+	public String getRua() {
+		return rua;
+	}
+
+
+	public void setRua(String rua) {
+		this.rua = rua;
+	}
+
+
+	public String getNumero() {
+		return numero;
+	}
+
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+
+	public String getEstado() {
+		return estado;
+	}
+
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
 
 	public Usuario getUsuario() {
 		return usuario;

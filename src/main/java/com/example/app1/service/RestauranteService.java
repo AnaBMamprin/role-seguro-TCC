@@ -50,8 +50,14 @@ public class RestauranteService {
         
         // (Lógica do Geocoding - está correta)
         try {
-            String endereco = restauranteDTO.getEndereco();
-            String enderecoFormatado = URLEncoder.encode(endereco, StandardCharsets.UTF_8);
+        	String enderecoCompleto = String.format(
+        	        "%s, %s, %s, %s",
+        	        restauranteDTO.getEndereco(), 
+        	        restauranteDTO.getCidade(),   
+        	        restauranteDTO.getEstado(),  
+        	        "Brasil"                     
+        	    );
+            String enderecoFormatado = URLEncoder.encode(enderecoCompleto, StandardCharsets.UTF_8);
             String url = "https://maps.googleapis.com/maps/api/geocode/json" +
                          "?address=" + enderecoFormatado +
                          "&key=" + apiKey;
@@ -124,9 +130,10 @@ public class RestauranteService {
      // VERIFICA SE O ENDEREÇO MUDOU ANTES DE FAZER GEOCODING (CORRIGIDO)
      // ==============================================================
 
-     String enderecoNovo = dto.getEndereco();
-     
-     String enderecoAntigo = restaurante.getEndereco();
+        String enderecoNovo = dto.getEndereco();
+        String cidadeNova = dto.getCidade();     // <-- Pegue a nova cidade
+        String estadoNovo = dto.getEstado();   // <-- Pegue o novo estado
+        String enderecoAntigo = restaurante.getEndereco();
 
      // SÓ executa o Geocoding se:
      // 1. O endereço novo NÃO for nulo ou vazio
@@ -135,9 +142,19 @@ public class RestauranteService {
 
          System.out.println("[SERVICE ATUALIZAR] Endereço mudou. Buscando novas coordenadas...");
          restaurante.setEndereco(enderecoNovo); 
-
+         restaurante.setCidade(cidadeNova);     // <-- Faltava isso
+         restaurante.setEstado(estadoNovo);
          try {
-             String enderecoFormatado = URLEncoder.encode(dto.getEndereco(), StandardCharsets.UTF_8);
+        	 
+        	 String enderecoCompleto = String.format(
+        	            "%s, %s, %s, %s",
+        	            enderecoNovo,
+        	            cidadeNova,
+        	            estadoNovo,
+        	            "Brasil"
+        	        );
+        	 
+             String enderecoFormatado = URLEncoder.encode(enderecoCompleto, StandardCharsets.UTF_8);
              String url = "https://maps.googleapis.com/maps/api/geocode/json" +
                           "?address=" + enderecoFormatado +
                           "&key=" + apiKey;
@@ -188,47 +205,86 @@ public class RestauranteService {
         repo.save(restaurante);
     }
     
-    public void salvarRestaurante(RestauranteDTO dto) {
-        
-        Restaurante restaurante;
-        Usuario contaUsuario;
+    @Transactional
+    public void salvarRestaurante(RestauranteDTO dto, Long idDoUsuarioDono) {
 
-        if (dto.getId() != null && dto.getId() > 0) {
-            // MODO EDIÇÃO
-            restaurante = repo.findById(dto.getId()).orElseThrow();
-            contaUsuario = restaurante.getUsuario(); 
+        // 1. BUSCAR O DONO (O Usuário JÁ DEVE EXISTIR)
+        // Não vamos mais criar um 'new Usuario()'
+        Usuario dono = usuarioRepository.findById(idDoUsuarioDono)
+                .orElseThrow(() -> new RuntimeException("Usuário 'Dono' não encontrado com ID: " + idDoUsuarioDono));
+
+        // 2. BUSCAR COORDENADAS (LÓGICA DO GEOCODING CORRIGIDA)
+        double latitude = 0.0;
+        double longitude = 0.0;
+        String enderecoCompletoParaSalvar = "";
+
+        try {
+            // CORREÇÃO: Usar os campos separados do DTO
+            String enderecoCompletoParaGoogle = String.format(
+                "%s, %s, %s, %s, %s",
+                dto.getRua(),       // "Avenida Estados Unidos"
+                dto.getNumero(),    // "479"
+                dto.getBairro(),    // "Jardim das Nações"
+                dto.getCidade(),    // "Guarulhos"
+                dto.getEstado()     // "SP"
+            );
             
-            contaUsuario.setEmailUsuario(dto.getEmail());
-            contaUsuario.setNomeUsuario(dto.getNome());  
-          
-            if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
-                contaUsuario.setSenhaUsuario(passwordEncoder.encode(dto.getSenha()));
+            // Vamos salvar o endereço no banco de forma legível
+            enderecoCompletoParaSalvar = dto.getRua() + ", " + dto.getNumero();
+
+            System.out.println("[SERVICE salvarRestaurante] Buscando coordenadas para: " + enderecoCompletoParaGoogle);
+            
+            String enderecoFormatado = URLEncoder.encode(enderecoCompletoParaGoogle, StandardCharsets.UTF_8);
+            String url = "https://maps.googleapis.com/maps/api/geocode/json" +
+                         "?address=" + enderecoFormatado +
+                         "&key=" + apiKey;
+
+            String jsonResponse = restTemplate.getForObject(url, String.class);
+            JsonNode root = objectMapper.readTree(jsonResponse);
+            JsonNode status = root.path("status");
+
+            if (status.asText().equals("OK")) {
+                JsonNode location = root.path("results").get(0).path("geometry").path("location");
+                latitude = location.path("lat").asDouble();
+                longitude = location.path("lng").asDouble();
+                System.out.println("[GOOGLE API] SUCESSO! Lat: " + latitude + ", Lng: " + longitude);
+            } else {
+                System.err.println("Erro de Geocoding: " + status.asText());
             }
-
-        } else {
-            restaurante = new Restaurante();
-            contaUsuario = new Usuario();
-
-            // Dados da conta
-            contaUsuario.setEmailUsuario(dto.getEmail());
-            contaUsuario.setSenhaUsuario(passwordEncoder.encode(dto.getSenha())); // CRIPTOGRAFA A SENHA
-            contaUsuario.setRole(UserEnum.ROLE_RESTAURANTE); // <-- AQUI A MÁGICA ACONTECE
-            contaUsuario.setNomeUsuario(dto.getNome()); 
-            // (outros campos do usuário, se houver)
+        } catch (Exception e) {
+            System.err.println("Falha ao chamar a API de Geocoding em salvarRestaurante.");
+            e.printStackTrace();
         }
 
-        // Preenche/Atualiza os dados do Restaurante
+        // 3. CRIAR O NOVO RESTAURANTE
+        Restaurante restaurante = new Restaurante();
+
+        // 4. PREENCHER OS DADOS DO RESTAURANTE (NENHUM DADO DE USUÁRIO AQUI)
         restaurante.setNome(dto.getNome());
         restaurante.setCulinaria(dto.getCulinaria());
         restaurante.setHorario(dto.getHorario());
-        // ... (etc.) ...
-
-        // ASSOCIAR a conta ao restaurante
-        restaurante.setUsuario(contaUsuario);
+        restaurante.setSite(dto.getSite());
+        restaurante.setTipodeprato(dto.getTipodeprato());
+        restaurante.setCaminhoFoto(dto.getCaminhoFoto());
         
-        // Salvar o Restaurante (O Cascade.ALL salva o Usuário junto)
+        // Dados do endereço (corrigidos)
+        restaurante.setEndereco(enderecoCompletoParaSalvar); // Salva "Avenida Estados Unidos, 479"
+        restaurante.setCidade(dto.getCidade());
+        restaurante.setEstado(dto.getEstado());
+        // (Seu Model precisa ter Bairro, se você quiser salvar)
+        // restaurante.setBairro(dto.getBairro()); 
+        
+        // Dados do Geocoding
+        restaurante.setLatitude(latitude);
+        restaurante.setLongitude(longitude);
+
+        // 5. ATRELAR O DONO AO RESTAURANTE (A MÁGICA DO @ManyToOne)
+        restaurante.setUsuario(dono);
+        
+        // 6. SALVAR
+        // O JPA vai salvar o restaurante e preencher a chave estrangeira 'usuario_id'
         repo.save(restaurante);
-    } 
+    }
     
     public String getGoogleMapsApiKey() {
         return this.apiKey;
