@@ -141,6 +141,7 @@ public class RestauranteController {
             return "redirect:/restaurantes";
         }
     }
+    
 
     // ======================================================
     // COPIE O MÉTODO AUXILIAR PARA CÁ TAMBÉM

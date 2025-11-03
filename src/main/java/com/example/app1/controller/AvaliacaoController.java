@@ -26,7 +26,7 @@ public class AvaliacaoController {
 	public String mostrarPaginaRestaurantes(Model model) {
 		List<Avaliacao> listaDeAvaliacoes = serv.ListarTodasAvaliacoes();
 		model.addAttribute("avaliacoes", listaDeAvaliacoes);
-		model.addAttribute("novaAvaliacao", new AvaliacaoDTO("", ""));
+		model.addAttribute("novaAvaliacao", new AvaliacaoDTO());
 		return "restaurantes"; 
 	}
 	
