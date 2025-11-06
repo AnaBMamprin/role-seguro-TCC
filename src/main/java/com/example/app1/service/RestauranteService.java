@@ -38,70 +38,7 @@ public class RestauranteService {
     // ========================================================================
     // SEU MÉTODO DE CADASTRO (QUE JÁ FIZEMOS - ESTÁ CORRETO)
     // ========================================================================
-    @Transactional
-	public void converteRestaurantes( RestauranteDTO restauranteDTO ) {
-    	
-    	System.out.println("--- [SERVICE] INICIANDO CONVERSÃO ---");
-        // PONTO CRÍTICO 3: O DTO chegou no service?
-        System.out.println("[SERVICE] DTO recebido. Foto no DTO: " + restauranteDTO.getCaminhoFoto());
-		
-        double latitude = 0.0;
-        double longitude = 0.0;
-        
-        // (Lógica do Geocoding - está correta)
-        try {
-        	String enderecoCompleto = String.format(
-        	        "%s, %s, %s, %s",
-        	        restauranteDTO.getEndereco(), 
-        	        restauranteDTO.getCidade(),   
-        	        restauranteDTO.getEstado(),  
-        	        "Brasil"                     
-        	    );
-            String enderecoFormatado = URLEncoder.encode(enderecoCompleto, StandardCharsets.UTF_8);
-            String url = "https://maps.googleapis.com/maps/api/geocode/json" +
-                         "?address=" + enderecoFormatado +
-                         "&key=" + apiKey;
-
-            String jsonResponse = restTemplate.getForObject(url, String.class);
-            JsonNode root = objectMapper.readTree(jsonResponse);
-            JsonNode status = root.path("status");
-
-            if (status.asText().equals("OK")) {
-                JsonNode location = root.path("results").get(0).path("geometry").path("location");
-                latitude = location.path("lat").asDouble();
-                longitude = location.path("lng").asDouble();
-            } else {
-                System.err.println("Erro de Geocoding: " + status.asText());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Falha ao chamar a API de Geocoding.");
-        }
-        
-        // 1. Cria o objeto
-		Restaurante restaurante = new Restaurante();
-        
-        // 2. Seta todos os dados do DTO
-        restaurante.setNome(restauranteDTO.getNome());
-        restaurante.setCidade(restauranteDTO.getCidade());
-        restaurante.setCulinaria(restauranteDTO.getCulinaria()); 
-        restaurante.setTipodeprato(restauranteDTO.getTipodeprato());
-        restaurante.setHorario(restauranteDTO.getHorario());
-        restaurante.setEndereco(restauranteDTO.getEndereco());
-        restaurante.setSite(restauranteDTO.getSite());
-        
-        // 3. Seta as coordenadas
-        restaurante.setLatitude(latitude);
-        restaurante.setLongitude(longitude);
-        
-        if (restauranteDTO.getCaminhoFoto() != null && !restauranteDTO.getCaminhoFoto().isEmpty()) {
-            restaurante.setCaminhoFoto(restauranteDTO.getCaminhoFoto());
-        }
-        
-        // 5. Salva no banco
-        repo.save(restaurante);
-	}
-	
+    
     // ========================================================================
     // PARTE 1: ADICIONE ESTE NOVO MÉTODO DE ATUALIZAÇÃO
     // ========================================================================
@@ -277,6 +214,77 @@ public class RestauranteService {
         // O JPA vai salvar o restaurante e preencher a chave estrangeira 'usuario_id'
         repo.save(restaurante);
     }
+    
+    @Transactional
+	public void converteRestaurantes( RestauranteDTO dto ) {
+    	
+    	System.out.println("--- [SERVICE DATA-LOADER] INICIANDO CONVERSÃO ---");
+		
+        double latitude = 0.0;
+        double longitude = 0.0;
+        String enderecoParaSalvar = "";
+        
+        try {
+            // --- CORREÇÃO CRÍTICA ---
+            // Usando os campos separados (Rua, Numero, Bairro)
+            // que o DataLoader vai enviar no DTO.
+            String enderecoCompletoParaGoogle = String.format(
+                "%s, %s, %s, %s, %s",
+                dto.getRua(),       // <-- CORRIGIDO
+                dto.getNumero(),    // <-- CORRIGIDO
+                dto.getBairro(),    // <-- CORRIGIDO
+                dto.getCidade(),
+                dto.getEstado()
+            );
+            
+            enderecoParaSalvar = dto.getRua() + ", " + dto.getNumero();
+
+            System.out.println("[SERVICE DATA-LOADER] Buscando coordenadas para: " + enderecoCompletoParaGoogle);
+            
+            String enderecoFormatado = URLEncoder.encode(enderecoCompletoParaGoogle, StandardCharsets.UTF_8);
+            String url = "https://maps.googleapis.com/maps/api/geocode/json" +
+                         "?address=" + enderecoFormatado +
+                         "&key=" + apiKey;
+
+            String jsonResponse = restTemplate.getForObject(url, String.class);
+            JsonNode root = objectMapper.readTree(jsonResponse);
+            JsonNode status = root.path("status");
+
+            if (status.asText().equals("OK")) {
+                JsonNode location = root.path("results").get(0).path("geometry").path("location");
+                latitude = location.path("lat").asDouble();
+                longitude = location.path("lng").asDouble();
+                System.out.println("[GOOGLE API] SUCESSO! Lat: " + latitude + ", Lng: " + longitude);
+            } else {
+                System.err.println("Erro de Geocoding (DataLoader): " + status.asText());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Falha ao chamar a API de Geocoding (DataLoader).");
+        }
+        
+        // 1. Cria o objeto
+		Restaurante restaurante = new Restaurante();
+        
+        // 2. Seta todos os dados do DTO
+        restaurante.setNome(dto.getNome());
+        restaurante.setCidade(dto.getCidade());
+        restaurante.setEstado(dto.getEstado());
+        restaurante.setCulinaria(dto.getCulinaria()); 
+        restaurante.setTipodeprato(dto.getTipodeprato());
+        restaurante.setHorario(dto.getHorario());
+        restaurante.setEndereco(enderecoParaSalvar); // Salva "Rua X, 123"
+        restaurante.setSite(dto.getSite());
+        restaurante.setCep(dto.getCep()); // Salva o CEP
+        restaurante.setBairro(dto.getBairro()); // Salva o Bairro
+        
+        // 3. Seta as coordenadas
+        restaurante.setLatitude(latitude);
+        restaurante.setLongitude(longitude);
+        
+        // 4. Salva no banco (sem 'Usuario', pois é dado de teste)
+        repo.save(restaurante);
+	}
     
     public String getGoogleMapsApiKey() {
         return this.apiKey;

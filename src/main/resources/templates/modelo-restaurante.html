@@ -117,30 +117,96 @@
 		        /*]]>*/
 		    </script>
 
-		    <script>
-		        // Esta função é chamada pela API do Google (callback=initMap)
-		        function initMap() {
-		            // 1. Cria o objeto de localização
-		            const localizacao = { lat: restauranteLat, lng: restauranteLng };
+			<script>
+					        // Esta função é chamada pela API do Google (callback=initMap)
+					        function initMap() {
+					            
+			                    // 1. VERIFICA SE AS COORDENADAS SÃO VÁLIDAS
+			                    // (restauranteLat e restauranteLng vêm do script th:inline)
+								if (restauranteLat == 0 || restauranteLng == 0) {
+								                        
+											            // 2. SE FOREM 0, MOSTRE A MENSAGEM
+											            const mapaDiv = document.getElementById("mapa");
+											            mapaDiv.innerHTML = '<div class="alert alert-warning h-100 d-flex align-items-center justify-content-center">Localização não disponível no mapa.</div>';
+											            
+											            // 3. NÃO TENTA CRIAR O MAPA
+											            return; 
+											        }
+								                    // --- FIM DA CORREÇÃO ---
 
-		            // 2. Cria o mapa, centralizado no restaurante
-		            const map = new google.maps.Map(document.getElementById("mapa"), {
-		                zoom: 16, // Nível de zoom (15-17 é bom para endereços)
-		                center: localizacao,
-		            });
+											        // 4. SE AS COORDENADAS EXISTIREM (NÃO FOREM 0), CRIA O MAPA
+											        const localizacao = { lat: restauranteLat, lng: restauranteLng };
 
-		            // 3. Cria um marcador (pin) no local
-		            const marker = new google.maps.Marker({
-		                position: localizacao,
-		                map: map,
-		                title: restauranteNome, // Texto que aparece ao passar o mouse
-		            });
-		        }
-		    </script>
+											        const map = new google.maps.Map(document.getElementById("mapa"), {
+											            zoom: 16, 
+											            center: localizacao,
+											        });
+
+											        const marker = new google.maps.Marker({
+											            position: localizacao,
+											            map: map,
+											            title: restauranteNome,
+											        });
+											    }
+					    </script>
 
 		    <script async
 		        th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey} + '&callback=initMap'}">
 		    </script>
+			
+			<div class="modal fade" id="avaliacaoModal" tabindex="-1" aria-labelledby="avaliacaoModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    
+			    <form th:action="@{/restaurantes/salvar}" 
+			          th:object="${novaAvaliacao}" 
+			          method="post" 
+			          class="modal-content">
+			      
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="avaliacaoModalLabel">
+			            Avalie: <span th:text="${restaurante.nome}"></span>
+			        </h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      
+			      <div class="modal-body">
+			        
+			        <div class="mb-3">
+			          <label for="tituloAvaliacao" class="form-label">Título da sua avaliação</label>
+			          <input type="text" class="form-control" id="tituloAvaliacao" 
+			                 th:field="*{tituloAvaliação}" required>
+			        </div>
+			        
+			        <div class="mb-3">
+			          <label for="textoAvaliacao" class="form-label">Sua avaliação</label>
+			          <textarea class="form-control" id="textoAvaliacao" rows="4" 
+			                    th:field="*{textoAvaliação}" required></textarea>
+			        </div>
+			        
+			        <div class="mb-3">
+			          <label for="notaAvaliacao" class="form-label">Sua nota</label>
+			          <select class="form-select" id="notaAvaliacao" th:field="*{nota}" required>
+			            <option value="" disabled selected>Selecione uma nota...</option>
+			            <option value="5">⭐⭐⭐⭐⭐ (Excelente)</option>
+			            <option value="4">⭐⭐⭐⭐ (Bom)</option>
+			            <option value="3">⭐⭐⭐ (Regular)</option>
+			            <option value="2">⭐⭐ (Ruim)</option>
+			            <option value="1">⭐ (Péssimo)</option>
+			          </select>
+			        </div>
+			        
+			        <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
+			        
+			      </div>
+			      
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+			        <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+			      </div>
+			      
+			    </form> </div>
+			</div>
+			
 
 	</body>
 	</html>

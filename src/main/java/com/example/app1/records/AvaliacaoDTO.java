@@ -5,14 +5,14 @@ public class AvaliacaoDTO {
 	private Long id;
 	private String tituloAvaliação;
 	private String textoAvaliação;
-	private int nota; 
+	private Integer nota; 
     private Long usuarioId; 
     private Long restauranteId;
 	
 	public AvaliacaoDTO(){} 
 	
 
-	public AvaliacaoDTO(Long id, String tituloAvaliação, String textoAvaliação, int nota, Long usuarioId,
+	public AvaliacaoDTO(Long id, String tituloAvaliação, String textoAvaliação, Integer nota, Long usuarioId,
 			Long restauranteId) {
 		super();
 		this.id = id;
@@ -25,12 +25,12 @@ public class AvaliacaoDTO {
 	
 	
 
-	public int getNota() {
+	public Integer getNota() {
 		return nota;
 	}
 
 
-	public void setNota(int nota) {
+	public void setNota(Integer nota) {
 		this.nota = nota;
 	}
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.Authentication;
@@ -21,9 +22,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import com.example.app1.model.Avaliacao;
 import com.example.app1.model.Restaurante;
 import com.example.app1.model.Usuario;
 import com.example.app1.records.RestauranteDTO;
+import com.example.app1.repository.AvaliacaoRepository;
 import com.example.app1.repository.RestauranteRepository;
 import com.example.app1.repository.UserRepository;
 import com.example.app1.service.RestauranteService;
@@ -36,6 +39,9 @@ public class RestauranteController {
     private final RestauranteService service;
     private final FavoritoService favoritoService;
     private final UserRepository userRepository;
+    
+    @Autowired
+    AvaliacaoRepository avaliacaoRepository;
     
     @Value("${google.maps.api.key}")
     private String apiKey;
@@ -78,8 +84,8 @@ public class RestauranteController {
         }
         
         // --- Lógica para Feed de Avaliações (Quando implementar) ---
-        // List<Avaliacao> avaliacoesRecentes = avaliacaoRepository.findTop5ByOrderByReviewDateDesc(); // Exemplo
-        // model.addAttribute("avaliacoesRecentes", avaliacoesRecentes);
+         List<Avaliacao> avaliacoesRecentes = avaliacaoRepository.findTop5ByOrderByDataAvaliacaoDesc(); // Exemplo
+         model.addAttribute("avaliacoesRecentes", avaliacoesRecentes);
 
         return "inicial"; // O nome do seu template HTML
     }
@@ -118,26 +124,34 @@ public class RestauranteController {
     }
     
     @GetMapping("/modelo-restaurante")
-    public String detalhesRestaurante(@RequestParam("id") Long id, Model model) {
+    public String detalhesRestaurante(
+            @RequestParam("id") Long id, // <-- @RequestParam pega o "?id=45"
+            Model model
+        ) {
+        
         Optional<Restaurante> restauranteOpt = reposi.findById(id);
 
         if (restauranteOpt.isPresent()) {
             Restaurante restaurante = restauranteOpt.get();
             
-            // --- ADICIONAR LÓGICA DE FAVORITOS ---
             Long usuarioId = getCurrentUserId();
             boolean isFavorito = (usuarioId != null) && favoritoService.isFavorito(usuarioId, id);
             
-            // --- Lógica para ${podeAvaliar} (Exemplo) ---
-            // boolean podeAvaliar = verificarSePodeAvaliar(usuarioId, id); // Implementar esta lógica
-            // model.addAttribute("podeAvaliar", podeAvaliar); 
-
+            // O método que criamos (agora vai funcionar)
+            boolean podeAvaliar = verificarSePodeAvaliar(usuarioId, id);
+            
             model.addAttribute("restaurante", restaurante);
-            model.addAttribute("isFavorito", isFavorito); 
-            model.addAttribute("googleMapsApiKey", service.getGoogleMapsApiKey());// Envia para o Thymeleaf
+            model.addAttribute("isFavorito", isFavorito);
+            model.addAttribute("googleMapsApiKey", service.getGoogleMapsApiKey()); // ou getGoogleMapsApiKey()
+            model.addAttribute("podeAvaliar", podeAvaliar); 
 
-            return "modelo-restaurante";
+            // A linha mais importante para o seu formulário de avaliação
+            model.addAttribute("novaAvaliacao", new com.example.app1.records.AvaliacaoDTO());
+
+            // Diz ao Spring para carregar o ARQUIVO "modelo-restaurante.html"
+            return "modelo-restaurante"; 
         } else {
+            // Se o ID não existir, volta para a lista
             return "redirect:/restaurantes";
         }
     }
@@ -167,6 +181,19 @@ public class RestauranteController {
             }
         }
         return null;
+    }
+    private boolean verificarSePodeAvaliar(Long usuarioId, Long restauranteId) {
+        // 1. Se o usuário não está logado, ele não pode avaliar.
+        if (usuarioId == null) {
+            return false;
+        }
+        
+        // 2. Pergunta ao repositório se já existe uma avaliação com essa combinação.
+        // (Vamos ter que criar este método no repositório no próximo passo).
+        boolean jaAvaliou = avaliacaoRepository.existsByUsuario_IdUsuarioAndRestaurante_Id(usuarioId, restauranteId);
+        
+        // 3. Ele "pode avaliar" se ele "NÃO" ( ! ) "já avaliou".
+        return !jaAvaliou;
     }
     
     public String getGoogleMapsApiKey() {

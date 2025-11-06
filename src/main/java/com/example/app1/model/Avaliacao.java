@@ -29,10 +29,10 @@ public class Avaliacao {
 	
  // --- CAMPO NOVO: NOTA ---
  @Column(nullable = false) // Uma avaliação deve ter nota
- private int nota; // (Ex: 1, 2, 3, 4, 5)
+ private Integer nota; // (Ex: 1, 2, 3, 4, 5)
  
  // --- CAMPO NOVO: DATA ---
- @Column(nullable = false, updatable = false)
+ @Column(nullable = false, updatable = false, name = "data_avaliacao")
  private LocalDateTime dataAvaliacao;
  
  // --- RELACIONAMENTO: USUÁRIO ---
@@ -54,7 +54,7 @@ public class Avaliacao {
 	
 	
   
- public Avaliacao(Long idAvaliacao, String tituloAvaliacao, String textoAvaliacao, int nota, LocalDateTime dataAvaliacao,
+ public Avaliacao(Long idAvaliacao, String tituloAvaliacao, String textoAvaliacao, Integer nota, LocalDateTime dataAvaliacao,
 		Usuario usuario, Restaurante restaurante) {
 	super();
 	this.idAvaliacao = idAvaliacao;
@@ -102,11 +102,11 @@ public class Avaliacao {
 		TextoAvaliacao = textoAvaliacao;
 	}
 
-	public int getNota() {
+	public Integer getNota() {
 		return nota;
 	}
 
-	public void setNota(int nota) {
+	public void setNota(Integer nota) {
 		this.nota = nota;
 	}
 

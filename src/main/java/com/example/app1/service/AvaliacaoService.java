@@ -29,10 +29,15 @@ public class AvaliacaoService {
 	public Avaliacao SalvarAvaliacao(AvaliacaoDTO avDTO) {
 		 
         // 1. Buscar as entidades "pai" (Quem escreveu e Para qual restaurante)
-        Usuario usuario = usuarioRepository.findById(avDTO.getId())
+        
+        // --- CORREÇÃO 1 (ESTA É A LINHA 40) ---
+        // Usar o ID do usuário que veio no DTO
+        Usuario usuario = usuarioRepository.findById(avDTO.getUsuarioId()) 
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + avDTO.getUsuarioId()));
         
-        Restaurante restaurante = restauranteRepository.findById(avDTO.getId())
+        // --- CORREÇÃO 2 ---
+        // Usar o ID do restaurante que veio no DTO
+        Restaurante restaurante = restauranteRepository.findById(avDTO.getRestauranteId()) 
                 .orElseThrow(() -> new RuntimeException("Restaurante não encontrado com ID: " + avDTO.getRestauranteId()));
 		
         // 2. Criar a nova avaliação
@@ -41,14 +46,13 @@ public class AvaliacaoService {
         // 3. Preencher os dados
 		 novaAvaliacao.setTituloAvaliacao(avDTO.getTituloAvaliação()); 
 		 novaAvaliacao.setTextoAvaliacao(avDTO.getTextoAvaliação());
-        //novaAvaliacao.setNota(avDTO.nota()); // <-- Salvar a nota
+         novaAvaliacao.setNota(avDTO.getNota()); // Salva a nota
 		 
-        // 4. --- A CORREÇÃO CRÍTICA ---
-        // Ligar a avaliação ao usuário e ao restaurante
+        // 4. Ligar a avaliação ao usuário e ao restaurante
         novaAvaliacao.setUsuario(usuario);
         novaAvaliacao.setRestaurante(restaurante);
-        // -----------------------------
         
+        // 5. Salvar no banco
 		 return repo.save(novaAvaliacao);
 	}
 	

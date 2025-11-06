@@ -1,5 +1,7 @@
 package com.example.app1.controller;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,10 @@ import com.example.app1.repository.UserRepository;
 import com.example.app1.service.FileStorageService;
 import com.example.app1.service.RestauranteService;
 import com.example.app1.usuarioEnums.UserEnum;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -51,12 +57,16 @@ public class AdmController {
         model.addAttribute("culinariasUnicas", culinarias);
         return "adm";
     }
+    
+   
 
-    @PostMapping("/restauranteCadastrar")
+    @PostMapping("/adm/restauranteCadastrar")
     public String cadastrarRestaurante(
             @ModelAttribute RestauranteDTO dto,
-            @RequestParam("fotoFile") MultipartFile fotoFile,
-            RedirectAttributes redirectAttributes) { 
+            // 1. Receba o ID do Dono do <select> que está no formulário
+            @RequestParam("idDoUsuarioDono") Long idDono, 
+            @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile, RedirectAttributes redirectAttributes
+        ) { 
     	
     	System.out.println("--- [ADM CONTROLLER] INICIANDO CADASTRO ---");
 
@@ -81,7 +91,7 @@ public class AdmController {
             }
 
             // 6. Manda o DTO (com ou sem foto) para o service
-            restauranteService.converteRestaurantes(dto);
+            restauranteService.salvarRestaurante(dto, idDono); 
             
             redirectAttributes.addFlashAttribute("sucesso", "Restaurante cadastrado com sucesso!");
 
