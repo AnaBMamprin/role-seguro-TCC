@@ -43,7 +43,7 @@ public class RestauranteService {
     // PARTE 1: ADICIONE ESTE NOVO MÉTODO DE ATUALIZAÇÃO
     // ========================================================================
     @Transactional
-    public void atualizarRestaurante(Long id, RestauranteDTO dto) {
+    public void atualizarRestaurante(Long id, RestauranteDTO dto, Long idDono) {
         
         // Dica: Usar orElseThrow é mais seguro para garantir que o restaurante existe
         Restaurante restaurante = repo.findById(id)
@@ -130,7 +130,12 @@ public class RestauranteService {
             System.out.println("[SERVICE ATUALIZAR] Campo 'rua' vazio. Endereço antigo mantido.");
         }
         
-        // 7. Salva o restaurante (com ou sem o endereço novo)
+        // 7. Se foi passado um idDono, tenta setar o dono
+        if (idDono != null) {
+            usuarioRepository.findById(idDono).ifPresent(restaurante::setUsuario);
+        }
+
+        // 8. Salva o restaurante (com ou sem o endereço novo)
         repo.save(restaurante);
     }
     

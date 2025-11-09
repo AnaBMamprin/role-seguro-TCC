@@ -201,6 +201,16 @@
 				    </div>
 				    
 					<div class="modal-body">
+					    <!-- Selecionar usuário dono -->
+					    <label class="form-label" style="color: black;">Dono (Usuário):</label>
+					    <select class="form-select mb-2" name="idDoUsuarioDono" id="selectUsuarioDono" required>
+					        <option value="" disabled selected>Selecione o usuário dono</option>
+					        <option th:each="u : ${usuarios}"
+					                th:value="${u.idUsuario}"
+					                th:text="${u.nomeUsuario + ' (' + u.emailUsuario + ')'}">
+					        </option>
+					    </select>
+
 					    <input class="form-control mb-2" type="text" name="nome" id="modalRestauranteNome" placeholder="Nome" required>
 					    <input class="form-control mb-2" type="text" name="horario" id="modalRestauranteHorario" placeholder="Horário de funcionamento" required>
 						

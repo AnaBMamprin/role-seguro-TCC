@@ -106,11 +106,12 @@ public class AdmController {
     
             // 3. Verifica se uma NOVA foto foi enviada
         	@PostMapping("/restauranteEditar")
-        	public String editarRestaurante(
-        	        @ModelAttribute RestauranteDTO dto, 
-        	        @RequestParam("id") Long id,
-        	        @RequestParam("fotoFile") MultipartFile fotoFile,
-        	        RedirectAttributes redirectAttributes) { 
+        public String editarRestaurante(
+            @ModelAttribute RestauranteDTO dto, 
+            @RequestParam("id") Long id,
+            @RequestParam(value = "idDoUsuarioDono", required = false) Long idDono,
+            @RequestParam("fotoFile") MultipartFile fotoFile,
+            RedirectAttributes redirectAttributes) { 
         	    
         	    System.out.println("--- [ADM CONTROLLER] INICIANDO EDIÇÃO (ID: " + id + ") ---"); // <-- ADICIONE
 
@@ -132,8 +133,8 @@ public class AdmController {
         	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Nenhuma foto nova foi enviada."); // <-- ADICIONE
         	        }
         	        
-        	        // 6. Manda para o service atualizar
-        	        restauranteService.atualizarRestaurante(id, dto);
+                    // 6. Manda para o service atualizar (passando id do dono se houver)
+                    restauranteService.atualizarRestaurante(id, dto, idDono);
         	        
         	        redirectAttributes.addFlashAttribute("sucesso", "Restaurante atualizado com sucesso!");
 
