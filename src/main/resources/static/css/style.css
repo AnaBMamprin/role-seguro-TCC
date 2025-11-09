@@ -720,3 +720,16 @@ color: var(--light);
 .alert-info h4 {
     color: #052c65; /* Cor mais escura para o título do alert */
 }
+
+/* ==================== CORREÇÃO MODAL ==================== */
+/* Força o texto dentro do modal a ser escuro, 
+  sobrescrevendo o "color: var(--light)" do body.
+*/
+.modal-content {
+  color: #212529; /* Cor de texto escura padrão */
+}
+
+/* Opcional: Garante que os títulos do modal também fiquem escuros */
+.modal-header .modal-title {
+  color: #212529;
+}
