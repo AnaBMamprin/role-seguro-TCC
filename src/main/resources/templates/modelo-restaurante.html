@@ -52,52 +52,109 @@
 		    </nav>
 
 			<div class="container my-5 restaurante-detalhes">
-			    <div class="row g-4 mb-5">
-		       	 <div class="col-md-7 mb-4 mb-md-0">
-		            <div class="d-flex align-items-center mb-3">
-		                <h1 th:text="${restaurante.nome}" class="me-3 display-5">Nome</h1>
-		                
-	                    <span class="favorite-icon fs-2" style="cursor: pointer;"
-		                      th:attr="onclick='toggleFavorito(this, ' + ${restaurante.id} + ')'"
-		                      th:title="${isFavorito ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}">
-		                    <i class="bi" th:classappend="${isFavorito ? 'bi-heart-fill text-danger' : 'bi-heart'}"></i>
-		                </span>
-		            </div>
-		            <p><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'Não informado'}"></span></p>
-		            <p><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'Não informado'}"></span></p>
-		            <p><strong>Tipo de prato:</strong> <span th:text="${restaurante.tipodeprato ?: 'Não informado'}"></span></p>
-		            <p><strong>Horário:</strong> <span th:text="${restaurante.horario ?: 'Não informado'}"></span></p>
-		            <p><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'Não informado'}"></span></p>
-		            <p><strong>Site:</strong>
-		                <a th:href="${restaurante.site ?: '#'}" th:text="${restaurante.site ?: 'Não disponível'}" target="_blank" th:if="${restaurante.site != null and !restaurante.site.isEmpty()}"></a>
-		                <span th:unless="${restaurante.site != null and !restaurante.site.isEmpty()}">Não disponível</span>
-		            </p>
-					<div sec:authorize="isAuthenticated()" class="alert alert-info mt-4" role="alert">
-					    <h4 class="alert-heading">Deixe sua Avaliação!</h4>
-					    <p>Gostou da sua experiência neste restaurante? Compartilhe sua opinião com outros usuários!</p>
-					    <hr>
-					    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#avaliacaoModal">
-					      Avaliar este Restaurante
-					    </button>
-					</div>		        </div>
-		        <div class="col-md-5">
-					<img th:if="${restaurante.caminhoFoto != null AND restaurante.caminhoFoto != ''}"
-					         th:src="@{/uploads/restaurante-fotos/{filename}(filename=${restaurante.caminhoFoto})}"
-					         th:alt="${'Foto de ' + restaurante.nome}"
-					         class="img-fluid rounded shadow-sm w-100 mb-3" 
-					         style="object-fit: cover; height: 350px; border: 3px solid white;">
 
-					    <div th:if="${restaurante.caminhoFoto == null OR restaurante.caminhoFoto == ''}"
-					         class="d-flex align-items-center justify-content-center bg-light rounded shadow-sm w-100 mb-3"
-					         style="height: 350px;">
-					        <span class="text-muted fs-4">Sem foto</span>
-					    </div>
+			    <div class="row g-4 mb-4">
+			        
+			        <div class="col-md-7">
+			            <div class="d-flex align-items-center mb-3">
+			                <h1 th:text="${restaurante.nome}" class="me-3 display-5">Nome</h1>
+			                <span class="favorite-icon fs-2" style="cursor: pointer;"
+			                      th:attr="onclick='toggleFavorito(this, ' + ${restaurante.id} + ')'"
+			                      th:title="${isFavorito ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}">
+			                    <i class="bi" th:classappend="${isFavorito ? 'bi-heart-fill text-danger' : 'bi-heart'}"></i>
+			                </span>
+			            </div>
+			            <p><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'Não informado'}"></span></p>
+			            <p><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'Não informado'}"></span></p>
+			            <p><strong>Tipo de prato:</strong> <span th:text="${restaurante.tipodeprato ?: 'Não informado'}"></span></p>
+			            <p><strong>Horário:</strong> <span th:text="${restaurante.horario ?: 'Não informado'}"></span></p>
+			            <p><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'Não informado'}"></span></p>
+			            <p><strong>Site:</strong>
+			                <a th:href="${restaurante.site ?: '#'}" th:text="${restaurante.site ?: 'Não disponível'}" target="_blank" th:if="${restaurante.site != null and !restaurante.site.isEmpty()}"></a>
+			                <span th:unless="${restaurante.site != null and !restaurante.site.isEmpty()}">Não disponível</span>
+			            </p>
+			        </div>
 
-					        <div id="mapa" style="height: 400px; width: 100%;"></div>
-		        </div>
-		    </div>
-		    <div class="mt-5">...</div>
-		</div>
+			        <div class="col-md-5">
+			            
+			            <img th:if="${restaurante.caminhoFoto != null AND restaurante.caminhoFoto != ''}"
+			                 th:src="@{/uploads/restaurante-fotos/{filename}(filename=${restaurante.caminhoFoto})}"
+			                 th:alt="${'Foto de ' + restaurante.nome}"
+			                 class="img-fluid rounded shadow-sm w-100" 
+			                 style="object-fit: cover; height: 300px; border: 3px solid white;">
+
+			            <div th:if="${restaurante.caminhoFoto == null OR restaurante.caminhoFoto == ''}"
+			                 class="d-flex align-items-center justify-content-center bg-light rounded shadow-sm w-100"
+			                 style="height: 300px;">
+			                <span class="text-muted fs-4">Sem foto</span>
+			            </div>
+			        </div>
+			    </div>
+			    <hr class="my-3" style="border-color: rgba(255,255,255,0.1);">
+
+			    <div class="row">
+			        <div class="col-12">
+
+			            <div sec:authorize="isAuthenticated()" class="alert alert-info mt-2 mb-3" role="alert">
+			                <div class="d-flex justify-content-between align-items-center">
+			                    <div>
+			                        <h4 class="alert-heading mb-0">Já visitou este local?</h4>
+			                        <p class="mb-0">Compartilhe sua opinião com outros usuários!</p>
+			                    </div>
+			                    <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#avaliacaoModal">
+			                      Deixar Avaliação
+			                    </button>
+			                </div>
+			            </div>
+			            
+			            <ul class="nav nav-tabs" id="detailsTab" role="tablist">
+			                <li class="nav-item" role="presentation">
+			                    <button class="nav-link active" id="avaliacoes-tab" data-bs-toggle="tab" data-bs-target="#avaliacoes-pane" type="button" role="tab" aria-controls="avaliacoes-pane" aria-selected="true">
+			                        <i class="bi bi-chat-right-text-fill me-1"></i>
+			                        Avaliações (<span th:text="${#lists.size(avaliacoesDoRestaurante)}"></span>)
+			                    </button>
+			                </li>
+			                <li class="nav-item" role="presentation">
+			                    <button class="nav-link" id="mapa-tab" data-bs-toggle="tab" data-bs-target="#mapa-pane" type="button" role="tab" aria-controls="mapa-pane" aria-selected="false">
+			                        <i class="bi bi-geo-alt-fill me-1"></i>
+			                        Localização
+			                    </button>
+			                </li>
+			            </ul>
+
+			            <div class="tab-content shadow-sm" id="detailsTabContent" style="background-color: #fff; border: 1px solid #dee2e6; border-top: 0; padding: 1.5rem; border-radius: 0 0 .375rem .375rem;">
+			                
+			                <div class="tab-pane fade show active" id="avaliacoes-pane" role="tabpanel" aria-labelledby="avaliacoes-tab">
+			                    <div th:if="${#lists.isEmpty(avaliacoesDoRestaurante)}" class="text-center p-4">
+			                        <i class="bi bi-chat-right-text fs-3 text-muted"></i>
+			                        <p class="mt-2 mb-0 text-muted">Este restaurante ainda não tem avaliações.</p>
+			                    </div>
+
+			                    <div class="list-group" th:unless="${#lists.isEmpty(avaliacoesDoRestaurante)}">
+			                        <div th:each="avaliacao : ${avaliacoesDoRestaurante}" class="list-group-item list-group-item-action flex-column align-items-start mb-3 border rounded">
+			                            <div class="d-flex w-100 justify-content-between mb-2">
+			                                <h5 class="mb-1">
+			                                    <span th:each="i : ${#numbers.sequence(1, 5)}">
+			                                        <i class="bi" th:classappend="${i <= avaliacao.nota} ? 'bi-star-fill text-warning' : 'bi-star text-muted'"></i>
+			                                    </span>
+			                                </h5>
+			                                <small th:if="${avaliacao.dataAvaliacao != null}" th:text="${#temporals.format(avaliacao.dataAvaliacao, 'dd/MM/yyyy')}"></small>
+			                            </div>
+			                            <h6 class="mb-1" th:text="${avaliacao.tituloAvaliacao ?: 'Avaliação sem título'}"></h6>
+			                            <p class="mb-1" th:text="${avaliacao.textoAvaliacao}"></p>
+			                            <small class="text-muted" th:text="${'Por: ' + (avaliacao.usuario?.nomeUsuario ?: 'Usuário Anônimo')}"></small>
+			                        </div>
+			                    </div>
+			                </div>
+
+			                <div class="tab-pane fade" id="mapa-pane" role="tabpanel" aria-labelledby="mapa-tab">
+			                    <div id="mapa" style="height: 400px; width: 100%; border-radius: .375rem;"></div>
+			                </div>
+			            </div>
+
+			        </div>
+			    </div>
+			    </div>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -154,7 +211,48 @@
 		<script async
 		    th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey} + '&callback=initMap'}">
 		</script>
+		<script>
+		    let mapInitialized = false;
+		    const mapaTab = document.getElementById('mapa-tab'); // Pega o botão da aba
 
+		    // Ouve o evento 'shown.bs.tab' (disparado pelo Bootstrap)
+		    mapaTab.addEventListener('shown.bs.tab', function (event) {
+		        
+		        // Se o mapa ainda não foi iniciado...
+		        if (!mapInitialized) {
+		            // ...chame sua função initMap()
+		            initMap(); 
+		            mapInitialized = true;
+		        }
+		    });
+
+		    // Sua função initMap() original (não mude nada nela)
+		    function initMap() {
+		        
+		        // 1. VERIFICA SE AS COORDENADAS SÃO VÁLIDAS
+		        if (restauranteLat == 0 || restauranteLng == 0) {
+		            const mapaDiv = document.getElementById("mapa");
+		            mapaDiv.innerHTML = '<div class="alert alert-warning h-100 d-flex align-items-center justify-content-center">Localização não disponível no mapa.</div>';
+		            return; 
+		        }
+
+		        // 4. SE AS COORDENADAS EXISTIREM, CRIA O MAPA
+		        const localizacao = { lat: restauranteLat, lng: restauranteLng };
+		        const map = new google.maps.Map(document.getElementById("mapa"), {
+		            zoom: 16, 
+		            center: localizacao,
+		        });
+		        const marker = new google.maps.Marker({
+		            position: localizacao,
+		            map: map,
+		            title: restauranteNome,
+		        });
+		    }
+		</script>
+
+		<script async
+		    th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey}}">
+		</script>
 			<script>
 					        // Esta função é chamada pela API do Google (callback=initMap)
 					        function initMap() {

@@ -733,3 +733,22 @@ color: var(--light);
 .modal-header .modal-title {
   color: #212529;
 }
+
+/* ==================== CORREÇÃO ABAS (TABS) ==================== */
+/* Garante que o texto dentro do conteúdo da aba seja escuro */
+.tab-content {
+  color: #212529; /* Preto */
+}
+
+/* Estiliza o link da aba */
+.nav-tabs .nav-link {
+  color: #495057; /* Cinza escuro */
+  font-weight: 600;
+}
+
+/* Estiliza o link da aba ATIVA */
+.nav-tabs .nav-link.active {
+  color: var(--primary); /* Sua cor primária (laranja) */
+  border-bottom-color: var(--primary) !important;
+  border-bottom-width: 3px;
+}

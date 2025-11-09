@@ -148,6 +148,9 @@ public class RestauranteController {
             // A linha mais importante para o seu formulário de avaliação
             model.addAttribute("novaAvaliacao", new com.example.app1.records.AvaliacaoDTO());
 
+            List<Avaliacao> avaliacoes = avaliacaoRepository.findByRestauranteIdOrderByDataAvaliacaoDesc(id);
+        	model.addAttribute("avaliacoesDoRestaurante", avaliacoes);
+        	
             // Diz ao Spring para carregar o ARQUIVO "modelo-restaurante.html"
             return "modelo-restaurante"; 
         } else {

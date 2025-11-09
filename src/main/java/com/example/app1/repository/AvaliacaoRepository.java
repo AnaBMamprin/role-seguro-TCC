@@ -14,5 +14,5 @@ public interface AvaliacaoRepository extends JpaRepository <Avaliacao, Long> {
 	
 	boolean existsByUsuario_IdUsuarioAndRestaurante_Id(Long usuarioId, Long restauranteId);
 	
-	
+	List<Avaliacao> findByRestauranteIdOrderByDataAvaliacaoDesc(Long restauranteId);
 }
