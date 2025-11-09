@@ -5,12 +5,12 @@
 	<head>
 	  <meta charset="UTF-8">
 	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	  <title>Detalhes do Restaurante</title>
+	  <title>TCHOMP Restaurante</title>
 	
 	  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-	  <link rel="stylesheet" th:href="@{/css/modelo-restaurante.css}">
+	  <link rel="stylesheet" th:href="@{/css/style.css}">
 	
 	  <style>
 	    #mapa {
@@ -101,21 +101,59 @@
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-		    <script th:inline="javascript">
-		        /*<![CDATA[*/
-		        
-		        // Passa as coordenadas do restaurante (do Model) para variáveis JS
-		        const restauranteLat = /*[[${restaurante.latitude}]]*/ 0;
-		        const restauranteLng = /*[[${restaurante.longitude}]]*/ 0;
-		        const restauranteNome = /*[[${restaurante.nome}]]*/ "Restaurante";
+		<script th:inline="javascript">
+		    /*<![CDATA[*/
+		    
+		    // ===================================
+		    // VARIÁVEIS DO MAPA (DO SEU CÓDIGO)
+		    // ===================================
+		    const restauranteLat = /*[[${restaurante.latitude}]]*/ 0;
+		    const restauranteLng = /*[[${restaurante.longitude}]]*/ 0;
+		    const restauranteNome = /*[[${restaurante.nome}]]*/ "Restaurante";
 
-		        // Script do toggleFavorito (você já tinha, mas sem o CDATA)
-		        async function toggleFavorito(element, restauranteId) {
-		            // ... (toda a sua lógica do fetch do toggleFavorito) ...
-		        }
+		    // ===================================
+		    // FUNÇÃO TOGGLE FAVORITO (COPIADA E SEM CSRF)
+		    // ===================================
+		    async function toggleFavorito(element, restauranteId) {
+		        const icon = element.querySelector('i');
+		        const isFavorito = icon.classList.contains('bi-heart-fill');
+		        const url = isFavorito ? '/favoritos/remove' : '/favoritos/add';
+		        const method = 'POST';
 		        
-		        /*]]>*/
-		    </script>
+		        // Headers simplificados, sem CSRF
+		        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+
+		        try {
+		            const response = await fetch(url, { method: method, headers: headers, body: `restauranteId=${restauranteId}` });
+		            if (response.ok) {
+		                if (isFavorito) {
+		                    icon.classList.remove('bi-heart-fill', 'text-danger');
+		                    icon.classList.add('bi-heart');
+		                    element.setAttribute('title', 'Adicionar aos Favoritos');
+		                } else {
+		                    icon.classList.remove('bi-heart');
+		                    icon.classList.add('bi-heart-fill', 'text-danger');
+		                    element.setAttribute('title', 'Remover dos Favoritos');
+		                }
+		            } else {
+		                const errorMsg = await response.text(); alert(`Erro: ${errorMsg}`);
+		                if (response.status === 401 || response.status === 403) { window.location.href = '/login'; }
+		            }
+		        } catch (error) { console.error('Erro:', error); alert('Erro de conexão.'); }
+		    }
+		    
+		    /*]]>*/
+		</script>
+
+		<script>
+		    function initMap() {
+		        // ... (toda a sua lógica do initMap) ...
+		    }
+		</script>
+
+		<script async
+		    th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey} + '&callback=initMap'}">
+		</script>
 
 			<script>
 					        // Esta função é chamada pela API do Google (callback=initMap)

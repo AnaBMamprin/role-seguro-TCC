@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tchomp Restaurantes</title>
+    <title>TCHOMP Restaurantes</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -66,27 +66,34 @@
 		    Nenhum restaurante cadastrado ainda.
 		</div>
 
-		<div class="cards-grid" th:unless="${paginaRestaurantes == null or paginaRestaurantes.isEmpty()}">
-		    <div class="menu-card" th:each="restaurante : ${paginaRestaurantes.content}"> <h3 class="mb-3">
-                    <a th:href="@{/modelo-restaurante(id=${restaurante.id})}"
-                       class="stretched-link text-decoration-none" style="color: inherit;"
-                       th:text="${restaurante.nome}"> Nome </a>
-                </h3>
-                <span class="favorite-icon" style="position: absolute; top: 15px; right: 15px; z-index: 10; cursor: pointer;"
-                      th:attr="onclick='toggleFavorito(this, ' + ${restaurante.id} + ')'"
-                      th:title="${#sets.contains(idsFavoritos, restaurante.id) ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}">
-                    <i class="bi fs-4" th:classappend="${#sets.contains(idsFavoritos, restaurante.id) ? 'bi-heart-fill text-danger' : 'bi-heart'}"></i>
-                </span>
-                <p><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'N/A'}"></span></p>
-                <p><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'N/A'}"></span></p>
-                <p><strong>Tipo de prato:</strong> <span th:text="${restaurante.tipodeprato ?: 'N/A'}"></span></p>
-                <p><strong>Horário:</strong> <span th:text="${restaurante.horario ?: 'N/A'}"></span></p>
-                <p><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'N/A'}"></span></p>
-                <form th:action="@{/cupons/gerar}" method="post" class="mt-auto pt-3" style="position: relative; z-index: 5;">
-                    <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
-                    <button type="submit" class="btn btn-sm btn-success w-100">Gerar Cupom</button>
-                </form>
-                </div> </div> 
+		<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:unless="${paginaRestaurantes == null or paginaRestaurantes.isEmpty()}">
+		    
+		    <div class="col" th:each="restaurante : ${paginaRestaurantes.content}">
+		        
+		        <div class="menu-card h-100"> 
+		            <h3 class="mb-3">
+		                <a th:href="@{/modelo-restaurante(id=${restaurante.id})}"
+		                   class="stretched-link text-decoration-none" style="color: inherit;"
+		                   th:text="${restaurante.nome}"> Nome </a>
+		            </h3>
+		            <span class="favorite-icon" style="position: absolute; top: 15px; right: 15px; z-index: 10; cursor: pointer;"
+		                  th:attr="onclick='toggleFavorito(this, ' + ${restaurante.id} + ')'"
+		                  th:title="${#sets.contains(idsFavoritos, restaurante.id) ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}">
+		                <i class="bi fs-4" th:classappend="${#sets.contains(idsFavoritos, restaurante.id) ? 'bi-heart-fill text-danger' : 'bi-heart'}"></i>
+		            </span>
+		            <p><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'N/A'}"></span></p>
+		            <p><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'N/A'}"></span></p>
+		            <p><strong>Tipo de prato:</strong> <span th:text="${restaurante.tipodeprato ?: 'N/A'}"></span></p>
+		            <p><strong>Horário:</strong> <span th:text="${restaurante.horario ?: 'N/A'}"></span></p>
+		            <p><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'N/A'}"></span></p>
+		            <form th:action="@{/cupons/gerar}" method="post" class="mt-auto pt-3" style="position: relative; z-index: 5;">
+		                <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
+		                <button type="submit" class="btn btn-sm btn-success w-100">Gerar Cupom</button>
+		            </form>
+		            
+		        </div>
+		    </div> 
+		</div>
 				<nav aria-label="Navegação das páginas" class="mt-5" 
 				     th:if="${paginaRestaurantes.totalPages > 1}"> <ul class="pagination justify-content-center">
 

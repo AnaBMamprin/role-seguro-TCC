@@ -60,7 +60,7 @@ public class AdmController {
     
    
 
-    @PostMapping("/adm/restauranteCadastrar")
+    @PostMapping("/restauranteCadastrar")
     public String cadastrarRestaurante(
             @ModelAttribute RestauranteDTO dto,
             // 1. Receba o ID do Dono do <select> que está no formulário

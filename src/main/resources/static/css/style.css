@@ -654,3 +654,69 @@ color: var(--light);
   height: 100%;
   border-radius: 15px;
 }
+
+/* Container principal do restaurante */
+.restaurante-detalhes {
+  max-width: 900px; /* Mantém */
+  margin: 0 auto;   /* Mantém */
+  padding: 2rem;    /* Mantém */
+  background: rgba(255, 255, 255, 0.85); /* DEIXE MAIS OPACO OU MUDE para #f8f9fa (cinza claro BS) */
+  border-radius: 15px; /* Mantém */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
+  color: #333; /* CORRIGIDO: Define uma cor de texto escura padrão */
+}
+
+/* Título do restaurante */
+.restaurante-detalhes h1 {
+  font-size: 2.5rem; /* Mantém */
+  font-weight: 700; /* Mantém */
+  margin-bottom: 1rem; /* Mantém */
+  color: #E67E22; /* CORRIGIDO: Laranja escuro (combina com sua paleta) ou outra cor escura */
+  text-align: center; /* Mantém */
+}
+
+/* Detalhes (cidade, culinária, etc) */
+.restaurante-detalhes p {
+  font-size: 1.1rem; /* Mantém */
+  margin: 0.5rem 0; /* Mantém */
+  line-height: 1.4; /* Mantém */
+}
+
+.restaurante-detalhes p strong {
+  color: #0d6efd; /* CORRIGIDO: Exemplo: Azul padrão do Bootstrap */
+  /* Ou use o laranja: color: #E67E22; */
+}
+
+/* Link do site */
+.restaurante-detalhes a {
+  /* color: var(--accent); */
+  color: #0d6efd; /* CORRIGIDO: Mesma cor do strong */
+  text-decoration: none; /* Mantém */
+  font-weight: bold; /* Mantém */
+}
+
+.restaurante-detalhes a:hover {
+  text-decoration: underline; /* Mantém */
+  color: #0a58ca;
+}
+
+/* Container do mapa */
+.mapa-container {
+  width: 100%;
+  margin-top: 2rem;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra mais suave */
+}
+
+/* Garante que o mapa ocupe todo o container */
+#mapa { /* Mudamos de gmp-map para #mapa */
+  width: 100%;
+  height: 400px; /* Ou ajuste conforme necessário no layout */
+  border-radius: 15px; /* Mantém */
+}
+
+/* Adicional: Estilo para o Bloco de Avaliação Pendente */
+.alert-info h4 {
+    color: #052c65; /* Cor mais escura para o título do alert */
+}
