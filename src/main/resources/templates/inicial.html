@@ -57,63 +57,143 @@
 				      </div>
 				    </nav>
 
-	<div class="fullscreen-menu"> 
-	    <div class="container">
-	        <h1 style="color: gray;">Qual culinária você prefere?</h1>
-	        
-	        <div class="menu-grid">
-	            <div class="menu-card" 
-	                 th:each="culinaria : ${culinarias}"
-	                 th:data-culinaria="${culinaria}"  
-	                 onclick="irParaCulinaria(this)">
-	                <i class="fas fa-utensils"></i> 
-	                <h3 th:text="${culinaria}">Culinária</h3>
-	                <p th:text="'Veja todos os restaurantes de culinária ' + ${culinaria}">Descrição</p>
-	            </div>
-	        </div>
-	    </div>
-	</div>
+						<div class="categoria-bar-container container-fluid">
+						    <div class="categoria-bar container">
+						        
+						        <a th:href="@{/restaurantes}" class="categoria-btn">
+						            <i class="bi bi-grid-fill"></i>
+						            <span>Ver Todos</span>
+						        </a>
+						        
+						        <a th:each="culinaria : ${culinarias}" 
+						           th:href="@{/restaurantes(culinaria=${culinaria})}" 
+						           class="categoria-btn">
+						            <i class="fas fa-utensils"></i> <span th:text="${culinaria}">Culinária</span>
+						        </a>
+						    </div>
+						</div>
 
-    <div class="container mt-5 mb-5"> <h2 class="text-center mb-4">Últimas Avaliações</h2>
+						<div class="container mt-4 mb-5"> 
+						    
+						    <h2 class="mb-3" style="color: var(--cor-secundaria); font-weight: 700;">
+						        <i class="bi bi-chat-right-text-fill" style="color: var(--cor-primaria);"></i>
+						        Últimas Avaliações
+						    </h2>
 
-        <div th:if="${#lists.isEmpty(avaliacoesRecentes)}" class="text-center text-muted">
-            <p>Ainda não há avaliações. Seja o primeiro a avaliar!</p>
-        </div>
+						    <div th:if="${#lists.isEmpty(avaliacoesRecentes)}" class="alert alert-light border text-center text-muted">
+						        <p class="mb-0">Ainda não há avaliações.</p>
+						    </div>
 
-        <div th:unless="${#lists.isEmpty(avaliacoesRecentes)}" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            
-            <div th:each="avaliacao : ${avaliacoesRecentes}" class="col">
-                <div class="card h-100 shadow-sm"> <div class="card-body d-flex flex-column"> <h5 class="card-title mb-1">
-                            <a th:href="@{/modelo-restaurante(id=${avaliacao.restaurante?.id})}" 
-                               th:text="${avaliacao.restaurante?.nome ?: 'Restaurante Desconhecido'}">
-                                Nome do Restaurante
-                            </a>
-                        </h5>
+						    <div th:unless="${#lists.isEmpty(avaliacoesRecentes)}" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+						        
+						        <div th:each="avaliacao : ${avaliacoesRecentes}" class="col">
+						            <div class="card h-100 shadow-sm">
+						                <div class="card-body d-flex flex-column">
+						                    <h5 class="card-title mb-1">
+						                        <a th:href="@{/modelo-restaurante(id=${avaliacao.restaurante?.id})}" 
+						                           th:text="${avaliacao.restaurante?.nome ?: 'Restaurante Desconhecido'}">
+						                            Nome do Restaurante
+						                        </a>
+						                    </h5>
 
-                        <div class="mb-2">
-                            <span th:each="i : ${#numbers.sequence(1, 5)}">
-                                <i class="bi" th:classappend="${i <= avaliacao.nota} ? 'bi-star-fill text-warning' : 'bi-star text-muted'"></i>
-                            </span>
-                        </div>
+						                    <div class="mb-2">
+						                        <span th:each="i : ${#numbers.sequence(1, 5)}">
+						                            <i class="bi" th:classappend="${i <= avaliacao.nota} ? 'bi-star-fill' : 'bi-star text-muted'" style="color: var(--cor-acento);"></i>
+						                        </span>
+						                    </div>
 
-                        <p class="card-text text-muted mb-auto" th:text="${#strings.abbreviate(avaliacao.textoAvaliacao ?: '', 100)}">
-                            Comentário da avaliação... 
-                        </p> 
+						                    <p class="card-text text-muted mb-auto" th:text="${#strings.abbreviate(avaliacao.textoAvaliacao ?: '', 100)}">
+						                        Comentário da avaliação... 
+						                    </p> 
 
-                        <div class="mt-3 border-top pt-2">
-                             <small class="text-muted" 
-                                    th:text="${(avaliacao.usuario?.nomeUsuario ?: 'Usuário Anônimo') + ' - ' + #temporals.format(avaliacao.dataAvaliacao, 'dd/MM/yyyy')}">
-                                    Usuário - Data
-                             </small>
-                        </div>
-                    </div> </div> </div> </div> </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function irParaCulinaria(elementoCard) {
-            const culinaria = elementoCard.getAttribute('data-culinaria');
-            const url = '/restaurantes?culinaria=' + encodeURIComponent(culinaria) + '&cidade=Guarulhos';
-            window.location.href = url;
-        }
-    </script>
+						                    <div class="mt-3 border-top pt-2">
+						                         <small class="text-muted" 
+						                                th:text="${(avaliacao.usuario?.nomeUsuario ?: 'Usuário Anônimo') + ' - ' + #temporals.format(avaliacao.dataAvaliacao, 'dd/MM/yyyy')}">
+						                                Usuário - Data
+						                         </small>
+						                    </div>
+						                </div>
+						            </div>
+						        </div>
+						    </div> 
+						    <hr class="my-4">
 
-</body>
-</html>
+						    <h2 class="mb-3" style="color: var(--cor-secundaria); font-weight: 700;">
+						        <i class="bi bi-house-heart-fill" style="color: var(--cor-primaria);"></i>
+						        Adicionados Recentemente
+						    </h2>
+						    
+						    <div th:if="${#lists.isEmpty(restaurantesRecentes)}" class="alert alert-light border text-center text-muted">
+						        <p class="mb-0">Nenhum restaurante cadastrado recentemente.</p>
+						    </div>
+						    
+						    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3" th:unless="${#lists.isEmpty(restaurantesRecentes)}">
+						        
+						        <div class="col" th:each="restaurante : ${restaurantesRecentes}">
+						            <div class="menu-card h-100"> 
+						                
+						                <h3 class="mb-3 fs-2">
+						                    <a th:href="@{/modelo-restaurante(id=${restaurante.id})}"
+						                       class="stretched-link text-decoration-none" style="color: inherit;"
+						                       th:text="${restaurante.nome}"> Nome </a>
+						                </h3>
+						                
+						                <span class="favorite-icon" style="position: absolute; top: 15px; right: 15px; z-index: 10; cursor: pointer;"
+						                      th:attr="onclick='toggleFavorito(this, ' + ${restaurante.id} + ')'"
+						                      th:title="${#sets.contains(idsFavoritos, restaurante.id) ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}">
+						                    <i class="bi fs-4" th:classappend="${#sets.contains(idsFavoritos, restaurante.id) ? 'bi-heart-fill coracao-favorito' : 'bi-heart'}"></i>
+						                </span>
+
+						                <div class="d-flex mt-2 flex-grow-1">
+						                    <div class="flex-grow-1">
+						                        <p class="mb-1 fs-5"><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'N/A'}"></span></p>
+						                        <p class="mb-1 fs-5"><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'N/A'}"></span></p>
+						                    </div>
+						                    <div class="ps-2 text-center">
+						                        <span th:with="media=${mapaDeMedias.get(restaurante.id)}, 
+						                                       contagem=${mapaDeContagem.get(restaurante.id)}">
+						                            <span th:if="${media == null}" class="badge bg-secondary text-dark-emphasis">
+						                                <i class="bi bi-star"></i> N/A (0)
+						                            </span>
+						                            <span th:if="${media != null}" class="badge bg-dark text-white fs-6">
+						                                <i class="bi bi-star-fill" style="color: var(--cor-acento);"></i>
+						                                <span th:text="${#numbers.formatDecimal(media, 1, 1)}"></span>
+						                                <span class="fw-light" th:text="'(' + ${contagem} + ')'"></span>
+						                            </span>
+						                        </span>
+						                    </div>
+						                </div> </div> </div> </div> </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+						<script th:inline="javascript">
+						    /*<![CDATA[*/
+						    async function toggleFavorito(element, restauranteId) {
+						        const icon = element.querySelector('i');
+						        const isFavorito = icon.classList.contains('bi-heart-fill');
+						        const url = isFavorito ? '/favoritos/remove' : '/favoritos/add';
+						        const method = 'POST';
+						        
+						        // Headers simplificados, sem CSRF
+						        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+						
+						        try {
+						            const response = await fetch(url, { method: method, headers: headers, body: `restauranteId=${restauranteId}` });
+						            if (response.ok) {
+						                if (isFavorito) {
+						                    icon.classList.remove('bi-heart-fill', 'coracao-favorito');
+						                    icon.classList.add('bi-heart');
+						                    element.setAttribute('title', 'Adicionar aos Favoritos');
+						                } else {
+						                    icon.classList.remove('bi-heart');
+						                    icon.classList.add('bi-heart-fill', 'coracao-favorito');
+						                    element.setAttribute('title', 'Remover dos Favoritos');
+						                }
+						            } else {
+						                const errorMsg = await response.text(); alert(`Erro: ${errorMsg}`);
+						                if (response.status === 401 || response.status === 403) { window.location.href = '/login'; }
+						            }
+						        } catch (error) { console.error('Erro:', error); alert('Erro de conexão.'); }
+						    }
+						    /*]]>*/
+						</script>
+
+					</body>
+					</html>

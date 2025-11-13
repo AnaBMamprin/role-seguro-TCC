@@ -23,45 +23,108 @@
             height: 100%; /* Para que mt-auto funcione bem em grids */
         }
         /* Defina o layout do seu grid aqui ou no style.css */
-        .cards-grid {
-             display: grid;
-             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Exemplo responsivo */
-             gap: 1.5rem; /* Espaçamento entre cards */
-        }
     </style>
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg main-navbar">
-      <div class="container-fluid">
-        <a class="navbar-brand text-white fw-bold" href="/inicial">TCHOMP</a>
-           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-             <span class="navbar-toggler-icon"></span>
-           </button>
-        <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
-          <div class="navbar-nav mx-auto d-flex justify-content-center">
-            <a class="nav-link" th:href="@{/inicial}">Página Inicial</a>
-            <a class="nav-link" th:href="@{/restaurantes}">Restaurantes</a>
-            <a class="nav-link" th:href="@{/perfil}">Perfil</a>
-            <a class="nav-link" th:href="@{/adm}" sec:authorize="hasRole('ADMIN')">Administração</a>
-            <a class="nav-link" th:href="@{/sobre}">Sobre</a>
-          </div>
-          <a th:href="@{/favoritos}" class="btn btn-favorite ms-3">
-              <i class="bi bi-heart me-1"></i> Favoritos
-          </a>
-          <form class="d-flex ms-3 search-box" th:action="@{/buscar}" method="get">
-            <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" name="q">
-            <button class="btn btn-search" type="submit">
-              <i class="bi bi-search"></i>
-            </button>
-          </form>
-          <a href="/logout" class="btn btn-logout ms-3">
-              <i class="bi bi-box-arrow-right me-1"></i> Sair
-          </a>
-        </div>
-      </div>
-    </nav>
+	<!-- Navbar Principal -->
+					    <nav class="navbar navbar-expand-lg main-navbar">
+					      <div class="container-fluid">
+							
+							<!-- LOGO -->
+							   <a class="navbar-brand text-white fw-bold" href="/inicial">TCHOMP</a>
+
+							   <!-- BOTÃO TOGGLER (MOBILE) -->
+							   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+							     <span class="navbar-toggler-icon"></span>
+							   </button>
+
+					        <!-- Links centralizados + barra de pesquisa -->
+					        <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
+					          <div class="navbar-nav mx-auto d-flex justify-content-center">
+					            <a class="nav-link" th:href="@{/inicial}">Página Inicial</a>
+					            <a class="nav-link" th:href="@{/restaurantes}">Restaurantes</a>
+					            <a class="nav-link" th:href="@{/perfil}">Perfil</a>
+								<!-- Só aparece se o usuário tiver ROLE_ADMIN -->
+								<a class="nav-link" th:href="@{/adm}" sec:authorize="hasRole('ADMIN')">Administração</a>
+					            <a class="nav-link" th:href="@{/sobre}">Sobre</a>
+					          </div>
+							  
+							  <!-- Botão Favoritos -->
+							  <a th:href="@{/favoritos}" class="btn btn-favorite ms-3">
+							      <i class="bi bi-heart me-1"></i> Favoritos
+							  </a>
+
+					          <!-- Barra de pesquisa estilizada -->
+					          <form class="d-flex ms-3 search-box" th:action="@{/buscar}" method="get">
+					            <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" name="q">
+					            <button class="btn btn-search" type="submit">
+					              <i class="bi bi-search"></i>
+					            </button>
+					          </form>
+							  <!-- Botão Sair -->
+							  <a href="/logout" class="btn btn-logout ms-3">
+							      <i class="bi bi-box-arrow-right me-1"></i> Sair
+							  </a>
+					        </div>
+					      </div>
+					    </nav>
     <div style="color: grey;" class="container my-5">  <h1 class="mb-4">Melhores Localizações </h1>
 
+		<form th:action="@{/restaurantes}" method="GET" class="card shadow-sm mb-4">
+		    <div class="card-body">
+		        <div class="row g-3 align-items-end">
+		            
+		            <div class="col-md-4">
+		                <label for="culinaria" class="form-label">Filtrar por Culinária:</label>
+		                <select id="culinaria" name="culinaria" class="form-select">
+		                    <option value="">Todas as Culinárias</option>
+		                    <option th:each="c : ${culinariasUnicas}" 
+		                            th:value="${c}" 
+		                            th:text="${c}"
+		                            th:selected="${c == culinariaSelecionada}">
+		                    </option>
+		                </select>
+		            </div>
+		            
+		            <div class="col-md-4">
+		                <label for="tipoDePrato" class="form-label">Filtrar por Tipo de Prato:</label>
+		                <select id="tipoDePrato" name="tipoDePrato" class="form-select">
+		                    <option value="">Todos os Tipos</option>
+		                    <option th:each="t : ${tiposDePratoUnicos}" 
+		                            th:value="${t}" 
+		                            th:text="${t}"
+		                            th:selected="${t == tipoDePratoSelecionado}">
+		                    </option>
+		                </select>
+		            </div>
+		            
+					<div class="col-md-2">
+					    <label for="sortParam" class="form-label">Ordenar por:</label>
+					    <select id="sortParam" name="sortParam" class="form-select">
+					        
+					        <option value="nome,ASC" 
+					                th:selected="${sortParam == 'nome,ASC'}">
+					            Alfabética (A-Z)
+					        </option>
+					        
+					        <option value="nome,DESC" 
+					                th:selected="${sortParam == 'nome,DESC'}">
+					            Alfabética (Z-A)
+					        </option>
+					        
+					    </select>
+					</div>
+		            
+		            <div class="col-md-2">
+		                <button type="submit" class="btn btn-primary w-100">
+		                    <i class="bi bi-search me-1"></i> Filtrar
+		                </button>
+		            </div>
+		            
+		        </div>
+		    </div>
+		</form>
+		
 		<div th:if="${paginaRestaurantes == null or paginaRestaurantes.isEmpty()}" class="alert alert-warning" role="alert">
 		    Nenhum restaurante cadastrado ainda.
 		</div>
@@ -71,33 +134,63 @@
 		    <div class="col" th:each="restaurante : ${paginaRestaurantes.content}">
 		        
 		        <div class="menu-card h-100"> 
-		            <h3 class="mb-3">
+		            
+		            <h3 class="mb-3 fs-2">
 		                <a th:href="@{/modelo-restaurante(id=${restaurante.id})}"
 		                   class="stretched-link text-decoration-none" style="color: inherit;"
 		                   th:text="${restaurante.nome}"> Nome </a>
 		            </h3>
+		            
 		            <span class="favorite-icon" style="position: absolute; top: 15px; right: 15px; z-index: 10; cursor: pointer;"
 		                  th:attr="onclick='toggleFavorito(this, ' + ${restaurante.id} + ')'"
 		                  th:title="${#sets.contains(idsFavoritos, restaurante.id) ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}">
-		                <i class="bi fs-4" th:classappend="${#sets.contains(idsFavoritos, restaurante.id) ? 'bi-heart-fill text-danger' : 'bi-heart'}"></i>
-		            </span>
-		            <p><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'N/A'}"></span></p>
-		            <p><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'N/A'}"></span></p>
-		            <p><strong>Tipo de prato:</strong> <span th:text="${restaurante.tipodeprato ?: 'N/A'}"></span></p>
-		            <p><strong>Horário:</strong> <span th:text="${restaurante.horario ?: 'N/A'}"></span></p>
-		            <p><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'N/A'}"></span></p>
+					<i class="bi fs-4" th:classappend="${#sets.contains(idsFavoritos, restaurante.id) ? 'bi-heart-fill coracao-favorito' : 'bi-heart'}"></i>		            </span>
+
+					<div class="d-flex mt-2 flex-grow-1">
+					    
+					    <div class="flex-grow-1">
+					        <p class="mb-1 fs-5"><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'N/A'}"></span></p>
+					        <p class="mb-1 fs-5"><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'N/A'}"></span></p>
+					        <p class="mb-1 fs-5"><strong>Tipo:</strong> <span th:text="${restaurante.tipodeprato ?: 'N/A'}"></span></p>
+					        <p class="mb-1 fs-5"><strong>Horário:</strong> <span th:text="${restaurante.horario ?: 'N/A'}"></span></p>
+					        <p class="mb-1 fs-5"><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'N/A'}"></span></p>
+					    </div>
+					    
+						<div class="ps-2 text-center">
+						    <span th:with="media=${mapaDeMedias.get(restaurante.id)}, 
+						                   contagem=${mapaDeContagem.get(restaurante.id)}">
+						        
+						        <span th:if="${media == null}" class="badge bg-secondary text-dark-emphasis">
+						            <i class="bi bi-star"></i> N/A (0)
+						        </span>
+						        
+						        <span th:if="${media != null}" 
+						              class="badge bg-dark text-white fs-6">
+						            
+						            <i class="bi bi-star-fill" style="color: var(--cor-acento);"></i>
+						            
+						            <span th:text="${#numbers.formatDecimal(media, 1, 1)}"></span>
+						            
+						            <span class="fw-light" th:text="'(' + ${contagem} + ')'"></span>
+						        </span>
+						    </span>
+						</div>
+					    
+					</div>
+		            
 		            <form th:action="@{/cupons/gerar}" method="post" class="mt-auto pt-3" style="position: relative; z-index: 5;">
 		                <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
 		                <button type="submit" class="btn btn-sm btn-success w-100">Gerar Cupom</button>
 		            </form>
-		            
-		        </div>
+		     
 		    </div> 
-			
-		</div>
+			</div> 
+			</div>
 				<nav aria-label="Navegação das páginas" class="mt-5" 
-				     th:if="${paginaRestaurantes.totalPages > 1}"> <ul class="pagination justify-content-center">
-
+					th:if="${paginaRestaurantes != null AND !paginaRestaurantes.isEmpty() AND paginaRestaurantes.totalPages > 1}">
+					
+						<ul class="pagination justify-content-center">
+						
 				        <li class="page-item" th:classappend="${paginaRestaurantes.first ? 'disabled' : ''}">
 				            <a class="page-link" 
 				               th:href="@{/restaurantes(page=${paginaRestaurantes.number - 1}, culinaria=${culinaria})}">
