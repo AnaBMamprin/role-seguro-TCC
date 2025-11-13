@@ -116,37 +116,44 @@ public class RestauranteController {
     @GetMapping("/restaurantes")
     public String mostrarRestaurantes(
             @RequestParam(name = "culinaria", required = false) String culinaria,
-            @RequestParam(name = "page", defaultValue = "0") int page, // Número da página (começa em 0)
-            @RequestParam(name = "size", defaultValue = "9") int size, // Itens por página (ex: 9 para grid 3x3)
-            @RequestParam(name = "sort", defaultValue = "nome") String sort, // Opcional: Campo de ordenação
-            @RequestParam(name = "direction", defaultValue = "ASC") String direction, // Opcional: Direção
+            @RequestParam(name = "tipoDePrato", required = false) String tipoDePrato, 
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "9") int size,
+            @RequestParam(name = "sortParam", defaultValue = "nome,ASC") String sortParam,
             Model model) {
 
-        // Cria o objeto Pageable
-         Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort); // Se usar ordenação
-        Pageable pageable = PageRequest.of(page, size); // PageRequest.of(page, size, sortOrder) se usar sort
+        // 2. LÓGICA DE ORDENAÇÃO (para "quebrar" o sortParam)
+        String[] sortParts = sortParam.split(","); // "nome,ASC" vira ["nome", "ASC"]
+        String sortField = sortParts[0];
+        String direction = sortParts[1];
 
-        Page<Restaurante> paginaRestaurantes; // Usa Page<>
+        Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sortField);
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
 
-        if (culinaria != null && !culinaria.isEmpty()) {
+        Page<Restaurante> paginaRestaurantes; // Declara a página
+
+        // 2. ÁRVORE DE DECISÃO PARA OS FILTROS
+        boolean temCulinaria = (culinaria != null && !culinaria.isEmpty());
+        boolean temTipo = (tipoDePrato != null && !tipoDePrato.isEmpty());
+
+        if (temCulinaria && temTipo) {
+            paginaRestaurantes = reposi.findByCulinariaAndTipodepratoContaining(culinaria, tipoDePrato, pageable);
+        } else if (temCulinaria) {
             paginaRestaurantes = reposi.findByCulinaria(culinaria, pageable);
+        } else if (temTipo) {
+            paginaRestaurantes = reposi.findByTipodepratoContaining(tipoDePrato, pageable);
         } else {
-            paginaRestaurantes = reposi.findAll(pageable);
+            paginaRestaurantes = reposi.findAll(pageable); // Sem filtros
         }
 
+        // --- 3. (Lógica de Favoritos, Média e Contagem - Sem alteração) ---
         Long usuarioId = getCurrentUserId(); 
         Set<Long> idsFavoritos = (usuarioId != null) ? favoritoService.getFavoritoIds(usuarioId) : Collections.emptySet();
         
         List<Long> idsDaPagina = paginaRestaurantes.getContent().stream()
                                     .map(Restaurante::getId)
                                     .collect(Collectors.toList());
-        
         Map<Long, Double> mapaDeMedias = new HashMap<>();
-        
-        for (Long id : idsDaPagina) {
-            mapaDeMedias.put(id, service.getMediaDeAvaliacoes(id));
-        }
-        
         Map<Long, Long> mapaDeContagem = new HashMap<>();
         
         for (Long id : idsDaPagina) {
@@ -154,15 +161,29 @@ public class RestauranteController {
             mapaDeContagem.put(id, avaliacaoRepository.countByRestauranteId(id));
         }
 
-        model.addAttribute("paginaRestaurantes", paginaRestaurantes); 
-        model.addAttribute("culinaria", culinaria);
+        // --- 4. ENVIAR OS FILTROS E OPÇÕES PARA O HTML ---
+        
+        // Pega as culinárias únicas (Verifique se seu 'reposi' tem esse método)
+        model.addAttribute("culinariasUnicas", reposi.findDistinctCulinarias());
+        
+        // Lista fixa dos tipos de prato
+        List<String> tiposDePratoUnicos = List.of("Rodízio", "Self Service", "A la Carte");
+        model.addAttribute("tiposDePratoUnicos", tiposDePratoUnicos);
+        
+        // Envia os valores selecionados de volta
+        model.addAttribute("culinariaSelecionada", culinaria);
+        model.addAttribute("tipoDePratoSelecionado", tipoDePrato);
+        model.addAttribute("sortParam", sortParam);
+
+        // Envia os dados principais
+        model.addAttribute("paginaRestaurantes", paginaRestaurantes); // <-- AQUI!
         model.addAttribute("idsFavoritos", idsFavoritos); 
         model.addAttribute("mapaDeMedias", mapaDeMedias);
         model.addAttribute("mapaDeContagem", mapaDeContagem);
 
         return "restaurantes";
     }
-    
+        
     @GetMapping("/modelo-restaurante")
     public String detalhesRestaurante(
             @RequestParam("id") Long id, // <-- @RequestParam pega o "?id=45"

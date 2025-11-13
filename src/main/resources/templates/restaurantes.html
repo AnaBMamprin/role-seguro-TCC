@@ -57,6 +57,61 @@
     </nav>
     <div style="color: grey;" class="container my-5">  <h1 class="mb-4">Melhores Localizações </h1>
 
+		<form th:action="@{/restaurantes}" method="GET" class="card shadow-sm mb-4">
+		    <div class="card-body">
+		        <div class="row g-3 align-items-end">
+		            
+		            <div class="col-md-4">
+		                <label for="culinaria" class="form-label">Filtrar por Culinária:</label>
+		                <select id="culinaria" name="culinaria" class="form-select">
+		                    <option value="">Todas as Culinárias</option>
+		                    <option th:each="c : ${culinariasUnicas}" 
+		                            th:value="${c}" 
+		                            th:text="${c}"
+		                            th:selected="${c == culinariaSelecionada}">
+		                    </option>
+		                </select>
+		            </div>
+		            
+		            <div class="col-md-4">
+		                <label for="tipoDePrato" class="form-label">Filtrar por Tipo de Prato:</label>
+		                <select id="tipoDePrato" name="tipoDePrato" class="form-select">
+		                    <option value="">Todos os Tipos</option>
+		                    <option th:each="t : ${tiposDePratoUnicos}" 
+		                            th:value="${t}" 
+		                            th:text="${t}"
+		                            th:selected="${t == tipoDePratoSelecionado}">
+		                    </option>
+		                </select>
+		            </div>
+		            
+					<div class="col-md-2">
+					    <label for="sortParam" class="form-label">Ordenar por:</label>
+					    <select id="sortParam" name="sortParam" class="form-select">
+					        
+					        <option value="nome,ASC" 
+					                th:selected="${sortParam == 'nome,ASC'}">
+					            Alfabética (A-Z)
+					        </option>
+					        
+					        <option value="nome,DESC" 
+					                th:selected="${sortParam == 'nome,DESC'}">
+					            Alfabética (Z-A)
+					        </option>
+					        
+					    </select>
+					</div>
+		            
+		            <div class="col-md-2">
+		                <button type="submit" class="btn btn-primary w-100">
+		                    <i class="bi bi-search me-1"></i> Filtrar
+		                </button>
+		            </div>
+		            
+		        </div>
+		    </div>
+		</form>
+		
 		<div th:if="${paginaRestaurantes == null or paginaRestaurantes.isEmpty()}" class="alert alert-warning" role="alert">
 		    Nenhum restaurante cadastrado ainda.
 		</div>
@@ -117,8 +172,7 @@
 		            
 		        </div> </div> </div>
 				<nav aria-label="Navegação das páginas" class="mt-5" 
-				     th:if="${paginaRestaurantes.totalPages > 1}"> <ul class="pagination justify-content-center">
-
+					th:if="${paginaRestaurantes != null AND !paginaRestaurantes.isEmpty() AND paginaRestaurantes.totalPages > 1}">
 				        <li class="page-item" th:classappend="${paginaRestaurantes.first ? 'disabled' : ''}">
 				            <a class="page-link" 
 				               th:href="@{/restaurantes(page=${paginaRestaurantes.number - 1}, culinaria=${culinaria})}">

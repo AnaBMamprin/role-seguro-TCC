@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Sort;
 
 import com.example.app1.model.Restaurante;
 import com.example.app1.model.Usuario;
@@ -45,9 +46,15 @@ public class AdmController {
     @GetMapping
     public String paginaAdm(Model model) {
         // ... (seu método está OK)
-        List<Restaurante> restaurantes = restauranteRepository.findAll();
-        List<Usuario> usuarios = userRepository.findAll();
-        long totalAdmins = usuarios.stream()
+    	List<Restaurante> restaurantes = restauranteRepository.findAll(
+                Sort.by(Sort.Direction.ASC, "nome")
+            );
+    	
+    	List<Usuario> usuarios = userRepository.findAll(
+                Sort.by(Sort.Direction.ASC, "nomeUsuario")
+            );
+    	
+    	long totalAdmins = usuarios.stream()
                .filter(u -> u.getRole() == UserEnum.ROLE_ADMIN)
                .count();
         List<String> culinarias = restauranteRepository.findDistinctCulinarias();
