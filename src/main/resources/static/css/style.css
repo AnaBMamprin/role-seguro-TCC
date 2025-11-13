@@ -612,3 +612,16 @@ body, html {
   transition: all 0.3s ease;
   /* (As cores de background já são definidas no CSS principal) */
 }
+
+/* =============================================== */
+/* CORREÇÃO DE LAYOUT (Evita "pulo" da navbar) */
+/* =============================================== */
+
+/* Força a barra de rolagem vertical a estar sempre 
+  visível (ou pelo menos ocupar espaço), mesmo em páginas curtas.
+  Isso impede que o layout "pule" ao navegar entre
+  páginas longas e curtas.
+*/
+html {
+  overflow-y: scroll;
+}
