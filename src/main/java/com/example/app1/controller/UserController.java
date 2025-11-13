@@ -101,13 +101,13 @@ public class UserController {
     }
     
 
-    // Edição de usuário
-    @PostMapping("/adm/updateUser")
+  /*  // Edição de usuário
+    @PostMapping("/perfil/atualizar")
     public String updateUser(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
         userService.updateUser(userDTO);
         redirectAttributes.addFlashAttribute("mensagem", "Usuário atualizado com sucesso!");
         return "redirect:/adm";
-    }
+    } */
     
     // Método para deletar usuário
     @PostMapping("/adm/deleteUser")

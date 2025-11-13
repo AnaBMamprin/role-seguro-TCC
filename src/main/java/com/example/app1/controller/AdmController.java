@@ -44,7 +44,6 @@ public class AdmController {
     
     @GetMapping
     public String paginaAdm(Model model) {
-        // ... (seu método está OK)
         List<Restaurante> restaurantes = restauranteRepository.findAll();
         List<Usuario> usuarios = userRepository.findAll();
         long totalAdmins = usuarios.stream()
@@ -155,7 +154,7 @@ public class AdmController {
 
     // ================== USUÁRIOS ==================
 
-    @PostMapping("/usuarioToggleAdm")
+/*    @PostMapping("/usuarioToggleAdm")
     public String toggleAdm(@RequestParam("id") Long id) {
         // ... (seu método está OK)
         Usuario usuario = userRepository.findById(id).orElse(null);
@@ -168,5 +167,50 @@ public class AdmController {
             userRepository.save(usuario);
         }
         return "redirect:/adm";
+    } */
+    
+    
+    @PostMapping("/updateUser")
+    @Transactional
+    public String updateUser(@RequestParam("id") Long id,
+                             @RequestParam("nome") String nome,
+                             @RequestParam("email") String email,
+                             @RequestParam("endereco") String endereco,
+                             @RequestParam("role") String roleName, // <-- Recebe a String do <select>
+                             RedirectAttributes redirectAttributes) {
+
+        try {
+            Usuario usuario = userRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+            UserEnum novoRole = UserEnum.valueOf(roleName); // Converte a String (ex: "ROLE_RESTAURANTE") para o Enum
+
+            // Lógica de proteção do último admin
+            if (usuario.getRole() == UserEnum.ROLE_ADMIN && novoRole != UserEnum.ROLE_ADMIN) {
+                // Se o usuário ATUAL é ADMIN e o NOVO papel NÃO é ADMIN (ou seja, um rebaixamento)
+                long totalAdmins = userRepository.countByRole(UserEnum.ROLE_ADMIN);
+                if (totalAdmins <= 1) {
+                    // Impede o rebaixamento
+                    throw new RuntimeException("Não é possível rebaixar o único administrador do sistema.");
+                }
+            }
+
+            // Atualiza os dados
+            usuario.setNomeUsuario(nome);
+            usuario.setEmailUsuario(email);
+            usuario.setEnderecoUsuario(endereco);
+            usuario.setRole(novoRole); // Define o novo papel
+
+            userRepository.save(usuario);
+            redirectAttributes.addFlashAttribute("sucesso", "Usuário " + nome + " atualizado com sucesso!");
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erro", "Erro ao atualizar usuário: " + e.getMessage());
+        }
+
+        return "redirect:/adm";
     }
+
+
 }
+    

@@ -15,7 +15,7 @@ public class Cupom {
     private String codigo;
 
     @Column(nullable = false)
-    private Double desconto;
+    private Integer percentualDesconto;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -33,13 +33,27 @@ public class Cupom {
 
     @Column(nullable = false)
     private Boolean usado = false;
+    
+    @Column(length = 30) // <-- Adicione esta linha
+    private String tipoCupom; // <-- E esta linha
 
     // Getters e Setters
+    
+    
+    
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public String getTipoCupom() {
+		return tipoCupom;
+	}
+
+	public void setTipoCupom(String tipoCupom) {
+		this.tipoCupom = tipoCupom;
+	}
+
+	public void setId(Long id) {
         this.id = id;
     }
 
@@ -51,12 +65,12 @@ public class Cupom {
         this.codigo = codigo;
     }
 
-    public Double getDesconto() {
-        return desconto;
+    public Integer getPercentualDesconto() {
+        return percentualDesconto;
     }
 
-    public void setDesconto(Double desconto) {
-        this.desconto = desconto;
+    public void setPercentualDesconto(Integer Percentualdesconto) {
+        this.percentualDesconto = Percentualdesconto;
     }
 
     public Usuario getUsuario() {
