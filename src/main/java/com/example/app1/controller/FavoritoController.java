@@ -3,6 +3,9 @@ package com.example.app1.controller;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.app1.model.Restaurante;
 import com.example.app1.model.Usuario;
+// IMPORTS NOVOS (NECESSÁRIOS PARA MÉDIA/CONTAGEM)
+import com.example.app1.repository.AvaliacaoRepository; 
+import com.example.app1.service.RestauranteService; 
 import com.example.app1.repository.UserRepository;
 import com.example.app1.service.FavoritoService;
 
@@ -28,52 +34,72 @@ public class FavoritoController {
 	private final FavoritoService favoritoService;
     private final UserRepository userRepository;
     
+    // CAMPOS NOVOS
+    private final RestauranteService restauranteService;
+    private final AvaliacaoRepository avaliacaoRepository;
+    
     @Autowired
     public FavoritoController(FavoritoService favoritoService, 
-                              UserRepository userRepository) {
+                              UserRepository userRepository,
+                              // INJEÇÕES NOVAS
+                              RestauranteService restauranteService,
+                              AvaliacaoRepository avaliacaoRepository) {
         this.favoritoService = favoritoService;
         this.userRepository = userRepository;
+        // ATRIBUIÇÕES NOVAS
+        this.restauranteService = restauranteService;
+        this.avaliacaoRepository = avaliacaoRepository;
     }
 
     @GetMapping("/favoritos")
-    public String listarFavoritos(Model model) { // Removido Authentication daqui
-        Long usuarioId = getCurrentUserId(); // Pega o ID do usuário logado
+    public String listarFavoritos(Model model) {
+        Long usuarioId = getCurrentUserId();
         if (usuarioId == null) {
-            return "redirect:/login"; // Redireciona se não estiver logado
+            return "redirect:/login";
         }
 
-        List<Restaurante> favoritos = favoritoService.listarFavoritosPorUsuarioId(usuarioId);
-        Set<Long> idsFavoritos = favoritoService.getFavoritoIds(usuarioId); // Pega os IDs
+        // 1. Busca a lista de restaurantes (como antes)
+        List<Restaurante> restaurantesFavoritos = favoritoService.listarFavoritosPorUsuarioId(usuarioId);
+        
+        // 2. Lógica de Média e Contagem (NOVA)
+        Map<Long, Double> mapaDeMedias = new HashMap<>();
+        Map<Long, Long> mapaDeContagem = new HashMap<>();
+        
+        for (Restaurante r : restaurantesFavoritos) {
+            Long id = r.getId();
+            // (Verifique se seu RestauranteService se chama 'service' ou 'restauranteService')
+            mapaDeMedias.put(id, restauranteService.getMediaDeAvaliacoes(id)); 
+            mapaDeContagem.put(id, avaliacaoRepository.countByRestauranteId(id));
+        }
 
-        model.addAttribute("favoritos", favoritos);
-        model.addAttribute("idsFavoritos", idsFavoritos); // Envia os IDs para o Thymeleaf
+        // 3. Envia os dados para o HTML
+        
+        model.addAttribute("favoritos", restaurantesFavoritos);
+        model.addAttribute("mapaDeMedias", mapaDeMedias);
+        model.addAttribute("mapaDeContagem", mapaDeContagem);
 
         return "favoritos";
     }
 
     // ======================================================
-    // ENDPOINT PARA ADICIONAR (POST AJAX)
+    // O RESTO DO SEU CONTROLLER (Sem mudanças)
     // ======================================================
+
     @PostMapping("/favoritos/add")
-    @ResponseBody // Retorna dados, não HTML
+    @ResponseBody
     public ResponseEntity<?> adicionarFavorito(@RequestParam("restauranteId") Long restauranteId) {
         Long usuarioId = getCurrentUserId();
         if (usuarioId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não autenticado.");
         }
-
         boolean success = favoritoService.addFavorito(usuarioId, restauranteId);
         if (success) {
-            return ResponseEntity.ok().body("Favorito adicionado."); // Mensagem de sucesso
+            return ResponseEntity.ok().body("Favorito adicionado.");
         } else {
-            // Pode ser erro de ID não encontrado ou outra falha
             return ResponseEntity.badRequest().body("Erro ao adicionar favorito.");
         }
     }
 
-    // ======================================================
-    // ENDPOINT PARA REMOVER (POST AJAX)
-    // ======================================================
     @PostMapping("/favoritos/remove")
     @ResponseBody
     public ResponseEntity<?> removerFavorito(@RequestParam("restauranteId") Long restauranteId) {
@@ -81,7 +107,6 @@ public class FavoritoController {
         if (usuarioId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não autenticado.");
         }
-
         boolean success = favoritoService.removeFavorito(usuarioId, restauranteId);
         if (success) {
             return ResponseEntity.ok().body("Favorito removido.");
@@ -90,10 +115,6 @@ public class FavoritoController {
         }
     }
 
-
-    // ======================================================
-    // MÉTODO AUXILIAR PARA PEGAR O ID DO USUÁRIO LOGADO
-    // ======================================================
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
@@ -103,19 +124,17 @@ public class FavoritoController {
             if (principal instanceof UserDetails) {
                 email = ((UserDetails) principal).getUsername();
             } else if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
-                 // Para login com Google, o email pode estar em um atributo diferente
                  email = ((org.springframework.security.oauth2.core.user.OAuth2User) principal).getAttribute("email");
             }
              else {
-                 return null; // Não conseguiu determinar o usuário
+                 return null; 
             }
 
             if (email != null) {
-                // Use o método correto do seu UserRepository
                 Optional<Usuario> userOpt = userRepository.findByEmailUsuario(email); 
-                return userOpt.map(Usuario::getIdUsuario).orElse(null); // Ajuste getIdUsuario se necessário
+                return userOpt.map(Usuario::getIdUsuario).orElse(null);
             }
         }
-        return null; // Usuário não autenticado ou anônimo
+        return null;
     }
 }

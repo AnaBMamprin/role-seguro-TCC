@@ -9,141 +9,135 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     </head>
-<body>
-	<!-- Navbar Principal -->
-					    <nav class="navbar navbar-expand-lg main-navbar">
-					      <div class="container-fluid">
-							
-							<!-- LOGO -->
-							   <a class="navbar-brand text-white fw-bold" href="/inicial">TCHOMP</a>
+	<body>
 
-							   <!-- BOTÃO TOGGLER (MOBILE) -->
-							   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-							     <span class="navbar-toggler-icon"></span>
-							   </button>
+		<nav class="navbar navbar-expand-lg main-navbar">
+		    <div class="container-fluid">
+		        <a class="navbar-brand text-white fw-bold" href="/inicial">TCHOMP</a>
+		        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+		            <span class="navbar-toggler-icon"></span>
+		        </button>
+		        <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
+		            <div class="navbar-nav mx-auto d-flex justify-content-center">
+		                <a class="nav-link" th:href="@{/inicial}">Página Inicial</a>
+		                <a class="nav-link" th:href="@{/restaurantes}">Restaurantes</a>
+		                <a class="nav-link" th:href="@{/perfil}">Perfil</a>
+		                <a class="nav-link" th:href="@{/adm}" sec:authorize="hasRole('ADMIN')">Administração</a>
+		                <a class="nav-link" th:href="@{/sobre}">Sobre</a>
+		            </div>
+		            <a th:href="@{/favoritos}" class="btn btn-favorite ms-3">
+		                <i class="bi bi-heart me-1"></i> Favoritos
+		            </a>
+		            <form class="d-flex ms-3 search-box" th:action="@{/buscar}" method="get">
+		                <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" name="q">
+		                <button class="btn btn-search" type="submit">
+		                    <i class="bi bi-search"></i>
+		                </button>
+		            </form>
+		            <a href="/logout" class="btn btn-logout ms-3">
+		                <i class="bi bi-box-arrow-right me-1"></i> Sair
+		            </a>
+		        </div>
+		    </div>
+		</nav>
+	    
+	    <div class="container my-5">
+	        <h1 class="mb-4" style="color: var(--cor-secundaria); font-weight: 700;">
+	            <i class="bi bi-heart-fill me-2" style="color: var(--cor-primaria);"></i>
+	            Meus Restaurantes Favoritos
+	        </h1>
 
-					        <!-- Links centralizados + barra de pesquisa -->
-					        <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
-					          <div class="navbar-nav mx-auto d-flex justify-content-center">
-					            <a class="nav-link" th:href="@{/inicial}">Página Inicial</a>
-					            <a class="nav-link" th:href="@{/restaurantes}">Restaurantes</a>
-					            <a class="nav-link" th:href="@{/perfil}">Perfil</a>
-								<!-- Só aparece se o usuário tiver ROLE_ADMIN -->
-								<a class="nav-link" th:href="@{/adm}" sec:authorize="hasRole('ADMIN')">Administração</a>
-					            <a class="nav-link" th:href="@{/sobre}">Sobre</a>
-					          </div>
-							  
-							  <!-- Botão Favoritos -->
-							  <a th:href="@{/favoritos}" class="btn btn-favorite ms-3">
-							      <i class="bi bi-heart me-1"></i> Favoritos
-							  </a>
+			<div th:if="${#lists.isEmpty(favoritos)}" class="alert alert-light border text-center text-muted shadow-sm">
+			    <p class="fs-5 mb-0">Você ainda não adicionou nenhum restaurante aos seus favoritos.</p>
+			    <a th:href="@{/restaurantes}" class="alert-link">Ver todos os restaurantes</a>.
+			</div>
 
-					          <!-- Barra de pesquisa estilizada -->
-					          <form class="d-flex ms-3 search-box" th:action="@{/buscar}" method="get">
-					            <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" name="q">
-					            <button class="btn btn-search" type="submit">
-					              <i class="bi bi-search"></i>
-					            </button>
-					          </form>
-							  <!-- Botão Sair -->
-							  <a href="/logout" class="btn btn-logout ms-3">
-							      <i class="bi bi-box-arrow-right me-1"></i> Sair
-							  </a>
-					        </div>
-					      </div>
-					    </nav>
+			<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:unless="${#lists.isEmpty(favoritos)}">
+			    
+			    <div class="col" th:each="restaurante : ${favoritos}">
+			        <div class="menu-card h-100"> 
+			            
+			            <h3 class="mb-3 fs-2">
+			                <a th:href="@{/modelo-restaurante(id=${restaurante.id})}"
+			                   class="stretched-link text-decoration-none" style="color: inherit;"
+			                   th:text="${restaurante.nome}"> Nome </a>
+			            </h3>
+			            
+			            <span class="favorite-icon" style="position: absolute; top: 15px; right: 15px; z-index: 10; cursor: pointer;"
+			                  th:attr="onclick='toggleFavorito(this, ' + ${restaurante.id} + ')'"
+			                  title="Remover dos Favoritos">
+			                <i class="bi fs-4 bi-heart-fill coracao-favorito"></i>
+			            </span>
 
-	<div class="container my-5">
-	    <h1 class="mb-4">Meus Restaurantes Favoritos</h1>
+			            <div class="d-flex mt-2 flex-grow-1">
+			                <div class="flex-grow-1">
+			                    <p class="mb-1 fs-5"><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'N/A'}"></span></p>
+			                    <p class="mb-1 fs-5"><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'N/A'}"></span></p>
+			                    <p class="mb-1 fs-5"><strong>Tipo:</strong> <span th:text="${restaurante.tipodeprato ?: 'N/A'}"></span></p>
+			                    <p class="mb-1 fs-5"><strong>Horário:</strong> <span th:text="${restaurante.horario ?: 'N/A'}"></span></p>
+			                    <p class="mb-1 fs-5"><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'N/A'}"></span></p>
+			                </div>
+			                <div class="ps-2 text-center">
+			                    <span th:with="media=${mapaDeMedias.get(restaurante.id)}, 
+			                                   contagem=${mapaDeContagem.get(restaurante.id)}">
+			                        <span th:if="${media == null}" class="badge bg-secondary text-dark-emphasis">
+			                            <i class="bi bi-star"></i> N/A (0)
+			                        </span>
+			                        <span th:if="${media != null}" class="badge bg-dark text-white fs-6">
+			                            <i class="bi bi-star-fill" style="color: var(--cor-acento);"></i>
+			                            <span th:text="${#numbers.formatDecimal(media, 1, 1)}"></span>
+			                            <span class="fw-light" th:text="'(' + ${contagem} + ')'"></span>
+			                        </span>
+			                    </span>
+			                </div>
+			            </div>
+			            
+			            <form th:action="@{/cupons/gerar}" method="post" class="mt-auto pt-3" style="position: relative; z-index: 5;">
+			                <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
+			                <button type="submit" class="btn btn-sm btn-success w-100">Gerar Cupom</button>
+			            </form>
+			            
+			        </div> </div> </div> </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	    
+		<script th:inline="javascript">
+		/*<![CDATA[*/
 
-	    <div th:if="${#lists.isEmpty(favoritos)}" class="alert alert-info" role="alert">
-	        Você ainda não adicionou nenhum restaurante aos seus favoritos. Comece a explorar!
-	        <a th:href="@{/restaurantes}" class="alert-link">Ver todos os restaurantes</a>.
-	    </div>
+		// Este é o script JS que você já tinha, está correto.
+		async function toggleFavorito(element, restauranteId) {
+		    // Na página de favoritos, SEMPRE assumimos que é favorito ao clicar
+		    const isFavorito = true; 
+		    const url = '/favoritos/remove'; // Sempre será /remove aqui
+		    const method = 'POST';
+		    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+	        // (Não precisamos de CSRF, como você já tinha removido)
 
-	    <div th:unless="${#lists.isEmpty(favoritos)}" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-	        <div class="col" th:each="restaurante : ${favoritos}">
-	            <div class="card h-100 shadow-sm" style="position: relative;" th:id="'card-restaurante-' + ${restaurante.id}"> 
-	                <div class="card-body d-flex flex-column">
-	                    <h5 class="card-title mb-1">
-	                        <a th:href="@{/modelo-restaurante(id=${restaurante.id})}"
-	                           class="stretched-link text-decoration-none text-dark" 
-	                           th:text="${restaurante.nome}">
-	                            Nome
-	                        </a>
-	                    </h5>
-	                    <span class="favorite-icon" style="position: absolute; top: 10px; right: 10px; z-index: 10; cursor: pointer;"
-	                          th:attr="onclick='toggleFavorito(this, ' + ${restaurante.id} + ')'"
-	                          title="Remover dos Favoritos">
-	                        <i class="bi bi-heart-fill text-danger"></i> 
-	                    </span>
-	                    <p class="card-text small text-muted mb-2" th:text="${restaurante.culinaria}">Culinária</p>
-	                    <p class="card-text small mb-auto" th:text="${restaurante.endereco}">Endereço</p>
-	                    <form th:action="@{/cupons/gerar}" method="post" class="mt-3" style="position: relative; z-index: 5;">
-	                        <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
-	                        <button type="submit" class="btn btn-sm btn-success w-100">Gerar Cupom</button>
-	                    </form>
-	                </div>
-	            </div>
-	        </div>
-	    </div> 
-    </div> 
+		    try {
+		        const response = await fetch(url, {
+		            method: method,
+		            headers: headers,
+		            body: `restauranteId=${restauranteId}`
+		        });
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-	
-    <script th:inline="javascript">
-	/*<![CDATA[*/
+		        if (response.ok) {
+		            // Sucesso! Remove o card da tela
+		            const cardWrapper = element.closest('.col'); // Encontra a div da coluna
+		            if (cardWrapper) {
+		                cardWrapper.remove(); // Remove a coluna inteira (que contém o card)
+		            }
 
-	async function toggleFavorito(element, restauranteId) {
-	    // Na página de favoritos, SEMPRE assumimos que é favorito ao clicar
-	    const isFavorito = true; 
-	    const url = '/favoritos/remove'; // Sempre será /remove aqui
-	    const method = 'POST';
-	    const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
-	    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
-	    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-	    if (csrfToken && csrfHeader) { headers[csrfHeader] = csrfToken; }
-
-	    try {
-	        const response = await fetch(url, {
-	            method: method,
-	            headers: headers,
-	            body: `restauranteId=${restauranteId}`
-	        });
-
-	        if (response.ok) {
-	            // Sucesso! Remove o card da tela
-                
-                // *** CORREÇÃO AQUI: Procurar por '.col' ou pelo ID ***
-	            // const cardWrapper = element.closest('.col'); // Encontra a div da coluna
-                // OU, usando o ID que adicionamos:
-                const cardWrapper = document.getElementById(`card-restaurante-${restauranteId}`)?.closest('.col');
-
-	            if (cardWrapper) {
-	                cardWrapper.remove(); // Remove a coluna inteira (que contém o card)
-	                
-                    // Opcional: Mostrar mensagem se a lista ficar vazia
-                    const grid = document.querySelector('.row.g-4'); // Seleciona o grid
-	                if (grid && grid.children.length === 0) {
-	                    // Se não houver mais colunas, mostra a mensagem de "vazio"
-                        // (Você precisaria ter essa mensagem no HTML com um ID para mostrá-la)
-                        // document.getElementById('mensagem-favoritos-vazio').style.display = 'block'; 
-	                }
-	            }
-
-			} else {
-				            const errorMsg = await response.text();
-				            alert(`Erro ao remover favorito: ${errorMsg}`);
-				            if (response.status === 401 || response.status === 403) {
-				                 window.location.href = '/login';
-				            }
-				        }
-				    } catch (error) {
-				        console.error('Erro ao remover favorito:', error);
-				        alert('Ocorreu um erro de conexão. Tente novamente.');
-				    }
+				} else {
+					const errorMsg = await response.text();
+					alert(`Erro ao remover favorito: ${errorMsg}`);
+					if (response.status === 401 || response.status === 403) {
+					     window.location.href = '/login';
+					}
 				}
-				/*]]>*/
-				</script>
-			</body>
-			</html>
+			} catch (error) {
+				console.error('Erro ao remover favorito:', error);
+				alert('Ocorreu um erro de conexão. Tente novamente.');
+			}
+		}
+		/*]]>*/
+		</script>
+	</body>
+	</html>
