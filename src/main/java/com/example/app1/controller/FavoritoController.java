@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -22,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.app1.model.Restaurante;
 import com.example.app1.model.Usuario;
-// IMPORTS NOVOS (NECESSÁRIOS PARA MÉDIA/CONTAGEM)
 import com.example.app1.repository.AvaliacaoRepository; 
 import com.example.app1.service.RestauranteService; 
 import com.example.app1.repository.UserRepository;
@@ -57,24 +58,24 @@ public class FavoritoController {
         if (usuarioId == null) {
             return "redirect:/login";
         }
-
-        // 1. Busca a lista de restaurantes (como antes)
-        List<Restaurante> restaurantesFavoritos = favoritoService.listarFavoritosPorUsuarioId(usuarioId);
         
-        // 2. Lógica de Média e Contagem (NOVA)
+        List<Restaurante> restaurantesFavoritos = favoritoService.listarFavoritosPorUsuarioId(usuarioId);
+
+        List<Restaurante> restaurantesOrdenados = restaurantesFavoritos.stream()
+            .sorted(Comparator.comparing(Restaurante::getNome))
+            .collect(Collectors.toList());
+        
         Map<Long, Double> mapaDeMedias = new HashMap<>();
         Map<Long, Long> mapaDeContagem = new HashMap<>();
         
-        for (Restaurante r : restaurantesFavoritos) {
+        for (Restaurante r : restaurantesOrdenados) { // <-- MUDANÇA AQUI
             Long id = r.getId();
-            // (Verifique se seu RestauranteService se chama 'service' ou 'restauranteService')
             mapaDeMedias.put(id, restauranteService.getMediaDeAvaliacoes(id)); 
             mapaDeContagem.put(id, avaliacaoRepository.countByRestauranteId(id));
         }
 
-        // 3. Envia os dados para o HTML
+        model.addAttribute("favoritos", restaurantesOrdenados); // <-- MUDANÇA AQUI
         
-        model.addAttribute("favoritos", restaurantesFavoritos);
         model.addAttribute("mapaDeMedias", mapaDeMedias);
         model.addAttribute("mapaDeContagem", mapaDeContagem);
 

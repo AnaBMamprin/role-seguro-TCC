@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -157,8 +158,16 @@ public class AdmController {
 	}
 
     @PostMapping("/restauranteExcluir")
-    public String excluirRestaurante(@RequestParam("id") Long id) {
-        restauranteRepository.deleteById(id);
+    public String excluirRestaurante(@RequestParam("id") Long id, RedirectAttributes redirect) {
+        try {
+            restauranteRepository.deleteById(id);
+            redirect.addFlashAttribute("sucesso", "Restaurante excluído!");
+        } catch (DataIntegrityViolationException e) {
+            // Isso acontece se houver uma "foreign key constraint" (favorito ou avaliação)
+            redirect.addFlashAttribute("erro", "Não é possível excluir este restaurante, pois ele está associado a favoritos ou avaliações de usuários.");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("erro", "Erro ao excluir restaurante.");
+        }
         return "redirect:/adm";
     }
 
