@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Collections;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,13 +86,33 @@ public class RestauranteController {
              // model.addAttribute("email", email); // Se precisar do email na view
         }
         
-        // --- Lógica para Feed de Avaliações (Quando implementar) ---
-         List<Avaliacao> avaliacoesRecentes = avaliacaoRepository.findTop5ByOrderByDataAvaliacaoDesc(); // Exemplo
-         model.addAttribute("avaliacoesRecentes", avaliacoesRecentes);
+        List<Avaliacao> avaliacoesRecentes = avaliacaoRepository.findTop6ByOrderByDataAvaliacaoDesc();
+        model.addAttribute("avaliacoesRecentes", avaliacoesRecentes);
+        
+        List<Restaurante> restaurantesRecentes = reposi.findTop6ByOrderByIdDesc();
+        model.addAttribute("restaurantesRecentes", restaurantesRecentes);
+        
+        List<Long> idsRecentes = restaurantesRecentes.stream()
+                .map(Restaurante::getId)
+                .collect(Collectors.toList());
 
-        return "inicial"; // O nome do seu template HTML
-    }
-
+		Map<Long, Double> mapaDeMedias = new HashMap<>();
+		Map<Long, Long> mapaDeContagem = new HashMap<>();
+		
+		for (Long id : idsRecentes) {
+		mapaDeMedias.put(id, service.getMediaDeAvaliacoes(id));
+		mapaDeContagem.put(id, avaliacaoRepository.countByRestauranteId(id));
+		}
+		
+		model.addAttribute("mapaDeMedias", mapaDeMedias);
+		model.addAttribute("mapaDeContagem", mapaDeContagem);
+		
+		Long usuarioId = getCurrentUserId(); 
+		Set<Long> idsFavoritos = (usuarioId != null) ? favoritoService.getFavoritoIds(usuarioId) : Collections.emptySet();
+		model.addAttribute("idsFavoritos", idsFavoritos);
+		
+		return "inicial";
+		}
     @GetMapping("/restaurantes")
     public String mostrarRestaurantes(
             @RequestParam(name = "culinaria", required = false) String culinaria,
@@ -111,14 +134,31 @@ public class RestauranteController {
             paginaRestaurantes = reposi.findAll(pageable);
         }
 
-        // --- Lógica de Favoritos (não muda) ---
         Long usuarioId = getCurrentUserId(); 
         Set<Long> idsFavoritos = (usuarioId != null) ? favoritoService.getFavoritoIds(usuarioId) : Collections.emptySet();
+        
+        List<Long> idsDaPagina = paginaRestaurantes.getContent().stream()
+                                    .map(Restaurante::getId)
+                                    .collect(Collectors.toList());
+        
+        Map<Long, Double> mapaDeMedias = new HashMap<>();
+        
+        for (Long id : idsDaPagina) {
+            mapaDeMedias.put(id, service.getMediaDeAvaliacoes(id));
+        }
+        
+        Map<Long, Long> mapaDeContagem = new HashMap<>();
+        
+        for (Long id : idsDaPagina) {
+            mapaDeMedias.put(id, service.getMediaDeAvaliacoes(id));
+            mapaDeContagem.put(id, avaliacaoRepository.countByRestauranteId(id));
+        }
 
-        // Envia o OBJETO PAGE inteiro para o Thymeleaf
         model.addAttribute("paginaRestaurantes", paginaRestaurantes); 
         model.addAttribute("culinaria", culinaria);
         model.addAttribute("idsFavoritos", idsFavoritos); 
+        model.addAttribute("mapaDeMedias", mapaDeMedias);
+        model.addAttribute("mapaDeContagem", mapaDeContagem);
 
         return "restaurantes";
     }
@@ -147,6 +187,9 @@ public class RestauranteController {
 
             // A linha mais importante para o seu formulário de avaliação
             model.addAttribute("novaAvaliacao", new com.example.app1.records.AvaliacaoDTO());
+            
+            Double media = service.getMediaDeAvaliacoes(id); // Chama o novo método do service
+            model.addAttribute("mediaAvaliacoes", media);
 
             List<Avaliacao> avaliacoes = avaliacaoRepository.findByRestauranteIdOrderByDataAvaliacaoDesc(id);
         	model.addAttribute("avaliacoesDoRestaurante", avaliacoes);

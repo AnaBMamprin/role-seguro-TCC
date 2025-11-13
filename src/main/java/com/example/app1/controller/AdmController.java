@@ -104,48 +104,50 @@ public class AdmController {
         return "redirect:/adm";
     }
     
-            // 3. Verifica se uma NOVA foto foi enviada
-        	@PostMapping("/restauranteEditar")
-        public String editarRestaurante(
-            @ModelAttribute RestauranteDTO dto, 
-            @RequestParam("id") Long id,
-            @RequestParam(value = "idDoUsuarioDono", required = false) Long idDono,
-            @RequestParam("fotoFile") MultipartFile fotoFile,
-            RedirectAttributes redirectAttributes) { 
-        	    
-        	    System.out.println("--- [ADM CONTROLLER] INICIANDO EDIÇÃO (ID: " + id + ") ---"); // <-- ADICIONE
+    @PostMapping("/restauranteEditar")
+	public String editarRestaurante(
+	        @ModelAttribute RestauranteDTO dto,  // O 'id' já está dentro do dto (dto.getId())
+	        // @RequestParam("id") Long id,  // <-- REMOVIDO (esta era a causa do bug)
+	        @RequestParam(value = "idDoUsuarioDono", required = false) Long idDono,
+	        @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile,
+	        RedirectAttributes redirectAttributes) { 
+	    
+	    // Pegue o ID de dentro do DTO, onde ele já foi mapeado
+	    Long idDoRestaurante = dto.getId();
+	    
+	    System.out.println("--- [ADM CONTROLLER] INICIANDO EDIÇÃO (ID: " + idDoRestaurante + ") ---"); 
 
-        	    try {
-        	        // 3. Verifica se uma NOVA foto foi enviada
-        	        if (fotoFile != null && !fotoFile.isEmpty()) {
-        	            
-        	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Foto recebida: " + fotoFile.getOriginalFilename()); // <-- ADICIONE
-        	            
-        	            // 4. Salva a nova foto
-        	            String nomeArquivo = fileStorageService.salvarFotoRestaurante(fotoFile);
-        	            
-        	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Foto salva no servidor com nome: " + nomeArquivo); // <-- ADICIONE
-        	            
-        	            // 5. Coloca o nome no DTO (o service vai saber o que fazer)
-        	            dto.setCaminhoFoto(nomeArquivo);
+	    try {
+	        // 3. Verifica se uma NOVA foto foi enviada
+	        if (fotoFile != null && !fotoFile.isEmpty()) {
+	            
+	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Foto recebida: " + fotoFile.getOriginalFilename());
+	            
+	            // 4. Salva a nova foto
+	            String nomeArquivo = fileStorageService.salvarFotoRestaurante(fotoFile);
+	            
+	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Foto salva no servidor com nome: " + nomeArquivo);
+	            
+	            // 5. Coloca o nome no DTO (o service vai saber o que fazer)
+	            dto.setCaminhoFoto(nomeArquivo);
 
-        	        } else {
-        	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Nenhuma foto nova foi enviada."); // <-- ADICIONE
-        	        }
-        	        
-                    // 6. Manda para o service atualizar (passando id do dono se houver)
-                    restauranteService.atualizarRestaurante(id, dto, idDono);
-        	        
-        	        redirectAttributes.addFlashAttribute("sucesso", "Restaurante atualizado com sucesso!");
+	        } else {
+	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Nenhuma foto nova foi enviada.");
+	        }
+	        
+	        // 6. Manda para o service atualizar (usando o ID do DTO)
+	        restauranteService.atualizarRestaurante(idDoRestaurante, dto, idDono);
+	        
+	        redirectAttributes.addFlashAttribute("sucesso", "Restaurante atualizado com sucesso!");
 
-        	    } catch (Exception e) {
-        	        e.printStackTrace();
-        	        redirectAttributes.addFlashAttribute("erro", "Erro ao editar restaurante: " + e.getMessage());
-        	    }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        redirectAttributes.addFlashAttribute("erro", "Erro ao editar restaurante: " + e.getMessage());
+	    }
 
-        	    System.out.println("--- [ADM CONTROLLER] FIM EDIÇÃO ---"); // <-- ADICIONE
-        	    return "redirect:/adm";
-        	}
+	    System.out.println("--- [ADM CONTROLLER] FIM EDIÇÃO ---");
+	    return "redirect:/adm";
+	}
 
     @PostMapping("/restauranteExcluir")
     public String excluirRestaurante(@RequestParam("id") Long id) {

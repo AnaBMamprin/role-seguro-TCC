@@ -9,13 +9,14 @@ import org.springframework.web.client.RestTemplate;
 import com.example.app1.model.Restaurante;
 import com.example.app1.model.Usuario;
 import com.example.app1.records.RestauranteDTO;
+import com.example.app1.repository.AvaliacaoRepository;
 import com.example.app1.repository.RestauranteRepository;
 import com.example.app1.repository.UserRepository;
 import com.example.app1.usuarioEnums.UserEnum;
 import com.fasterxml.jackson.databind.JsonNode; 
 import com.fasterxml.jackson.databind.ObjectMapper; 
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.net.URLEncoder; 
 import java.nio.charset.StandardCharsets; 
 
@@ -28,6 +29,8 @@ public class RestauranteService {
 	private PasswordEncoder passwordEncoder; // Você DEVE ter isso
 	@Autowired
 	private UserRepository usuarioRepository;
+	@Autowired 
+    private AvaliacaoRepository avaliacaoRepository;
 
     @Value("${google.maps.api.key}")
     private String apiKey;
@@ -137,6 +140,7 @@ public class RestauranteService {
 
         // 8. Salva o restaurante (com ou sem o endereço novo)
         repo.save(restaurante);
+        repo.flush();
     }
     
     @Transactional
@@ -290,6 +294,12 @@ public class RestauranteService {
         // 4. Salva no banco (sem 'Usuario', pois é dado de teste)
         repo.save(restaurante);
 	}
+    
+    public Double getMediaDeAvaliacoes(Long restauranteId) {
+        // O método do repositório já retorna null se não houver
+        // avaliações, então é seguro chamar diretamente.
+        return avaliacaoRepository.getMediaAvaliacoes(restauranteId);
+    }
     
     public String getGoogleMapsApiKey() {
         return this.apiKey;

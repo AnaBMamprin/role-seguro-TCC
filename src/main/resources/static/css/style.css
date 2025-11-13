@@ -1,10 +1,18 @@
-/* ==================== VARIÁVEIS DE CORES ==================== */
+/* ================================================== */
+/* PALETA DE CORES TCHOMP (VERSÃO NOVA)        */
+/* ================================================== */
 :root {
-  --primary: #D84315;   /* vermelho terroso */
-  --secondary: #FF7043; /* laranja apetite */
-  --accent: #FBC02D;    /* amarelo mostarda */
-  --light: #FAFAFA;     /* branco gelo */
-  --dark: #2C2C2C;      /* quase preto */
+  /* Cores Principais (Ação e Estrutura) */
+  --cor-primaria: #FF6B35;   /* Laranja (Botões de ação, links) */
+  --cor-secundaria: #003049; /* Azul Marinho (Navbar, Títulos, Rodapé) */
+  --cor-acento: #FFB627;    /* Laranja Claro (Hover, Estrelas) */
+
+  /* Cores Neutras (Fundo e Texto) */
+  --cor-fundo: #F5F5F5;      /* Cinza Claro (Fundo geral) */
+  --cor-fundo-card: #FFFFFF; /* Branco (Fundo de cards e modais) */
+  --cor-texto: #212529;      /* Preto Suave (Texto principal) */
+  --cor-texto-claro: #FFFFFF; /* Branco (Para usar sobre fundos escuros) */
+  --cor-texto-muted: #6C757D; /* Cinza Médio (Textos secundários) */
 }
 
 /* ==================== RESET BÁSICO ==================== */
@@ -13,25 +21,27 @@ body, html {
   padding: 0;
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #FAFAFA;
-  color: var(--light);
+  background-color: var(--cor-fundo); /* Fundo geral cinza claro */
+  color: var(--cor-texto);           /* Texto principal preto */
 }
 
 /* ========== NAVBAR ========== */
 .main-navbar{
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  /* REGRA: Header Azul Marinho */
+  background-color: var(--cor-secundaria);
   padding: .8rem 1rem;
 }
 
 .main-navbar .nav-link{
-  color: var(--light) !important;
+  color: var(--cor-texto-claro) !important; /* Texto branco na navbar */
   font-size: 1.2rem;
   margin: 0 15px;
   transition: color .3s, transform .2s;
 }
 
 .main-navbar .nav-link:hover{
-  color: var(--accent) !important;
+  /* REGRA: Hover em Laranja Claro */
+  color: var(--cor-acento) !important;
   transform: scale(1.05);
 }
 
@@ -42,22 +52,25 @@ body, html {
 }
 
 .main-navbar .btn-favorite{
-background: linear-gradient(135deg, var(--accent), var(--secondary));
-color: var(--light);
-  color: var(--light);
+  /* REGRA: Botão de Ação Laranja */
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-claro);
   border-radius: 8px;
   padding: .45rem .8rem;
   border: none;
+  transition: background-color .3s, transform .2s;
 }
 
 .btn-favorite:hover {
-  background: var(--primary);
+  /* REGRA: Hover Laranja Claro */
+  background-color: var(--cor-acento);
+  color: var(--cor-texto); /* Texto escuro no hover para contraste */
   transform: translateY(-2px);
 }
 
 .main-navbar .btn-logout{
   background-color: #e74c3c;
-  color: var(--light);
+  color: var(--cor-texto-claro);
   border-radius: 8px;
   padding: .45rem .8rem;
   border: none;
@@ -76,10 +89,10 @@ color: var(--light);
   border: 0;
   background: none;
   font-size: 1.1rem;
-  color: var(--light);
+  color: var(--cor-texto-claro); /* Ícone de busca branco */
 }
 
-/* ========== MENU FULLSCREEN (grade de culinárias) ========== */
+/* ========== MENU FULLSCREEN (grade de culinárias - inicial.html) ========== */
 .fullscreen-menu{
   padding: 50px 20px;
   text-align: center;
@@ -87,41 +100,48 @@ color: var(--light);
 .fullscreen-menu h1{
   font-size: 2rem;
   margin-bottom: 30px;
-  color: white;
-}
-
-.menu-grid{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  /* REGRA: Título Azul Marinho */
+  color: var(--cor-secundaria);
 }
 
 .menu-card{
-	position: relative;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  position: relative;
+  /* REGRA: Card com fundo branco (ou cinza claro F5F5F5) */
+  background: var(--cor-fundo-card);
+  border: 1px solid #dee2e6; /* Borda cinza sutil */
   border-radius: 15px;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0,0,0,.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,.05);
   transition: transform .2s ease, box-shadow .2s ease;
   cursor: pointer;
+  
+  /* Ajustes do card de restaurante.html */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .menu-card:hover{
   transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0,0,0,.15);
+  box-shadow: 0 6px 12px rgba(0,0,0,.1);
+  /* REGRA: Borda Laranja no hover */
+  border-color: var(--cor-primaria);
 }
 .menu-card i{
   font-size: 2rem;
   margin-bottom: 10px;
-  color: var(--accent);
+  /* REGRA: Ícone Laranja */
+  color: var(--cor-primaria);
 }
 .menu-card h3{
   margin: 10px 0;
   font-size: 1.35rem;
-  color: var(--light);
+  /* REGRA: Título Azul Marinho */
+  color: var(--cor-secundaria);
 }
 .menu-card p{
   font-size: .95rem;
-  color: rgb(38, 0, 64);
+  /* REGRA: Texto secundário cinza */
+  color: var(--cor-texto-muted);
 }
 
 .navbar-toggler {
@@ -131,61 +151,185 @@ color: var(--light);
 .navbar-toggler-icon {
   filter: invert(1);
 }
-/* ==================== BOTÕES ==================== */
-.btn-logout {
-  background-color: #e74c3c;
-  color: var(--light);
-  border-radius: 8px;
-  padding: 0.4rem 1rem;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.btn-logout:hover {
-  background-color: #c0392b;
-  transform: translateY(-2px);
-}
 
 /* ==================== BUSCA ==================== */
-.search-box {
-  position: relative;
-}
-
-.search-box .form-control {
-  border-radius: 25px;
-  padding-right: 40px;
-}
-
 .search-box .btn-search {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: var(--light);
-  font-size: 1.2rem;
-  cursor: pointer;
+  color: var(--cor-texto-muted); /* Ícone de busca cinza */
+}
+.main-navbar .search-box .btn-search {
+  color: var(--cor-texto-claro); /* Ícone de busca branco (só na navbar) */
 }
 
-/* ==================== PERFIL ==================== */
+
+/* ==================== PERFIL, LOGIN, CADASTRO ==================== */
+/* Páginas de formulário (Login, Cadastro) */
+.cadastro-page, .login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  /* REGRA: Fundo Azul Marinho */
+  background: var(--cor-secundaria);
+  font-family: 'Poppins', sans-serif;
+  color: var(--cor-texto-claro);
+}
+.cadastro-container, .login-container {
+  background: rgba(255, 255, 255, 0.1); /* Caixa branca translúcida */
+  padding: 2.5rem 3rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+.cadastro-container h2, .login-container h2.titulo-estilizado {
+  color: var(--cor-acento); /* Título Laranja Claro */
+}
+/* Botão de Ação Laranja */
+.cadastro-container button, .login-container form button {
+  background: var(--cor-primaria);
+  color: var(--cor-texto-claro);
+}
+.cadastro-container button:hover, .login-container form button:hover {
+  background: var(--cor-acento); /* Hover Laranja Claro */
+  color: var(--cor-texto);
+}
+/* Links em Laranja Claro */
+.cadastro-container p a, .login-container p a {
+  color: var(--cor-acento);
+}
+
+/* Página de Perfil */
 .profile-container {
   max-width: 800px;
   margin: 5rem auto;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--cor-fundo-card); /* Fundo Branco */
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  color: var(--cor-texto); /* Texto escuro */
+}
+.profile-card h2 {
+  color: var(--cor-secundaria); /* Título Azul Marinho */
+}
+.profile-card input {
+  background-color: var(--cor-fundo); /* Fundo cinza claro */
+  color: var(--cor-texto);
+  border: 1px solid #ced4da;
+}
+.btn-salvar {
+  background: var(--cor-primaria); /* Botão Salvar Laranja */
+  color: var(--cor-texto-claro);
+}
+.btn-salvar:hover {
+  background: var(--cor-acento);
+  color: var(--cor-texto);
 }
 
+
+/* ==================== PÁGINA RESTAURANTES ==================== */
+.restaurantes-page {
+  padding: 3rem 2rem;
+  background-color: var(--cor-fundo); /* Fundo geral cinza claro */
+  min-height: 100vh;
+}
+
+.restaurantes-page h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--cor-secundaria); /* Título Azul Marinho */
+}
+
+/* O card na pág de restaurantes já usa .menu-card (definido acima) */
+.restaurantes-page .menu-card {
+  color: var(--cor-texto-muted); /* Texto secundário cinza */
+}
+.restaurantes-page .menu-card h3 a {
+  color: var(--cor-secundaria) !important; /* Título Azul Marinho */
+}
+.restaurantes-page .menu-card p {
+  color: var(--cor-texto); /* Texto principal preto */
+}
+.restaurantes-page .menu-card p strong {
+  color: var(--cor-texto);
+}
+
+/* ==================== PÁGINA MODELO-RESTAURANTE ==================== */
+.restaurante-detalhes {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--cor-fundo-card); /* Fundo Branco */
+  border-radius: 15px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  color: var(--cor-texto); /* Texto principal preto */
+}
+
+.restaurante-detalhes h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--cor-secundaria); /* Título Azul Marinho */
+}
+
+.restaurante-detalhes p strong {
+  color: var(--cor-texto); /* Texto strong apenas em negrito */
+}
+
+.restaurante-detalhes a {
+  color: var(--cor-primaria); /* Links Laranja */
+  font-weight: bold;
+}
+.restaurante-detalhes a:hover {
+  text-decoration: underline;
+  color: var(--cor-acento);
+}
+
+/* ==================== CORREÇÃO ABAS (TABS) ==================== */
+.tab-content {
+  color: var(--cor-texto); /* Texto preto dentro da aba */
+}
+.nav-tabs .nav-link {
+  color: var(--cor-texto-muted); /* Abas inativas em cinza */
+  font-weight: 600;
+}
+.nav-tabs .nav-link.active {
+  color: var(--cor-primaria) !important; /* Aba ativa Laranja */
+  border-bottom-color: var(--cor-primaria) !important;
+  border-bottom-width: 3px;
+}
+/* Estrelas de Avaliação Laranja/Acento */
+.bi-star-fill {
+  color: var(--cor-acento);
+}
+
+/* ==================== CORREÇÃO MODAL ==================== */
+.modal-content {
+  color: var(--cor-texto); /* Texto preto no modal */
+}
+.modal-header .modal-title {
+  color: var(--cor-secundaria); /* Título do modal Azul Marinho */
+}
+
+/* ================================================== */
+/* CORREÇÃO DE LAYOUT - PERFIL & POP-UP          */
+/* ================================================== */
+
+/* Garante o espaçamento correto do container (a cor já está certa) */
+.profile-container {
+  max-width: 800px;
+  margin: 5rem auto;
+}
+
+/* Centraliza o título (a cor já está certa) */
 .profile-card h2 {
   text-align: center;
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
-  color: var(--light);
 }
 
+/* Formata os labels do formulário */
 .profile-card label {
   display: block;
   font-weight: bold;
@@ -193,21 +337,22 @@ color: var(--light);
   margin-bottom: 0.5rem;
 }
 
+/* Formata os inputs (faz eles ocuparem 100% da largura) */
 .profile-card input {
   width: 100%;
   padding: 0.8rem;
   border-radius: 8px;
-  border: none;
-  background: rgba(255,255,255,0.2);
-  color: var(--light);
+  /* (as cores de fundo e texto já vêm do novo CSS) */
 }
 
+/* Regra para o input readonly (email) */
 .profile-card input[readonly] {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
 /* ==================== BOTÕES ==================== */
+/* Faz os botões ficarem lado a lado */
 .profile-buttons {
   display: flex;
   justify-content: space-between;
@@ -215,6 +360,7 @@ color: var(--light);
   gap: 10px;
 }
 
+/* Regra de layout base para todos os botões */
 .btn-voltar, .btn-salvar, .btn-excluir {
   flex: 1;
   padding: 0.8rem;
@@ -225,6 +371,7 @@ color: var(--light);
   transition: 0.3s;
 }
 
+/* Cores dos botões que não são o principal */
 .btn-voltar {
   background: #ccc;
   color: #333;
@@ -233,16 +380,8 @@ color: var(--light);
   background: #bbb;
 }
 
-.btn-salvar {
-	background: linear-gradient(135deg, var(--accent), var(--secondary));
-	color: var(--light);
-}
-.btn-salvar:hover {
-  background: var(--primary);
-}
-
 .btn-excluir {
-  background: #dc3545;
+  background: #dc3545; /* Vermelho perigo */
   color: #fff;
 }
 .btn-excluir:hover {
@@ -250,6 +389,7 @@ color: var(--light);
 }
 
 /* ==================== POP-UP ==================== */
+/* Esconde o pop-up por padrão */
 .popup {
   display: none;
   position: fixed;
@@ -258,14 +398,18 @@ color: var(--light);
   background: rgba(0,0,0,0.5);
   justify-content: center;
   align-items: center;
+  z-index: 1050; /* Garante que fique acima da navbar */
 }
 
+/* Mostra o pop-up quando o JS adicionar a classe 'active' */
 .popup.active {
   display: flex;
 }
 
+/* Layout do conteúdo do pop-up */
 .popup-content {
-  background: rgba(255,255,255,0.95);
+  background: var(--cor-fundo-card); /* Fundo branco (da paleta nova) */
+  color: var(--cor-texto); /* Texto preto (da paleta nova) */
   padding: 2rem;
   border-radius: 12px;
   text-align: center;
@@ -298,32 +442,99 @@ color: var(--light);
   background: #5a6268;
 }
 
-/* ==================== CADASTRO ==================== */
-.cadastro-page {
+/* =============================================== */
+/* COR DO ÍCONE DE FAVORITO                   */
+/* =============================================== */
+
+/* Define a cor do coração quando ele está preenchido */
+.coracao-favorito {
+  color: var(--cor-primaria); /* Seu laranja principal */
+}
+
+/* =============================================== */
+/* =============================================== */
+/* BARRA DE CATEGORIAS (LAYOUT DE CARD)     */
+/* =============================================== */
+
+/* O container que segura a barra */
+.categoria-bar-container {
+  background-color: var(--cor-fundo-card); 
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #dee2e6;
+  position: sticky; 
+  top: 0;           
+  z-index: 1020;  
+}
+
+/* A barra de scroll horizontal */
+.categoria-bar {
   display: flex;
+  flex-wrap: nowrap; 
+  overflow-x: auto;  
+  -webkit-overflow-scrolling: touch; 
+}
+
+/* Esconde a barra de scroll */
+.categoria-bar::-webkit-scrollbar { display: none; }
+.categoria-bar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* O NOVO CARD DE CATEGORIA (Mais largo e espaçado) */
+.categoria-btn {
+  flex-shrink: 0; 
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
+  
+  /* Aparência de Card */
+  background-color: var(--cor-fundo-card); 
+  border: 1px solid #dee2e6;
+  border-radius: 12px; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+  
+  /* Layout do Conteúdo (Ícone + Texto) */
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
   justify-content: center;
-  align-items: center; /* centraliza vertical */
-  min-height: 100vh;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  min-width: 150px; /* AUMENTADO: Largura mínima do card */
+  
+  /* Texto e Ícone */
+  color: var(--cor-primaria); 
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
 }
 
-.cadastro-container {
-	max-width: 800px;  /* aumenta a largura máxima */
-	width: 90%;        /* ocupa até 90% da tela */
-	margin: 0 auto;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  color: var(--light);
-  text-align: center;
+/* Efeito Hover: Inverte as cores */
+.categoria-btn:hover {
+  background-color: var(--cor-primaria); /* Fundo Laranja */
+  color: var(--cor-texto-claro); /* Texto Branco */
+  border-color: var(--cor-primaria);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.cadastro-container h2 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  color: var(--light);
+/* O primeiro card ("Ver Todos") com cores invertidas */
+.categoria-bar a:first-child {
+  background-color: var(--cor-secundaria); /* Fundo Azul Marinho */
+  color: var(--cor-texto-claro); /* Texto Branco */
+  border-color: var(--cor-secundaria);
 }
+.categoria-bar a:first-child:hover {
+  background-color: #001f30; /* Azul um pouco mais escuro no hover */
+  border-color: #001f30;
+}
+
+.categoria-btn i {
+  font-size: 1.25rem; /* <<< MUDE DE '1.5rem' PARA '1.25rem' */
+  margin-bottom: 0.25rem;
+}
+
+/* ================================================== */
+/* CORREÇÃO DE LAYOUT - LOGIN & CADASTRO         */
+/* ================================================== */
+
+/* --- FORMULÁRIO DE CADASTRO --- */
 
 .cadastro-container form {
   display: flex;
@@ -332,11 +543,12 @@ color: var(--light);
 }
 
 .cadastro-container input {
+  width: 100%; /* Garante 100% de largura */
   padding: 0.8rem 1rem;
   border-radius: 8px;
   border: none;
   background: rgba(255,255,255,0.2);
-  color: var(--light);
+  color: var(--cor-texto-claro);
   font-size: 1rem;
 }
 
@@ -345,76 +557,28 @@ color: var(--light);
 }
 
 .cadastro-container button {
+  width: 100%; /* Garante 100% de largura */
   padding: 0.8rem;
   border-radius: 8px;
   border: none;
   font-weight: bold;
   font-size: 1.1rem;
-  background: linear-gradient(135deg, #FBC02D, #FF7043);
-  color: var(--light);
   cursor: pointer;
   transition: 0.3s;
+  /* (As cores de background já são definidas no CSS principal) */
 }
 
-.cadastro-container button:hover {
-  background: var(--secondary);
-  transform: translateY(-2px);
-}
+/* --- FORMULÁRIO DE LOGIN --- */
 
-/* Link para login */
-.cadastro-container p {
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  color: var(--light);
-}
+/* (As cores de .login-container já estão no CSS principal) */
 
-.cadastro-container p a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.cadastro-container p a:hover {
-  color: #e84118;
-  text-decoration: underline;
-}
-
-/* ==================== LOGIN ==================== */
-.login-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  font-family: 'Poppins', sans-serif;
-  color: #fff;
-}
-
-.login-container {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2.5rem 3rem;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-}
-
-.login-container h2.titulo-estilizado {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  color: #ffd700;
-  font-weight: 700;
-}
-
-/* Input com ícone */
-.input-group {
+.login-container .input-group {
   position: relative;
   margin-bottom: 1.2rem;
+  width: 100%;
 }
 
-.input-group i {
+.login-container .input-group i {
   position: absolute;
   left: 15px;
   top: 50%;
@@ -424,331 +588,27 @@ color: var(--light);
 }
 
 .login-container form input {
-  width: 100%;
-  padding: 0.8rem 1rem 0.8rem 2.8rem; /* espaço para o ícone */
+  width: 100%; /* Garante 100% de largura */
+  padding: 0.8rem 1rem 0.8rem 2.8rem; /* Adiciona espaço para o ícone */
   border: none;
   border-radius: 10px;
   font-size: 1rem;
+  background: rgba(255,255,255,0.2);
+  color: var(--cor-texto-claro);
 }
 
 .login-container form input::placeholder {
-  color: #ccc;
+  color: rgba(255,255,255,0.7);
 }
 
 .login-container form button {
-  width: 100%;
+  width: 100%; /* Garante 100% de largura */
   padding: 0.8rem;
   border: none;
   border-radius: 10px;
-  background:linear-gradient(135deg, #FBC02D, #FF7043);
-  color: #fff;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-
-.login-container form button:hover {
-  background-color: #e84118;
-  transform: translateY(-2px);
-}
-
-.login-container p {
-  margin-top: 1.2rem;
-  font-size: 0.95rem;
-}
-
-.login-container p a {
-  color: #ffd700;
-  text-decoration: none;
-}
-
-.login-container p a:hover {
-  text-decoration: underline;
-}
-
-.error-container {
-  max-width: 500px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-.error-animation {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.error-animation .digit {
-  font-size: 6rem;
-  font-weight: bold;
-  margin: 0 0.5rem;
-  animation: bounce 1s infinite alternate;
-}
-
-.error-animation .ghost {
-  font-size: 6rem;
-  color: var(--accent);
-  animation: float 2s ease-in-out infinite;
-}
-
-@keyframes bounce {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-20px); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
-}
-
-.error-container h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.error-container p {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-}
-
-.btn-home {
-  background-color: var(--accent);
-  color: var(--light);
-  border-radius: 8px;
-  padding: 0.7rem 1.5rem;
-  font-weight: bold;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.btn-home:hover {
-  background-color: #e84118;
-  transform: scale(1.05);
-}
-
-/* ==================== RESTAURANTES ==================== */
-.restaurantes-page {
-  padding: 3rem 2rem;
-  background: linear-gradient(135deg, #FDF6E3, #FFDAB9);
-  min-height: 100vh;
-}
-
-.restaurantes-page h1 {
-  text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  color: #ff6347; /* Tom de vermelho/apetite */
-}
-
-/* Grid de cards */
-.restaurantes-page .cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-/* Card do restaurante */
-.restaurantes-page .menu-card {
-  background: linear-gradient(135deg, #FFB347, #FF7E5F); /* gradiente amarelo-laranja */
-  border-radius: 15px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  transition: transform .3s ease, box-shadow .3s ease;
-  cursor: pointer;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.restaurantes-page .menu-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-}
-
-/* Conteúdo do card */
-.restaurantes-page .menu-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.restaurantes-page .menu-card p {
-  font-size: 0.95rem;
-  margin-bottom: 0.3rem;
-}
-
-/* Link do site */
-.restaurantes-page .menu-card a {
-  margin-top: 0.8rem;
-  color: #fff;
-  font-weight: bold;
-  text-decoration: underline;
-  transition: 0.3s;
-}
-
-.restaurantes-page .menu-card a:hover {
-  color: #ffeb3b;
-  text-decoration: none;
-}
-
-/* Container principal do restaurante */
-.restaurante-detalhes {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 15px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-  color: var(--light);
-}
-
-/* Título do restaurante */
-.restaurante-detalhes h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #FFD700; /* amarelo para chamar atenção */
-  text-align: center;
-}
-
-/* Detalhes (cidade, culinária, etc) */
-.restaurante-detalhes p {
-  font-size: 1.1rem;
-  margin: 0.5rem 0;
-  line-height: 1.4;
-}
-
-.restaurante-detalhes p strong {
-  color: var(--accent);
-}
-
-/* Link do site */
-.restaurante-detalhes a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.restaurante-detalhes a:hover {
-  text-decoration: underline;
-  color: #FF6F61;
-}
-
-/* Container do mapa */
-.mapa-container {
-  width: 100%;
-  height: 400px;
-  margin-top: 2rem;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-/* Garante que o mapa ocupe todo o container */
-.mapa-container gmp-map {
-  width: 100%;
-  height: 100%;
-  border-radius: 15px;
-}
-
-/* Container principal do restaurante */
-.restaurante-detalhes {
-  max-width: 900px; /* Mantém */
-  margin: 0 auto;   /* Mantém */
-  padding: 2rem;    /* Mantém */
-  background: rgba(255, 255, 255, 0.85); /* DEIXE MAIS OPACO OU MUDE para #f8f9fa (cinza claro BS) */
-  border-radius: 15px; /* Mantém */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
-  color: #333; /* CORRIGIDO: Define uma cor de texto escura padrão */
-}
-
-/* Título do restaurante */
-.restaurante-detalhes h1 {
-  font-size: 2.5rem; /* Mantém */
-  font-weight: 700; /* Mantém */
-  margin-bottom: 1rem; /* Mantém */
-  color: #E67E22; /* CORRIGIDO: Laranja escuro (combina com sua paleta) ou outra cor escura */
-  text-align: center; /* Mantém */
-}
-
-/* Detalhes (cidade, culinária, etc) */
-.restaurante-detalhes p {
-  font-size: 1.1rem; /* Mantém */
-  margin: 0.5rem 0; /* Mantém */
-  line-height: 1.4; /* Mantém */
-}
-
-.restaurante-detalhes p strong {
-  color: #0d6efd; /* CORRIGIDO: Exemplo: Azul padrão do Bootstrap */
-  /* Ou use o laranja: color: #E67E22; */
-}
-
-/* Link do site */
-.restaurante-detalhes a {
-  /* color: var(--accent); */
-  color: #0d6efd; /* CORRIGIDO: Mesma cor do strong */
-  text-decoration: none; /* Mantém */
-  font-weight: bold; /* Mantém */
-}
-
-.restaurante-detalhes a:hover {
-  text-decoration: underline; /* Mantém */
-  color: #0a58ca;
-}
-
-/* Container do mapa */
-.mapa-container {
-  width: 100%;
-  margin-top: 2rem;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra mais suave */
-}
-
-/* Garante que o mapa ocupe todo o container */
-#mapa { /* Mudamos de gmp-map para #mapa */
-  width: 100%;
-  height: 400px; /* Ou ajuste conforme necessário no layout */
-  border-radius: 15px; /* Mantém */
-}
-
-/* Adicional: Estilo para o Bloco de Avaliação Pendente */
-.alert-info h4 {
-    color: #052c65; /* Cor mais escura para o título do alert */
-}
-
-/* ==================== CORREÇÃO MODAL ==================== */
-/* Força o texto dentro do modal a ser escuro, 
-  sobrescrevendo o "color: var(--light)" do body.
-*/
-.modal-content {
-  color: #212529; /* Cor de texto escura padrão */
-}
-
-/* Opcional: Garante que os títulos do modal também fiquem escuros */
-.modal-header .modal-title {
-  color: #212529;
-}
-
-/* ==================== CORREÇÃO ABAS (TABS) ==================== */
-/* Garante que o texto dentro do conteúdo da aba seja escuro */
-.tab-content {
-  color: #212529; /* Preto */
-}
-
-/* Estiliza o link da aba */
-.nav-tabs .nav-link {
-  color: #495057; /* Cinza escuro */
-  font-weight: 600;
-}
-
-/* Estiliza o link da aba ATIVA */
-.nav-tabs .nav-link.active {
-  color: var(--primary); /* Sua cor primária (laranja) */
-  border-bottom-color: var(--primary) !important;
-  border-bottom-width: 3px;
+  /* (As cores de background já são definidas no CSS principal) */
 }

@@ -56,14 +56,26 @@
 			    <div class="row g-4 mb-4">
 			        
 			        <div class="col-md-7">
+			            
 			            <div class="d-flex align-items-center mb-3">
 			                <h1 th:text="${restaurante.nome}" class="me-3 display-5">Nome</h1>
 			                <span class="favorite-icon fs-2" style="cursor: pointer;"
 			                      th:attr="onclick='toggleFavorito(this, ' + ${restaurante.id} + ')'"
 			                      th:title="${isFavorito ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}">
-			                    <i class="bi" th:classappend="${isFavorito ? 'bi-heart-fill text-danger' : 'bi-heart'}"></i>
+								  <i class="bi" th:classappend="${isFavorito ? 'bi-heart-fill coracao-favorito' : 'bi-heart'}"></i>
 			                </span>
 			            </div>
+
+			            <div class="mb-3">
+			                <span th:if="${mediaAvaliacoes == null}" class="badge fs-5 bg-secondary text-dark-emphasis">
+			                    <i class="bi bi-star"></i> Sem avaliações
+			                </span>
+			                <span th:if="${mediaAvaliacoes != null}" class="badge fs-5 bg-warning text-dark">
+			                    <i class="bi bi-star-fill"></i>
+			                    Média <span th:text="${#numbers.formatDecimal(mediaAvaliacoes, 1, 1)}"></span>
+			                </span>
+			            </div>
+
 			            <p><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'Não informado'}"></span></p>
 			            <p><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'Não informado'}"></span></p>
 			            <p><strong>Tipo de prato:</strong> <span th:text="${restaurante.tipodeprato ?: 'Não informado'}"></span></p>
@@ -73,8 +85,8 @@
 			                <a th:href="${restaurante.site ?: '#'}" th:text="${restaurante.site ?: 'Não disponível'}" target="_blank" th:if="${restaurante.site != null and !restaurante.site.isEmpty()}"></a>
 			                <span th:unless="${restaurante.site != null and !restaurante.site.isEmpty()}">Não disponível</span>
 			            </p>
-			        </div>
 
+			        </div>
 			        <div class="col-md-5">
 			            
 			            <img th:if="${restaurante.caminhoFoto != null AND restaurante.caminhoFoto != ''}"
@@ -89,7 +101,7 @@
 			                <span class="text-muted fs-4">Sem foto</span>
 			            </div>
 			        </div>
-			    </div>
+			        </div>
 			    <hr class="my-3" style="border-color: rgba(255,255,255,0.1);">
 
 			    <div class="row">
@@ -155,29 +167,22 @@
 			        </div>
 			    </div>
 			    </div>
-
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 		<script th:inline="javascript">
 		    /*<![CDATA[*/
 		    
-		    // ===================================
-		    // VARIÁVEIS DO MAPA (DO SEU CÓDIGO)
-		    // ===================================
+		    // Variáveis para o Mapa
 		    const restauranteLat = /*[[${restaurante.latitude}]]*/ 0;
 		    const restauranteLng = /*[[${restaurante.longitude}]]*/ 0;
 		    const restauranteNome = /*[[${restaurante.nome}]]*/ "Restaurante";
 
-		    // ===================================
-		    // FUNÇÃO TOGGLE FAVORITO (COPIADA E SEM CSRF)
-		    // ===================================
+		    // Função de Favoritar
 		    async function toggleFavorito(element, restauranteId) {
 		        const icon = element.querySelector('i');
 		        const isFavorito = icon.classList.contains('bi-heart-fill');
 		        const url = isFavorito ? '/favoritos/remove' : '/favoritos/add';
 		        const method = 'POST';
-		        
-		        // Headers simplificados, sem CSRF
 		        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
 		        try {
@@ -203,21 +208,11 @@
 		</script>
 
 		<script>
-		    function initMap() {
-		        // ... (toda a sua lógica do initMap) ...
-		    }
-		</script>
-
-		<script async
-		    th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey} + '&callback=initMap'}">
-		</script>
-		<script>
 		    let mapInitialized = false;
-		    const mapaTab = document.getElementById('mapa-tab'); // Pega o botão da aba
+		    const mapaTab = document.getElementById('mapa-tab');
 
 		    // Ouve o evento 'shown.bs.tab' (disparado pelo Bootstrap)
 		    mapaTab.addEventListener('shown.bs.tab', function (event) {
-		        
 		        // Se o mapa ainda não foi iniciado...
 		        if (!mapInitialized) {
 		            // ...chame sua função initMap()
@@ -226,7 +221,7 @@
 		        }
 		    });
 
-		    // Sua função initMap() original (não mude nada nela)
+		    // Definição da função initMap()
 		    function initMap() {
 		        
 		        // 1. VERIFICA SE AS COORDENADAS SÃO VÁLIDAS
@@ -236,7 +231,7 @@
 		            return; 
 		        }
 
-		        // 4. SE AS COORDENADAS EXISTIREM, CRIA O MAPA
+		        // 2. SE AS COORDENADAS EXISTIREM, CRIA O MAPA
 		        const localizacao = { lat: restauranteLat, lng: restauranteLng };
 		        const map = new google.maps.Map(document.getElementById("mapa"), {
 		            zoom: 16, 
@@ -253,96 +248,60 @@
 		<script async
 		    th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey}}">
 		</script>
-			<script>
-					        // Esta função é chamada pela API do Google (callback=initMap)
-					        function initMap() {
-					            
-			                    // 1. VERIFICA SE AS COORDENADAS SÃO VÁLIDAS
-			                    // (restauranteLat e restauranteLng vêm do script th:inline)
-								if (restauranteLat == 0 || restauranteLng == 0) {
-								                        
-											            // 2. SE FOREM 0, MOSTRE A MENSAGEM
-											            const mapaDiv = document.getElementById("mapa");
-											            mapaDiv.innerHTML = '<div class="alert alert-warning h-100 d-flex align-items-center justify-content-center">Localização não disponível no mapa.</div>';
-											            
-											            // 3. NÃO TENTA CRIAR O MAPA
-											            return; 
-											        }
-								                    // --- FIM DA CORREÇÃO ---
-
-											        // 4. SE AS COORDENADAS EXISTIREM (NÃO FOREM 0), CRIA O MAPA
-											        const localizacao = { lat: restauranteLat, lng: restauranteLng };
-
-											        const map = new google.maps.Map(document.getElementById("mapa"), {
-											            zoom: 16, 
-											            center: localizacao,
-											        });
-
-											        const marker = new google.maps.Marker({
-											            position: localizacao,
-											            map: map,
-											            title: restauranteNome,
-											        });
-											    }
-					    </script>
-
-		    <script async
-		        th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey} + '&callback=initMap'}">
-		    </script>
 			
-			<div class="modal fade" id="avaliacaoModal" tabindex="-1" aria-labelledby="avaliacaoModalLabel" aria-hidden="true">
-			  <div class="modal-dialog">
-			    
-			    <form th:action="@{/restaurantes/salvar}" 
-			          th:object="${novaAvaliacao}" 
-			          method="post" 
-			          class="modal-content">
-			      
-			      <div class="modal-header">
-			        <h5 class="modal-title" id="avaliacaoModalLabel">
-			            Avalie: <span th:text="${restaurante.nome}"></span>
-			        </h5>
-			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      
-			      <div class="modal-body">
-			        
-			        <div class="mb-3">
-			          <label for="tituloAvaliacao" class="form-label">Título da sua avaliação</label>
-			          <input type="text" class="form-control" id="tituloAvaliacao" 
-			                 th:field="*{tituloAvaliação}" required>
-			        </div>
-			        
-			        <div class="mb-3">
-			          <label for="textoAvaliacao" class="form-label">Sua avaliação</label>
-			          <textarea class="form-control" id="textoAvaliacao" rows="4" 
-			                    th:field="*{textoAvaliação}" required></textarea>
-			        </div>
-			        
-			        <div class="mb-3">
-			          <label for="notaAvaliacao" class="form-label">Sua nota</label>
-			          <select class="form-select" id="notaAvaliacao" th:field="*{nota}" required>
-			            <option value="" disabled selected>Selecione uma nota...</option>
-			            <option value="5">⭐⭐⭐⭐⭐ (Excelente)</option>
-			            <option value="4">⭐⭐⭐⭐ (Bom)</option>
-			            <option value="3">⭐⭐⭐ (Regular)</option>
-			            <option value="2">⭐⭐ (Ruim)</option>
-			            <option value="1">⭐ (Péssimo)</option>
-			          </select>
-			        </div>
-			        
-			        <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
-			        
-			      </div>
-			      
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-			        <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
-			      </div>
-			      
-			    </form> </div>
-			</div>
+		
+		<div class="modal fade" id="avaliacaoModal" tabindex="-1" aria-labelledby="avaliacaoModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    
+		    <form th:action="@{/restaurantes/salvar}" 
+		          th:object="${novaAvaliacao}" 
+		          method="post" 
+		          class="modal-content">
+		      
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="avaliacaoModalLabel">
+		            Avalie: <span th:text="${restaurante.nome}"></span>
+		        </h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      
+		      <div class="modal-body">
+		        
+		        <div class="mb-3">
+		          <label for="tituloAvaliacao" class="form-label">Título da sua avaliação</label>
+		          <input type="text" class="form-control" id="tituloAvaliacao" 
+		                 th:field="*{tituloAvaliação}" required>
+		        </div>
+		        
+		        <div class="mb-3">
+		          <label for="textoAvaliacao" class="form-label">Sua avaliação</label>
+		          <textarea class="form-control" id="textoAvaliacao" rows="4" 
+		                    th:field="*{textoAvaliação}" required></textarea>
+		        </div>
+		        
+		        <div class="mb-3">
+		          <label for="notaAvaliacao" class="form-label">Sua nota</label>
+		          <select class="form-select" id="notaAvaliacao" th:field="*{nota}" required>
+		            <option value="" disabled selected>Selecione uma nota...</option>
+		            <option value="5">⭐⭐⭐⭐⭐ (Excelente)</option>
+		            <option value="4">⭐⭐⭐⭐ (Bom)</option>
+		            <option value="3">⭐⭐⭐ (Regular)</option>
+		            <option value="2">⭐⭐ (Ruim)</option>
+		            <option value="1">⭐ (Péssimo)</option>
+		          </select>
+		        </div>
+		        
+		        <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
+		        
+		      </div>
+		      
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+		        <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+		      </div>
+		      
+		    </form> </div>
+		</div>
 			
-
 	</body>
-	</html>
+</html>

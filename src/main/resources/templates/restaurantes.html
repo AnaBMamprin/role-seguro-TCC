@@ -23,11 +23,6 @@
             height: 100%; /* Para que mt-auto funcione bem em grids */
         }
         /* Defina o layout do seu grid aqui ou no style.css */
-        .cards-grid {
-             display: grid;
-             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Exemplo responsivo */
-             gap: 1.5rem; /* Espaçamento entre cards */
-        }
     </style>
 </head>
 <body>
@@ -71,29 +66,56 @@
 		    <div class="col" th:each="restaurante : ${paginaRestaurantes.content}">
 		        
 		        <div class="menu-card h-100"> 
-		            <h3 class="mb-3">
+		            
+		            <h3 class="mb-3 fs-2">
 		                <a th:href="@{/modelo-restaurante(id=${restaurante.id})}"
 		                   class="stretched-link text-decoration-none" style="color: inherit;"
 		                   th:text="${restaurante.nome}"> Nome </a>
 		            </h3>
+		            
 		            <span class="favorite-icon" style="position: absolute; top: 15px; right: 15px; z-index: 10; cursor: pointer;"
 		                  th:attr="onclick='toggleFavorito(this, ' + ${restaurante.id} + ')'"
 		                  th:title="${#sets.contains(idsFavoritos, restaurante.id) ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}">
-		                <i class="bi fs-4" th:classappend="${#sets.contains(idsFavoritos, restaurante.id) ? 'bi-heart-fill text-danger' : 'bi-heart'}"></i>
-		            </span>
-		            <p><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'N/A'}"></span></p>
-		            <p><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'N/A'}"></span></p>
-		            <p><strong>Tipo de prato:</strong> <span th:text="${restaurante.tipodeprato ?: 'N/A'}"></span></p>
-		            <p><strong>Horário:</strong> <span th:text="${restaurante.horario ?: 'N/A'}"></span></p>
-		            <p><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'N/A'}"></span></p>
+					<i class="bi fs-4" th:classappend="${#sets.contains(idsFavoritos, restaurante.id) ? 'bi-heart-fill coracao-favorito' : 'bi-heart'}"></i>		            </span>
+
+					<div class="d-flex mt-2 flex-grow-1">
+					    
+					    <div class="flex-grow-1">
+					        <p class="mb-1 fs-5"><strong>Cidade:</strong> <span th:text="${restaurante.cidade ?: 'N/A'}"></span></p>
+					        <p class="mb-1 fs-5"><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'N/A'}"></span></p>
+					        <p class="mb-1 fs-5"><strong>Tipo:</strong> <span th:text="${restaurante.tipodeprato ?: 'N/A'}"></span></p>
+					        <p class="mb-1 fs-5"><strong>Horário:</strong> <span th:text="${restaurante.horario ?: 'N/A'}"></span></p>
+					        <p class="mb-1 fs-5"><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'N/A'}"></span></p>
+					    </div>
+					    
+						<div class="ps-2 text-center">
+						    <span th:with="media=${mapaDeMedias.get(restaurante.id)}, 
+						                   contagem=${mapaDeContagem.get(restaurante.id)}">
+						        
+						        <span th:if="${media == null}" class="badge bg-secondary text-dark-emphasis">
+						            <i class="bi bi-star"></i> N/A (0)
+						        </span>
+						        
+						        <span th:if="${media != null}" 
+						              class="badge bg-dark text-white fs-6">
+						            
+						            <i class="bi bi-star-fill" style="color: var(--cor-acento);"></i>
+						            
+						            <span th:text="${#numbers.formatDecimal(media, 1, 1)}"></span>
+						            
+						            <span class="fw-light" th:text="'(' + ${contagem} + ')'"></span>
+						        </span>
+						    </span>
+						</div>
+					    
+					</div>
+		            
 		            <form th:action="@{/cupons/gerar}" method="post" class="mt-auto pt-3" style="position: relative; z-index: 5;">
 		                <input type="hidden" name="restauranteId" th:value="${restaurante.id}" />
 		                <button type="submit" class="btn btn-sm btn-success w-100">Gerar Cupom</button>
 		            </form>
 		            
-		        </div>
-		    </div> 
-		</div>
+		        </div> </div> </div>
 				<nav aria-label="Navegação das páginas" class="mt-5" 
 				     th:if="${paginaRestaurantes.totalPages > 1}"> <ul class="pagination justify-content-center">
 
