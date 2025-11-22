@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import com.example.app1.model.Restaurante;
 import com.example.app1.model.Usuario;
 import com.example.app1.records.RestauranteDTO;
+import com.example.app1.repository.AvaliacaoRepository;
 import com.example.app1.repository.RestauranteRepository;
 import com.example.app1.repository.UserRepository;
 import com.example.app1.service.FileStorageService;
@@ -41,30 +42,52 @@ public class AdmController {
     
     @Autowired
     private FileStorageService fileStorageService;
+    
+    @Autowired
+    private AvaliacaoRepository avaliacaoRepository;
 
     // ================== RESTAURANTES ==================
     
     @GetMapping
     public String paginaAdm(Model model) {
+        // (Não precisa mais de pageAvaliacoes)
 
-        // ... (seu método está OK)
-    	List<Restaurante> restaurantes = restauranteRepository.findAll(
-                Sort.by(Sort.Direction.ASC, "nome")
-            );
-    	
-    	List<Usuario> usuarios = userRepository.findAll(
-                Sort.by(Sort.Direction.ASC, "nomeUsuario")
-            );
-    	
-    	long totalAdmins = usuarios.stream()
+        List<Restaurante> restaurantes = restauranteRepository.findAll(
+            Sort.by(Sort.Direction.ASC, "nome")
+        );
+        
+        List<Usuario> usuarios = userRepository.findAll(
+            Sort.by(Sort.Direction.ASC, "nomeUsuario")
+        );
+        
+        long totalAdmins = usuarios.stream()
                .filter(u -> u.getRole() == UserEnum.ROLE_ADMIN)
                .count();
+               
         List<String> culinarias = restauranteRepository.findDistinctCulinarias();
+        
         model.addAttribute("restaurantes", restaurantes);
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("totalAdmins", totalAdmins);
         model.addAttribute("culinariasUnicas", culinarias);
+        
         return "adm";
+    }
+    
+    @PostMapping("/avaliacaoExcluir")
+    public String excluirAvaliacao(
+            @RequestParam("id") Long id, 
+            @RequestParam("restauranteId") Long restauranteId,
+            RedirectAttributes redirectAttributes) {
+        
+        try {
+            avaliacaoRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("sucesso", "Avaliação removida com sucesso.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erro", "Erro ao remover avaliação.");
+        }
+        
+        return "redirect:/modelo-restaurante?id=" + restauranteId;
     }
     
    
@@ -72,7 +95,6 @@ public class AdmController {
     @PostMapping("/restauranteCadastrar")
     public String cadastrarRestaurante(
             @ModelAttribute RestauranteDTO dto,
-            // 1. Receba o ID do Dono do <select> que está no formulário
             @RequestParam("idDoUsuarioDono") Long idDono, 
             @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile, RedirectAttributes redirectAttributes
         ) { 

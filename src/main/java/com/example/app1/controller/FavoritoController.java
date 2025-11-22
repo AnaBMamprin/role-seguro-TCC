@@ -91,7 +91,7 @@ public class FavoritoController {
     public ResponseEntity<?> adicionarFavorito(@RequestParam("restauranteId") Long restauranteId) {
         Long usuarioId = getCurrentUserId();
         if (usuarioId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não autenticado.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Você precisa estar logado");
         }
         boolean success = favoritoService.addFavorito(usuarioId, restauranteId);
         if (success) {
@@ -106,7 +106,7 @@ public class FavoritoController {
     public ResponseEntity<?> removerFavorito(@RequestParam("restauranteId") Long restauranteId) {
         Long usuarioId = getCurrentUserId();
         if (usuarioId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não autenticado.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Você precisa estar logado");
         }
         boolean success = favoritoService.removeFavorito(usuarioId, restauranteId);
         if (success) {

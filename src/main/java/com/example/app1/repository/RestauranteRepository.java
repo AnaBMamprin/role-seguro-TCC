@@ -23,6 +23,8 @@ public interface RestauranteRepository extends JpaRepository <Restaurante, Long 
 	 Page<Restaurante> findByTipodepratoContaining(String tipoDePrato, Pageable pageable);
 	 
 	 Page<Restaurante> findByCulinariaAndTipodepratoContaining(String culinaria, String tipoDePrato, Pageable pageable);
+	 
+	 Page<Restaurante> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
 
 	    @Query("SELECT DISTINCT r.culinaria FROM Restaurante r WHERE r.culinaria IS NOT NULL AND r.culinaria != ''")
 	    List<String> findDistinctCulinarias();

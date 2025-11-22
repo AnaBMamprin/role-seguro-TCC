@@ -21,9 +21,15 @@ public class SecurityConfig {
 	    
 	    	.csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(authz -> authz
-	        		.requestMatchers("/", "/login", "/cadastro", "/cadastrar", "/inicial", "/css/**", "/js/**", "/images/**").permitAll()
-	        		.requestMatchers("/adm/**").hasRole("ADMIN") // 🔒 só admin acessa
-	            .anyRequest().authenticated()
+	        		.requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**", "/webjars/**").permitAll()
+	                
+	                .requestMatchers("/", "/inicial", "/restaurantes", "/modelo-restaurante", "/buscar").permitAll()
+	                .requestMatchers("/login", "/cadastro", "/cadastrar").permitAll()
+	                
+	                .requestMatchers("/favoritos/add", "/favoritos/remove").permitAll()
+	                
+	                .requestMatchers("/adm/**").hasRole("ADMIN")
+	                .requestMatchers("/favoritos", "/perfil/**").authenticated()
 	        )
 	        .formLogin(form -> form
 	            .loginPage("/login")

@@ -215,6 +215,10 @@ public class RestauranteController {
             List<Avaliacao> avaliacoes = avaliacaoRepository.findByRestauranteIdOrderByDataAvaliacaoDesc(id);
         	model.addAttribute("avaliacoesDoRestaurante", avaliacoes);
         	
+        	if (avaliacoes != null) {
+                avaliacoes.removeIf(java.util.Objects::isNull);
+            }
+        	
             // Diz ao Spring para carregar o ARQUIVO "modelo-restaurante.html"
             return "modelo-restaurante"; 
         } else {
@@ -265,5 +269,56 @@ public class RestauranteController {
     
     public String getGoogleMapsApiKey() {
         return this.apiKey;
+    }
+    
+    @GetMapping("/buscar")
+    public String buscar(
+            @RequestParam("q") String query, // O texto digitado na navbar
+            Model model) {
+
+        // 1. Se a busca for vazia, redireciona para a lista completa
+        if (query == null || query.trim().isEmpty()) {
+            return "redirect:/restaurantes";
+        }
+
+        // 2. Configura paginação simples (pode ajustar o tamanho se quiser)
+        Pageable pageable = PageRequest.of(0, 20); 
+
+        // 3. Realiza a busca no banco
+        Page<Restaurante> resultados = reposi.findByNomeContainingIgnoreCase(query, pageable);
+
+        // 4. Lógica de Médias, Contagem e Favoritos (ESSENCIAL para o card não quebrar)
+        // (Copiamos a lógica do método /restaurantes para cá)
+        
+        List<Long> idsDaPagina = resultados.getContent().stream()
+                                    .map(Restaurante::getId)
+                                    .collect(Collectors.toList());
+        
+        Map<Long, Double> mapaDeMedias = new HashMap<>();
+        Map<Long, Long> mapaDeContagem = new HashMap<>();
+        
+        for (Long id : idsDaPagina) {
+            mapaDeMedias.put(id, service.getMediaDeAvaliacoes(id));
+            mapaDeContagem.put(id, avaliacaoRepository.countByRestauranteId(id));
+        }
+
+        Long usuarioId = getCurrentUserId();
+        Set<Long> idsFavoritos = (usuarioId != null) ? favoritoService.getFavoritoIds(usuarioId) : Collections.emptySet();
+
+        // 5. Envia tudo para o Model
+        model.addAttribute("paginaRestaurantes", resultados); // A lista filtrada
+        model.addAttribute("mapaDeMedias", mapaDeMedias);
+        model.addAttribute("mapaDeContagem", mapaDeContagem);
+        model.addAttribute("idsFavoritos", idsFavoritos);
+        
+        // Envia também os dados para o filtro (para não quebrar o topo da página)
+        model.addAttribute("culinariasUnicas", reposi.findDistinctCulinarias());
+        model.addAttribute("tiposDePratoUnicos", List.of("Rodízio", "Self Service", "A la Carte"));
+        
+        // Adiciona o termo buscado para mostrarmos na tela
+        model.addAttribute("termoBusca", query);
+
+        // 6. Retorna a MESMA página de lista
+        return "restaurantes";
     }
 }
