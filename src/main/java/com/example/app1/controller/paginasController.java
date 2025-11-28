@@ -11,7 +11,7 @@ public class paginasController {
 	
 	@GetMapping ("/")
 	public String home () {
-		return "login";
+		return "inicial";
 	}
 	
 /*	 @GetMapping("/cadastro")
