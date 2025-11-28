@@ -23,7 +23,7 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (repository.findByEmailUsuario("admin@email.com").isEmpty()) {
             Usuario admin = new Usuario();
-            admin.setNomeUsuario("João Entrão");
+            admin.setNomeUsuario("ADMIN");
             admin.setEmailUsuario("admin@email.com");
             admin.setSenhaUsuario(passwordEncoder.encode("senha123")); // Senha criptografada
            admin.setRole(UserEnum.ROLE_ADMIN); // Define como administrador

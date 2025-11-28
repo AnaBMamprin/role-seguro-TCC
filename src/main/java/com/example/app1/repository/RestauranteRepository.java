@@ -15,7 +15,6 @@ import com.example.app1.model.Usuario;
 public interface RestauranteRepository extends JpaRepository <Restaurante, Long > {
 	 
 	 Optional<Restaurante> findByNome(String nome);
-	 Optional<Restaurante> findByUsuario(Usuario usuario);
 	 Page<Restaurante> findAll(Pageable pageable); 
 
 	 Page<Restaurante> findByCulinaria(String culinaria, Pageable pageable);
@@ -23,6 +22,8 @@ public interface RestauranteRepository extends JpaRepository <Restaurante, Long 
 	 Page<Restaurante> findByTipodepratoContaining(String tipoDePrato, Pageable pageable);
 	 
 	 Page<Restaurante> findByCulinariaAndTipodepratoContaining(String culinaria, String tipoDePrato, Pageable pageable);
+	 
+	 Page<Restaurante> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
 
 	    @Query("SELECT DISTINCT r.culinaria FROM Restaurante r WHERE r.culinaria IS NOT NULL AND r.culinaria != ''")
 	    List<String> findDistinctCulinarias();

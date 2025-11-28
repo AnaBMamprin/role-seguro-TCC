@@ -20,4 +20,6 @@ public interface FavoritoRepository extends JpaRepository<Favorito, Long> {
 
     // Deleta um favorito específico (alternativa mais direta)
     void deleteByUsuarioAndRestaurante(Usuario usuario, Restaurante restaurante);
+    
+    void deleteByRestaurante(Restaurante restaurante);
 }

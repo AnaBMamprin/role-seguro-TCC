@@ -134,10 +134,10 @@ public class RestauranteService {
         }
         
         // 7. Se foi passado um idDono, tenta setar o dono
-        if (idDono != null) {
+   /*     if (idDono != null) {
             usuarioRepository.findById(idDono).ifPresent(restaurante::setUsuario);
         }
-
+*/
         // 8. Salva o restaurante (com ou sem o endereço novo)
         repo.save(restaurante);
         repo.flush();
@@ -217,7 +217,7 @@ public class RestauranteService {
         restaurante.setLongitude(longitude);
 
         // 5. ATRELAR O DONO AO RESTAURANTE (A MÁGICA DO @ManyToOne)
-        restaurante.setUsuario(dono);
+     //   restaurante.setUsuario(dono);
         
         // 6. SALVAR
         // O JPA vai salvar o restaurante e preencher a chave estrangeira 'usuario_id'
