@@ -1,6 +1,8 @@
 package com.example.app1.model;
 
 
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -55,6 +58,9 @@ public class Restaurante {
 /*	@ManyToOne(fetch = FetchType.LAZY) // "MUITOS" Restaurantes para "UM" Usuário
 	@JoinColumn(name = "usuario_id", referencedColumnName = "idUsuario") // O nome da sua FK
 	private Usuario usuario; */
+	
+	@OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL, orphanRemoval = true) // <--- O SEGREDO ESTÁ AQUI
+	private List<Cupom> cupons;
 	
 	
 	public Restaurante() {}
