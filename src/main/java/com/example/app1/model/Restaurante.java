@@ -52,9 +52,9 @@ public class Restaurante {
 	private String bairro;
 	
 	
-	@ManyToOne(fetch = FetchType.LAZY) // "MUITOS" Restaurantes para "UM" Usuário
+/*	@ManyToOne(fetch = FetchType.LAZY) // "MUITOS" Restaurantes para "UM" Usuário
 	@JoinColumn(name = "usuario_id", referencedColumnName = "idUsuario") // O nome da sua FK
-	private Usuario usuario;
+	private Usuario usuario; */
 	
 	
 	public Restaurante() {}
@@ -62,7 +62,7 @@ public class Restaurante {
 	
 	public Restaurante( String nome, String cidade, String estado, String culinaria, String tipodeprato,
 			String horario, String endereco, String site, Double latitude, Double longitude, String caminhoFoto,
-			String rua, String numero, String cep, String bairro, Usuario usuario) {
+			String rua, String numero, String cep, String bairro) {
 		super();
 		this.nome = nome;
 		this.cidade = cidade;
@@ -79,7 +79,6 @@ public class Restaurante {
 		this.numero = numero;
 		this.cep = cep;
 		this.bairro = bairro;
-		this.usuario = usuario;
 	}
 
 	
@@ -135,15 +134,7 @@ public class Restaurante {
 	}
 
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-
+	
 
 	public long getId() {
 		return id;

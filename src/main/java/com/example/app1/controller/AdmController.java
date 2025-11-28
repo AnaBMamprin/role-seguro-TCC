@@ -15,6 +15,7 @@ import com.example.app1.model.Restaurante;
 import com.example.app1.model.Usuario;
 import com.example.app1.records.RestauranteDTO;
 import com.example.app1.repository.AvaliacaoRepository;
+import com.example.app1.repository.FavoritoRepository;
 import com.example.app1.repository.RestauranteRepository;
 import com.example.app1.repository.UserRepository;
 import com.example.app1.service.FileStorageService;
@@ -36,15 +37,20 @@ public class AdmController {
 
     @Autowired
     private UserRepository userRepository;
-
+    
+    @Autowired
+    private FavoritoRepository favoritoRepository;
+    
+    @Autowired
+    private AvaliacaoRepository avaliacaoRepository;
+    
     @Autowired
     private RestauranteService restauranteService;
     
     @Autowired
     private FileStorageService fileStorageService;
     
-    @Autowired
-    private AvaliacaoRepository avaliacaoRepository;
+    
 
     // ================== RESTAURANTES ==================
     
@@ -181,15 +187,30 @@ public class AdmController {
 	}
 
     @PostMapping("/restauranteExcluir")
+    @Transactional // <--- IMPORTANTE: org.springframework.transaction.annotation.Transactional
     public String excluirRestaurante(@RequestParam("id") Long id, RedirectAttributes redirect) {
         try {
-            restauranteRepository.deleteById(id);
-            redirect.addFlashAttribute("sucesso", "Restaurante excluído!");
-        } catch (DataIntegrityViolationException e) {
-            // Isso acontece se houver uma "foreign key constraint" (favorito ou avaliação)
-            redirect.addFlashAttribute("erro", "Não é possível excluir este restaurante, pois ele está associado a favoritos ou avaliações de usuários.");
+            // A. Busca o restaurante
+            Restaurante restaurante = restauranteRepository.findById(id).orElse(null);
+            
+            if (restaurante != null) {
+                // B. LIMPEZA MANUAL: Apaga todos os favoritos deste restaurante
+                favoritoRepository.deleteByRestaurante(restaurante);
+                
+                // C. LIMPEZA MANUAL: Apaga todas as avaliações deste restaurante
+                avaliacaoRepository.deleteByRestaurante(restaurante);
+
+                // D. AGORA SIM: Apaga o restaurante (agora ele não tem mais "filhos")
+                restauranteRepository.delete(restaurante);
+                
+                redirect.addFlashAttribute("sucesso", "Restaurante e seus dados vinculados foram excluídos!");
+            } else {
+                redirect.addFlashAttribute("erro", "Restaurante não encontrado.");
+            }
+
         } catch (Exception e) {
-            redirect.addFlashAttribute("erro", "Erro ao excluir restaurante.");
+            e.printStackTrace(); // Para ver erros no console se houver
+            redirect.addFlashAttribute("erro", "Erro ao excluir restaurante: " + e.getMessage());
         }
         return "redirect:/adm";
     }

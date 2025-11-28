@@ -97,7 +97,7 @@ public class CupomController {
     /**
      * Processa o formulário enviado pelo DONO DO RESTAURANTE.
      */
-    @PostMapping("/restaurante/gerar")
+  /*  @PostMapping("/restaurante/gerar")
     public String gerarCupomDirecionado(
             @RequestParam("emailCliente") String emailCliente,
             @RequestParam("percentualDesconto") Integer percentualDesconto,
@@ -133,7 +133,7 @@ public class CupomController {
         // Usa redirect para evitar reenvio do formulário
         return "redirect:/cupons/restaurante/gerar-formulario";
     }
-    
+    */
     
     
 }

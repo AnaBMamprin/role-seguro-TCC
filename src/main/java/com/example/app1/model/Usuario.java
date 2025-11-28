@@ -50,12 +50,19 @@ public class Usuario implements UserDetails {
         this.role = role;
     }
     
-    @OneToMany(
+    /*@OneToMany(
             mappedBy = "usuario", // "usuario" é o nome do campo lá em Restaurante.java
             cascade = CascadeType.ALL, // Se deletar o Dono, deleta os restaurantes dele
             orphanRemoval = true // Se remover um restaurante da lista, ele é deletado
-        )
-        private List<Restaurante> restaurantes;
+        ) 
+        private List<Restaurante> restaurantes;  */
+    
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Avaliacao> avaliacoes;
+
+    // Se deletar o usuário, apaga todos os favoritos dele
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Favorito> favoritos;
 
     // Getters e Setters
     public Long getIdUsuario() {

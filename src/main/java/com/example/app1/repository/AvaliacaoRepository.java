@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.app1.model.Avaliacao;
+import com.example.app1.model.Restaurante;
 import com.example.app1.model.Usuario;
 
 public interface AvaliacaoRepository extends JpaRepository <Avaliacao, Long> {
@@ -17,6 +18,8 @@ public interface AvaliacaoRepository extends JpaRepository <Avaliacao, Long> {
 	boolean existsByUsuario_IdUsuarioAndRestaurante_Id(Long usuarioId, Long restauranteId);
 	
 	List<Avaliacao> findByRestauranteIdOrderByDataAvaliacaoDesc(Long restauranteId);
+	
+	void deleteByRestaurante(Restaurante restaurante);
 	
 	@Query("SELECT AVG(a.nota) FROM Avaliacao a WHERE a.restaurante.id = :restauranteId")
 	Double getMediaAvaliacoes(@Param("restauranteId") Long restauranteId);

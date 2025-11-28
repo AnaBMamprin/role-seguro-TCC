@@ -24,7 +24,7 @@ public class SecurityConfig {
 	        		.requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**", "/webjars/**").permitAll()
 	                
 	                .requestMatchers("/", "/inicial", "/restaurantes", "/modelo-restaurante", "/buscar").permitAll()
-	                .requestMatchers("/login", "/cadastro", "/cadastrar").permitAll()
+	                .requestMatchers("/login", "/cadastro", "/cadastrar", "/sobre").permitAll()
 	                
 	                .requestMatchers("/favoritos/add", "/favoritos/remove").permitAll()
 	                

@@ -15,7 +15,6 @@ import com.example.app1.model.Usuario;
 public interface RestauranteRepository extends JpaRepository <Restaurante, Long > {
 	 
 	 Optional<Restaurante> findByNome(String nome);
-	 Optional<Restaurante> findByUsuario(Usuario usuario);
 	 Page<Restaurante> findAll(Pageable pageable); 
 
 	 Page<Restaurante> findByCulinaria(String culinaria, Pageable pageable);
