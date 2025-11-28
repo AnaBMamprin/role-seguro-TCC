@@ -49,6 +49,7 @@ public class SecurityConfig {
 	            .permitAll()
 	        )
 	        .logout(logout -> logout
+
 	            .logoutUrl("/logout")
 	            .logoutSuccessUrl("/login?logout")
 	            .invalidateHttpSession(true)
@@ -56,16 +57,12 @@ public class SecurityConfig {
 	            .permitAll() 
 	        )
 	        .exceptionHandling(ex -> ex
-	            .accessDeniedPage("/erro403") // Como você definiu aqui, precisa liberar lá em cima
+	            .accessDeniedPage("/erro403") 
 	        );
 
 	    return http.build();
 	}
        
-	
-	 
-
-    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

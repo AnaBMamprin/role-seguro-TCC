@@ -10,12 +10,12 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login"; // página HTML do login
+        return "login";
     }
 
     @GetMapping("/logout-success")
     public String logoutPage() {
-        return "logout"; // página de confirmação de logout
-    }
+        return "logout";
 
+    }
 }

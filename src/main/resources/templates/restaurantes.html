@@ -14,15 +14,13 @@
     <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
 
     <style>
-        /* Garante que o .menu-card funcione com stretched-link e position absolute */
         .menu-card {
             position: relative;
-            /* Adicione aqui seus outros estilos para o card (padding, background, border-radius, etc.) */
-            display: flex; /* Para usar mt-auto no form */
-            flex-direction: column; /* Para usar mt-auto no form */
-            height: 100%; /* Para que mt-auto funcione bem em grids */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
-        /* Defina o layout do seu grid aqui ou no style.css */
+		
     </style>
 </head>
 <body>
@@ -265,7 +263,7 @@
 		                icon.classList.add('bi-heart-fill', 'text-danger');
 		                element.setAttribute('title', 'Remover dos Favoritos');
 		            }
-                    // Remove o card APENAS se estiver na página /favoritos
+					
                     if (window.location.pathname === '/favoritos' && isFavorito) {
                         const cardElement = element.closest('.menu-card');
                         if (cardElement) cardElement.remove();

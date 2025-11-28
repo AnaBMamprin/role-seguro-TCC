@@ -12,7 +12,6 @@ public class RestauranteDataLoader implements CommandLineRunner {
     private final RestauranteRepository repository;
     private final RestauranteService service;
 
-    // O construtor já está correto
     public RestauranteDataLoader(RestauranteRepository repository, RestauranteService service) {
         this.repository = repository;
         this.service = service;
@@ -21,28 +20,24 @@ public class RestauranteDataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         
-        // --- CORREÇÃO AQUI ---
-        // Agora passamos os dados de endereço "quebrados"
-        
         salvarSeNaoExistir(
-            "Habibs", "Guarulhos", "SP", "Arabe", "Esfihas, Kibes", "10h às 23h", 
-            "Av. Paulo Faccini", "123", "Jardim Maia", // Rua, Numero, Bairro
-            "https://habibs.com.br"
+            "Vó Lenka", "Guarulhos", "SP", "Brasileira", "Self Service", "11h às 16h", 
+            "Av. Paulo Faccini", "123", "Jardim Maia",
+            "https://volenka.com.br"
         );
 
         salvarSeNaoExistir(
-            "NenoPizzaria", "Guarulhos", "SP", "Italiana", "Massas, Pizzas", "18h às 00h", 
-            "Rua Josephina Mandotti", "229", "Jardim Maia", // Rua, Numero, Bairro
+            "NenoPizzaria", "Guarulhos", "SP", "Pizzas", "Rodízio, A La Carte", "18h às 00h", 
+            "Rua Josephina Mandotti", "229", "Jardim Maia",
             "https://nenopizzaria.com"
         );
 
         salvarSeNaoExistir(
-            "Burger King", "Guarulhos", "SP", "Americana", "Hamburgueres", "11h às 23h", 
-            "Av. Paulo Faccini", "1317", "Macedo", // Rua, Numero, Bairro
-            "https://burgerking.com.br"
+            "Bom de Prato", "Guarulhos", "SP", "Brasileira", "Self Service, A La Carte", "11h às 16h", 
+            "Av. Paulo Faccini", "1317", "Macedo",
+            "https://bomdeprato.com.br"
         );
 
-        // (Adicione outros se quiser)
     }
 
     private void salvarSeNaoExistir(
@@ -52,8 +47,6 @@ public class RestauranteDataLoader implements CommandLineRunner {
         
         if (repository.findByNome(nome).isEmpty()) {
             
-            // --- CORREÇÃO AQUI ---
-            // Agora montamos o DTO da forma correta
             RestauranteDTO dto = new RestauranteDTO();
             dto.setNome(nome);
             dto.setCidade(cidade);
@@ -63,14 +56,10 @@ public class RestauranteDataLoader implements CommandLineRunner {
             dto.setHorario(horario);
             dto.setSite(site);
             
-            // Seta os campos que o Service espera
             dto.setRua(rua);
             dto.setNumero(numero);
             dto.setBairro(bairro);
             
-            // Não sete 'dto.setEndereco()', pois não é mais usado aqui
-
-            // Chama o service (que agora vai receber o DTO correto e salvar o mapa)
             service.converteRestaurantes(dto); 
         }
     }

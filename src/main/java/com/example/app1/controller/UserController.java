@@ -19,8 +19,6 @@ import com.example.app1.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-
-
 @Controller
 public class UserController {
 
@@ -29,7 +27,7 @@ public class UserController {
 
     @Autowired
     private UserRepository usuarioRepository;
-    // Cadastro
+
     @PostMapping("/cadastrar")
     public String salvarCadastro(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
         userService.registerUser(userDTO);
@@ -41,34 +39,25 @@ public class UserController {
     @GetMapping("/perfil")
     public String verPerfil(Model model, Authentication authentication) {
         
-        // 1. Pega o email (ou username) do usuário logado na sessão
         String email = authentication.getName(); 
-        
-        // 2. Busca o usuário completo no banco de dados
-        // (Você pode precisar criar este método no seu Repository)
+
         Usuario usuario = usuarioRepository.findByEmailUsuario(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        
-        // 3. Adiciona o objeto "usuario" ao Model
-        // A página Thymeleaf terá acesso a essa variável
+
         model.addAttribute("usuario", usuario); 
         
-        return "perfil"; // Renderiza o arquivo 'perfil.html'
+        return "perfil";
     }
 
-    // (Vamos precisar disso para o botão "Salvar")
     @PostMapping("/perfil/atualizar")
     public String atualizarPerfil(
-            @ModelAttribute("usuario") Usuario usuarioForm, // 1. Recebe o objeto do formulário
-            Authentication authentication,                 // 2. Pega o usuário logado
+            @ModelAttribute("usuario") Usuario usuarioForm,
+            Authentication authentication,
             RedirectAttributes redirectAttributes) {
         
         try {
             String emailDoUsuarioLogado = authentication.getName();
             
-            // 3. Passa para o service o email de quem está logado
-            //    E os dados do formulário (nome, endereco, etc.)
-            //    Você precisará criar ou ajustar este método no seu service!
             userService.atualizarPerfil(emailDoUsuarioLogado, usuarioForm);
             
             redirectAttributes.addFlashAttribute("sucesso", "Perfil atualizado!");
@@ -80,7 +69,7 @@ public class UserController {
         return "redirect:/perfil";
     }
 
-    // (Vamos precisar disso para o botão "Excluir")
+
     @PostMapping("/perfil/excluir")
     public String excluirPerfil(Authentication authentication, RedirectAttributes redirectAttributes) {
         try {
@@ -90,7 +79,7 @@ public class UserController {
             
             userService.deleteUser(usuarioParaExcluir.getIdUsuario());
             
-            return "redirect:/login?logout"; // Desloga
+            return "redirect:/login?logout";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("erro", "Não foi possível excluir sua conta.");
             return "redirect:/perfil";
@@ -151,17 +140,14 @@ public class UserController {
     @PostMapping("/adm/deleteUser")
     public String deleteUser(@RequestParam("id") Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
         
-        // 1. Descobre quem é o Admin logado
         String emailLogado = authentication.getName();
         Usuario adminLogado = usuarioRepository.findByEmailUsuario(emailLogado).get();
 
-        // 2. Proteção: Se o Admin tentar se deletar por aqui, bloqueia
         if (adminLogado.getIdUsuario().equals(id)) {
             redirectAttributes.addFlashAttribute("erro", "Você não pode se excluir pelo painel administrativo!");
             return "redirect:/adm";
         }
 
-        // 3. Se for outro usuário, deleta normal
         userService.deleteUser(id); 
         return "redirect:/adm";
     }

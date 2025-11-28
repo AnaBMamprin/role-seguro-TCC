@@ -1,46 +1,37 @@
-/* ================================================== */
-/* PALETA DE CORES TCHOMP (VERSÃO NOVA)        */
-/* ================================================== */
 :root {
-  /* Cores Principais (Ação e Estrutura) */
-  --cor-primaria: #FF6B35;   /* Laranja (Botões de ação, links) */
-  --cor-secundaria: #003049; /* Azul Marinho (Navbar, Títulos, Rodapé) */
-  --cor-acento: #FFB627;    /* Laranja Claro (Hover, Estrelas) */
+  --cor-primaria: #FF6B35;
+  --cor-secundaria: #003049;
+  --cor-acento: #FFB627;
 
-  /* Cores Neutras (Fundo e Texto) */
-  --cor-fundo: #F5F5F5;      /* Cinza Claro (Fundo geral) */
-  --cor-fundo-card: #FFFFFF; /* Branco (Fundo de cards e modais) */
-  --cor-texto: #212529;      /* Preto Suave (Texto principal) */
-  --cor-texto-claro: #FFFFFF; /* Branco (Para usar sobre fundos escuros) */
-  --cor-texto-muted: #6C757D; /* Cinza Médio (Textos secundários) */
+  --cor-fundo: #F5F5F5;
+  --cor-fundo-card: #FFFFFF;
+  --cor-texto: #212529;
+  --cor-texto-claro: #FFFFFF;
+  --cor-texto-muted: #6C757D;
 }
 
-/* ==================== RESET BÁSICO ==================== */
 body, html {
   margin: 0;
   padding: 0;
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--cor-fundo); /* Fundo geral cinza claro */
-  color: var(--cor-texto);           /* Texto principal preto */
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
 }
 
-/* ========== NAVBAR ========== */
 .main-navbar{
-  /* REGRA: Header Azul Marinho */
   background-color: var(--cor-secundaria);
   padding: .8rem 1rem;
 }
 
 .main-navbar .nav-link{
-  color: var(--cor-texto-claro) !important; /* Texto branco na navbar */
+  color: var(--cor-texto-claro) !important;
   font-size: 1.2rem;
   margin: 0 15px;
   transition: color .3s, transform .2s;
 }
 
 .main-navbar .nav-link:hover{
-  /* REGRA: Hover em Laranja Claro */
   color: var(--cor-acento) !important;
   transform: scale(1.05);
 }
@@ -52,7 +43,6 @@ body, html {
 }
 
 .main-navbar .btn-favorite{
-  /* REGRA: Botão de Ação Laranja */
   background-color: var(--cor-primaria);
   color: var(--cor-texto-claro);
   border-radius: 8px;
@@ -62,9 +52,8 @@ body, html {
 }
 
 .btn-favorite:hover {
-  /* REGRA: Hover Laranja Claro */
   background-color: var(--cor-acento);
-  color: var(--cor-texto); /* Texto escuro no hover para contraste */
+  color: var(--cor-texto);
   transform: translateY(-2px);
 }
 
@@ -89,10 +78,9 @@ body, html {
   border: 0;
   background: none;
   font-size: 1.1rem;
-  color: var(--cor-texto-claro); /* Ícone de busca branco */
+  color: var(--cor-texto-claro);
 }
 
-/* ========== MENU FULLSCREEN (grade de culinárias - inicial.html) ========== */
 .fullscreen-menu{
   padding: 50px 20px;
   text-align: center;
@@ -100,22 +88,19 @@ body, html {
 .fullscreen-menu h1{
   font-size: 2rem;
   margin-bottom: 30px;
-  /* REGRA: Título Azul Marinho */
   color: var(--cor-secundaria);
 }
 
 .menu-card{
   position: relative;
-  /* REGRA: Card com fundo branco (ou cinza claro F5F5F5) */
   background: var(--cor-fundo-card);
-  border: 1px solid #dee2e6; /* Borda cinza sutil */
+  border: 1px solid #dee2e6;
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0,0,0,.05);
   transition: transform .2s ease, box-shadow .2s ease;
   cursor: pointer;
   
-  /* Ajustes do card de restaurante.html */
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -123,24 +108,20 @@ body, html {
 .menu-card:hover{
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0,0,0,.1);
-  /* REGRA: Borda Laranja no hover */
   border-color: var(--cor-primaria);
 }
 .menu-card i{
   font-size: 2rem;
   margin-bottom: 10px;
-  /* REGRA: Ícone Laranja */
   color: var(--cor-primaria);
 }
 .menu-card h3{
   margin: 10px 0;
   font-size: 1.35rem;
-  /* REGRA: Título Azul Marinho */
   color: var(--cor-secundaria);
 }
 .menu-card p{
   font-size: .95rem;
-  /* REGRA: Texto secundário cinza */
   color: var(--cor-texto-muted);
 }
 
@@ -152,29 +133,26 @@ body, html {
   filter: invert(1);
 }
 
-/* ==================== BUSCA ==================== */
 .search-box .btn-search {
-  color: var(--cor-texto-muted); /* Ícone de busca cinza */
+  color: var(--cor-texto-muted);
 }
+
 .main-navbar .search-box .btn-search {
-  color: var(--cor-texto-claro); /* Ícone de busca branco (só na navbar) */
+  color: var(--cor-texto-claro);
 }
 
-
-/* ==================== PERFIL, LOGIN, CADASTRO ==================== */
-/* Páginas de formulário (Login, Cadastro) */
 .cadastro-page, .login-page {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  /* REGRA: Fundo Azul Marinho */
   background: var(--cor-secundaria);
   font-family: 'Poppins', sans-serif;
   color: var(--cor-texto-claro);
 }
+
 .cadastro-container, .login-container {
-  background: rgba(255, 255, 255, 0.1); /* Caixa branca translúcida */
+  background: rgba(255, 255, 255, 0.1);
   padding: 2.5rem 3rem;
   border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.3);
@@ -182,55 +160,57 @@ body, html {
   max-width: 400px;
   text-align: center;
 }
+
 .cadastro-container h2, .login-container h2.titulo-estilizado {
-  color: var(--cor-acento); /* Título Laranja Claro */
+  color: var(--cor-acento);
 }
-/* Botão de Ação Laranja */
+
 .cadastro-container button, .login-container form button {
   background: var(--cor-primaria);
   color: var(--cor-texto-claro);
 }
 .cadastro-container button:hover, .login-container form button:hover {
-  background: var(--cor-acento); /* Hover Laranja Claro */
+  background: var(--cor-acento);
   color: var(--cor-texto);
 }
-/* Links em Laranja Claro */
+
 .cadastro-container p a, .login-container p a {
   color: var(--cor-acento);
 }
 
-/* Página de Perfil */
 .profile-container {
   max-width: 800px;
   margin: 5rem auto;
-  background: var(--cor-fundo-card); /* Fundo Branco */
+  background: var(--cor-fundo-card);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  color: var(--cor-texto); /* Texto escuro */
+  color: var(--cor-texto);
 }
+
 .profile-card h2 {
-  color: var(--cor-secundaria); /* Título Azul Marinho */
+  color: var(--cor-secundaria);
 }
+
 .profile-card input {
-  background-color: var(--cor-fundo); /* Fundo cinza claro */
+  background-color: var(--cor-fundo);
   color: var(--cor-texto);
   border: 1px solid #ced4da;
 }
+
 .btn-salvar {
-  background: var(--cor-primaria); /* Botão Salvar Laranja */
+  background: var(--cor-primaria);
   color: var(--cor-texto-claro);
 }
+
 .btn-salvar:hover {
   background: var(--cor-acento);
   color: var(--cor-texto);
 }
 
-
-/* ==================== PÁGINA RESTAURANTES ==================== */
 .restaurantes-page {
   padding: 3rem 2rem;
-  background-color: var(--cor-fundo); /* Fundo geral cinza claro */
+  background-color: var(--cor-fundo);
   min-height: 100vh;
 }
 
@@ -238,98 +218,94 @@ body, html {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 2rem;
-  color: var(--cor-secundaria); /* Título Azul Marinho */
+  color: var(--cor-secundaria);
 }
 
-/* O card na pág de restaurantes já usa .menu-card (definido acima) */
 .restaurantes-page .menu-card {
-  color: var(--cor-texto-muted); /* Texto secundário cinza */
+  color: var(--cor-texto-muted);
 }
+
 .restaurantes-page .menu-card h3 a {
-  color: var(--cor-secundaria) !important; /* Título Azul Marinho */
+  color: var(--cor-secundaria) !important;
 }
+
 .restaurantes-page .menu-card p {
-  color: var(--cor-texto); /* Texto principal preto */
+  color: var(--cor-texto);
 }
+
 .restaurantes-page .menu-card p strong {
   color: var(--cor-texto);
 }
 
-/* ==================== PÁGINA MODELO-RESTAURANTE ==================== */
 .restaurante-detalhes {
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem;
-  background: var(--cor-fundo-card); /* Fundo Branco */
+  background: var(--cor-fundo-card);
   border-radius: 15px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  color: var(--cor-texto); /* Texto principal preto */
+  color: var(--cor-texto);
 }
 
 .restaurante-detalhes h1 {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: var(--cor-secundaria); /* Título Azul Marinho */
+  color: var(--cor-secundaria);
 }
 
 .restaurante-detalhes p strong {
-  color: var(--cor-texto); /* Texto strong apenas em negrito */
+  color: var(--cor-texto);
 }
 
 .restaurante-detalhes a {
-  color: var(--cor-primaria); /* Links Laranja */
+  color: var(--cor-primaria);
   font-weight: bold;
 }
+
 .restaurante-detalhes a:hover {
   text-decoration: underline;
   color: var(--cor-acento);
 }
 
-/* ==================== CORREÇÃO ABAS (TABS) ==================== */
 .tab-content {
-  color: var(--cor-texto); /* Texto preto dentro da aba */
+  color: var(--cor-texto);
 }
+
 .nav-tabs .nav-link {
-  color: var(--cor-texto-muted); /* Abas inativas em cinza */
+  color: var(--cor-texto-muted);
   font-weight: 600;
 }
+
 .nav-tabs .nav-link.active {
-  color: var(--cor-primaria) !important; /* Aba ativa Laranja */
+  color: var(--cor-primaria) !important;
   border-bottom-color: var(--cor-primaria) !important;
   border-bottom-width: 3px;
 }
-/* Estrelas de Avaliação Laranja/Acento */
+
 .bi-star-fill {
   color: var(--cor-acento);
 }
 
-/* ==================== CORREÇÃO MODAL ==================== */
 .modal-content {
-  color: var(--cor-texto); /* Texto preto no modal */
+  color: var(--cor-texto);
 }
+
 .modal-header .modal-title {
-  color: var(--cor-secundaria); /* Título do modal Azul Marinho */
+  color: var(--cor-secundaria);
 }
 
-/* ================================================== */
-/* CORREÇÃO DE LAYOUT - PERFIL & POP-UP          */
-/* ================================================== */
-
-/* Garante o espaçamento correto do container (a cor já está certa) */
 .profile-container {
   max-width: 800px;
   margin: 5rem auto;
 }
 
-/* Centraliza o título (a cor já está certa) */
 .profile-card h2 {
   text-align: center;
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
 }
 
-/* Formata os labels do formulário */
 .profile-card label {
   display: block;
   font-weight: bold;
@@ -337,22 +313,17 @@ body, html {
   margin-bottom: 0.5rem;
 }
 
-/* Formata os inputs (faz eles ocuparem 100% da largura) */
 .profile-card input {
   width: 100%;
   padding: 0.8rem;
   border-radius: 8px;
-  /* (as cores de fundo e texto já vêm do novo CSS) */
 }
 
-/* Regra para o input readonly (email) */
 .profile-card input[readonly] {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-/* ==================== BOTÕES ==================== */
-/* Faz os botões ficarem lado a lado */
 .profile-buttons {
   display: flex;
   justify-content: space-between;
@@ -360,7 +331,6 @@ body, html {
   gap: 10px;
 }
 
-/* Regra de layout base para todos os botões */
 .btn-voltar, .btn-salvar, .btn-excluir {
   flex: 1;
   padding: 0.8rem;
@@ -371,25 +341,25 @@ body, html {
   transition: 0.3s;
 }
 
-/* Cores dos botões que não são o principal */
 .btn-voltar {
   background: #ccc;
   color: #333;
 }
+
 .btn-voltar:hover {
   background: #bbb;
 }
 
+
 .btn-excluir {
-  background: #dc3545; /* Vermelho perigo */
+  background: #dc3545;
   color: #fff;
 }
+
 .btn-excluir:hover {
   background: #c82333;
 }
 
-/* ==================== POP-UP ==================== */
-/* Esconde o pop-up por padrão */
 .popup {
   display: none;
   position: fixed;
@@ -398,18 +368,16 @@ body, html {
   background: rgba(0,0,0,0.5);
   justify-content: center;
   align-items: center;
-  z-index: 1050; /* Garante que fique acima da navbar */
+  z-index: 1050;
 }
 
-/* Mostra o pop-up quando o JS adicionar a classe 'active' */
 .popup.active {
   display: flex;
 }
 
-/* Layout do conteúdo do pop-up */
 .popup-content {
-  background: var(--cor-fundo-card); /* Fundo branco (da paleta nova) */
-  color: var(--cor-texto); /* Texto preto (da paleta nova) */
+  background: var(--cor-fundo-card);
+  color: var(--cor-texto);
   padding: 2rem;
   border-radius: 12px;
   text-align: center;
@@ -442,21 +410,10 @@ body, html {
   background: #5a6268;
 }
 
-/* =============================================== */
-/* COR DO ÍCONE DE FAVORITO                   */
-/* =============================================== */
-
-/* Define a cor do coração quando ele está preenchido */
 .coracao-favorito {
-  color: var(--cor-primaria); /* Seu laranja principal */
+  color: var(--cor-primaria);
 }
 
-/* =============================================== */
-/* =============================================== */
-/* BARRA DE CATEGORIAS (LAYOUT DE CARD)     */
-/* =============================================== */
-
-/* O container que segura a barra */
 .categoria-bar-container {
   background-color: var(--cor-fundo-card); 
   padding: 0.75rem 0;
@@ -466,7 +423,6 @@ body, html {
   z-index: 1020;  
 }
 
-/* A barra de scroll horizontal */
 .categoria-bar {
   display: flex;
   flex-wrap: nowrap; 
@@ -474,30 +430,25 @@ body, html {
   -webkit-overflow-scrolling: touch; 
 }
 
-/* Esconde a barra de scroll */
 .categoria-bar::-webkit-scrollbar { display: none; }
 .categoria-bar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* O NOVO CARD DE CATEGORIA (Mais largo e espaçado) */
 .categoria-btn {
   flex-shrink: 0; 
   margin-right: 1rem;
   padding: 0.5rem 1rem;
   
-  /* Aparência de Card */
   background-color: var(--cor-fundo-card); 
   border: 1px solid #dee2e6;
   border-radius: 12px; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
   
-  /* Layout do Conteúdo (Ícone + Texto) */
   display: flex;
   flex-direction: column; 
   align-items: center;
   justify-content: center;
-  min-width: 150px; /* AUMENTADO: Largura mínima do card */
+  min-width: 150px;
   
-  /* Texto e Ícone */
   color: var(--cor-primaria); 
   font-weight: 600;
   font-size: 0.9rem;
@@ -505,36 +456,29 @@ body, html {
   transition: all 0.2s ease-in-out;
 }
 
-/* Efeito Hover: Inverte as cores */
 .categoria-btn:hover {
-  background-color: var(--cor-primaria); /* Fundo Laranja */
-  color: var(--cor-texto-claro); /* Texto Branco */
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-claro);
   border-color: var(--cor-primaria);
   transform: translateY(-3px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* O primeiro card ("Ver Todos") com cores invertidas */
 .categoria-bar a:first-child {
-  background-color: var(--cor-secundaria); /* Fundo Azul Marinho */
-  color: var(--cor-texto-claro); /* Texto Branco */
+  background-color: var(--cor-secundaria);
+  color: var(--cor-texto-claro);
   border-color: var(--cor-secundaria);
 }
+
 .categoria-bar a:first-child:hover {
-  background-color: #001f30; /* Azul um pouco mais escuro no hover */
+  background-color: #001f30;
   border-color: #001f30;
 }
 
 .categoria-btn i {
-  font-size: 1.25rem; /* <<< MUDE DE '1.5rem' PARA '1.25rem' */
+  font-size: 1.25rem;
   margin-bottom: 0.25rem;
 }
-
-/* ================================================== */
-/* CORREÇÃO DE LAYOUT - LOGIN & CADASTRO         */
-/* ================================================== */
-
-/* --- FORMULÁRIO DE CADASTRO --- */
 
 .cadastro-container form {
   display: flex;
@@ -543,7 +487,7 @@ body, html {
 }
 
 .cadastro-container input {
-  width: 100%; /* Garante 100% de largura */
+  width: 100%;
   padding: 0.8rem 1rem;
   border-radius: 8px;
   border: none;
@@ -557,7 +501,7 @@ body, html {
 }
 
 .cadastro-container button {
-  width: 100%; /* Garante 100% de largura */
+  width: 100%;
   padding: 0.8rem;
   border-radius: 8px;
   border: none;
@@ -565,12 +509,7 @@ body, html {
   font-size: 1.1rem;
   cursor: pointer;
   transition: 0.3s;
-  /* (As cores de background já são definidas no CSS principal) */
 }
-
-/* --- FORMULÁRIO DE LOGIN --- */
-
-/* (As cores de .login-container já estão no CSS principal) */
 
 .login-container .input-group {
   position: relative;
@@ -588,8 +527,8 @@ body, html {
 }
 
 .login-container form input {
-  width: 100%; /* Garante 100% de largura */
-  padding: 0.8rem 1rem 0.8rem 2.8rem; /* Adiciona espaço para o ícone */
+  width: 100%;
+  padding: 0.8rem 1rem 0.8rem 2.8rem;
   border: none;
   border-radius: 10px;
   font-size: 1rem;
@@ -602,7 +541,7 @@ body, html {
 }
 
 .login-container form button {
-  width: 100%; /* Garante 100% de largura */
+  width: 100%;
   padding: 0.8rem;
   border: none;
   border-radius: 10px;
@@ -610,18 +549,8 @@ body, html {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  /* (As cores de background já são definidas no CSS principal) */
 }
 
-/* =============================================== */
-/* CORREÇÃO DE LAYOUT (Evita "pulo" da navbar) */
-/* =============================================== */
-
-/* Força a barra de rolagem vertical a estar sempre 
-  visível (ou pelo menos ocupar espaço), mesmo em páginas curtas.
-  Isso impede que o layout "pule" ao navegar entre
-  páginas longas e curtas.
-*/
 html {
   overflow-y: scroll;
 }

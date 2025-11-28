@@ -102,14 +102,11 @@
 		<script th:inline="javascript">
 		/*<![CDATA[*/
 
-		// Este é o script JS que você já tinha, está correto.
 		async function toggleFavorito(element, restauranteId) {
-		    // Na página de favoritos, SEMPRE assumimos que é favorito ao clicar
 		    const isFavorito = true; 
-		    const url = '/favoritos/remove'; // Sempre será /remove aqui
+		    const url = '/favoritos/remove';
 		    const method = 'POST';
 		    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-	        // (Não precisamos de CSRF, como você já tinha removido)
 
 		    try {
 		        const response = await fetch(url, {
@@ -119,10 +116,9 @@
 		        });
 
 		        if (response.ok) {
-		            // Sucesso! Remove o card da tela
-		            const cardWrapper = element.closest('.col'); // Encontra a div da coluna
+		            const cardWrapper = element.closest('.col');
 		            if (cardWrapper) {
-		                cardWrapper.remove(); // Remove a coluna inteira (que contém o card)
+		                cardWrapper.remove();
 		            }
 
 				} else {

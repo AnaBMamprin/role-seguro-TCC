@@ -31,27 +31,18 @@ public class CupomController {
     @Autowired
     private RestauranteRepository restauranteRepository; 
 
-    // ==========================================================
-    // === FLUXO 1: CLIENTE PEGA UM CUPOM
-    // ==========================================================
-
-    /**
-     * Mostra a página para o CLIENTE escolher um restaurante para gerar cupom.
-     */
     @GetMapping("/gerar")
     public String mostrarPaginaGerarCupomCliente(Model model, 
                                                @RequestParam(defaultValue = "0") int page) {
         
-        int pageSize = 10; // Defina quantos restaurantes por página
+        int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize);
         
-        // CORREÇÃO: Chame o findAll com pageable
         Page<Restaurante> paginaDeRestaurantes = restauranteRepository.findAll(pageable);
         
-        // Envie o objeto Page inteiro para o Thymeleaf
         model.addAttribute("restaurantes", paginaDeRestaurantes);
         
-        return "restaurantes"; // Página onde o cliente vê os restaurantes
+        return "restaurantes";
     }
 
  
@@ -60,37 +51,23 @@ public class CupomController {
                                     Principal principal,
                                     Model model) {
         try {
-            // 1. Acha o CLIENTE logado
             Usuario usuario = usuarioRepository.findByEmailUsuario(principal.getName())
                     .orElseThrow(() -> new RuntimeException("Usuário não encontrado. Faça login."));
             
-            // 2. Chama o service do FLUXO 1
             Cupom cupom = cupomService.gerarCupom(usuario.getIdUsuario(), restauranteId); 
             
             model.addAttribute("sucesso", "Cupom " + cupom.getCodigo() + " gerado com sucesso!");
 
         } catch (RuntimeException e) {
-            // Se o service jogar um erro (ex: "cupom já resgatado"), ele cai aqui
             model.addAttribute("erro", e.getMessage());
         }
         
-        // Recarrega os restaurantes e mostra a mesma página com a mensagem
         model.addAttribute("restaurantes", restauranteRepository.findAll());
         return "restaurantes";
     }
 
-    
-    // ==========================================================
-    // === FLUXO 2: DONO DO RESTAURANTE CRIA UM CUPOM
-    // ==========================================================
-
-    /**
-     * Mostra o formulário para o DONO DO RESTAURANTE preencher
-     * (email do cliente, percentual, etc.)
-    **/
     @GetMapping("/restaurante/gerar-formulario")
     public String mostrarFormularioGerarCupomDono(Model model) {
-        // Retorna o caminho do seu novo arquivo HTML
         return "restaurante/painel-cupons"; 
     }
     

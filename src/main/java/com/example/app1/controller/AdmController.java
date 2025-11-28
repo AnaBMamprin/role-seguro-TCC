@@ -51,12 +51,9 @@ public class AdmController {
     private FileStorageService fileStorageService;
     
     
-
-    // ================== RESTAURANTES ==================
     
     @GetMapping
     public String paginaAdm(Model model) {
-        // (Não precisa mais de pageAvaliacoes)
 
         List<Restaurante> restaurantes = restauranteRepository.findAll(
             Sort.by(Sort.Direction.ASC, "nome")
@@ -107,17 +104,14 @@ public class AdmController {
     	System.out.println("--- [ADM CONTROLLER] INICIANDO CADASTRO ---");
 
         try {
-            // 3. Verifica se a foto foi enviada
             if (fotoFile != null && !fotoFile.isEmpty()) {
             	
             	System.out.println("[ADM CONTROLLER] Foto recebida: " + fotoFile.getOriginalFilename());
             	
-                // 4. Salva a foto no servidor
                 String nomeArquivo = fileStorageService.salvarFotoRestaurante(fotoFile);
                 
                 System.out.println("[ADM CONTROLLER] Foto salva no servidor com nome: " + nomeArquivo); // <-- PONTO CRÍTICO 1
                 
-                // 5. Coloca o nome do arquivo no DTO
                 dto.setCaminhoFoto(nomeArquivo); 
                 
                 System.out.println("[ADM CONTROLLER] DTO agora tem a foto: " + dto.getCaminhoFoto()); // <-- PONTO CRÍTICO 2
@@ -126,7 +120,6 @@ public class AdmController {
                 System.out.println("[ADM CONTROLLER] Nenhuma foto foi enviada no cadastro.");
             }
 
-            // 6. Manda o DTO (com ou sem foto) para o service
             restauranteService.salvarRestaurante(dto); 
             
             redirectAttributes.addFlashAttribute("sucesso", "Restaurante cadastrado com sucesso!");
@@ -143,34 +136,28 @@ public class AdmController {
     @PostMapping("/restauranteEditar")
 	public String editarRestaurante(
 	        @ModelAttribute RestauranteDTO dto,  // O 'id' já está dentro do dto (dto.getId())
-	        // @RequestParam("id") Long id,  // <-- REMOVIDO (esta era a causa do bug)
 	        @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile,
 	        RedirectAttributes redirectAttributes) { 
 	    
-	    // Pegue o ID de dentro do DTO, onde ele já foi mapeado
 	    Long idDoRestaurante = dto.getId();
 	    
 	    System.out.println("--- [ADM CONTROLLER] INICIANDO EDIÇÃO (ID: " + idDoRestaurante + ") ---"); 
 
 	    try {
-	        // 3. Verifica se uma NOVA foto foi enviada
 	        if (fotoFile != null && !fotoFile.isEmpty()) {
 	            
 	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Foto recebida: " + fotoFile.getOriginalFilename());
 	            
-	            // 4. Salva a nova foto
 	            String nomeArquivo = fileStorageService.salvarFotoRestaurante(fotoFile);
 	            
 	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Foto salva no servidor com nome: " + nomeArquivo);
 	            
-	            // 5. Coloca o nome no DTO (o service vai saber o que fazer)
 	            dto.setCaminhoFoto(nomeArquivo);
 
 	        } else {
 	            System.out.println("[ADM CONTROLLER] (EDIÇÃO) Nenhuma foto nova foi enviada.");
 	        }
 	        
-	        // 6. Manda para o service atualizar (usando o ID do DTO)
 	        restauranteService.atualizarRestaurante(idDoRestaurante, dto);
 	        
 	        redirectAttributes.addFlashAttribute("sucesso", "Restaurante atualizado com sucesso!");
@@ -185,20 +172,15 @@ public class AdmController {
 	}
 
     @PostMapping("/restauranteExcluir")
-    @Transactional // <--- IMPORTANTE: org.springframework.transaction.annotation.Transactional
     public String excluirRestaurante(@RequestParam("id") Long id, RedirectAttributes redirect) {
         try {
-            // A. Busca o restaurante
             Restaurante restaurante = restauranteRepository.findById(id).orElse(null);
             
             if (restaurante != null) {
-                // B. LIMPEZA MANUAL: Apaga todos os favoritos deste restaurante
                 favoritoRepository.deleteByRestaurante(restaurante);
                 
-                // C. LIMPEZA MANUAL: Apaga todas as avaliações deste restaurante
                 avaliacaoRepository.deleteByRestaurante(restaurante);
 
-                // D. AGORA SIM: Apaga o restaurante (agora ele não tem mais "filhos")
                 restauranteRepository.delete(restaurante);
                 
                 redirect.addFlashAttribute("sucesso", "Restaurante e seus dados vinculados foram excluídos!");
@@ -207,7 +189,7 @@ public class AdmController {
             }
 
         } catch (Exception e) {
-            e.printStackTrace(); // Para ver erros no console se houver
+            e.printStackTrace();
             redirect.addFlashAttribute("erro", "Erro ao excluir restaurante: " + e.getMessage());
         }
         return "redirect:/adm";
@@ -237,30 +219,26 @@ public class AdmController {
                              @RequestParam("nome") String nome,
                              @RequestParam("email") String email,
                              @RequestParam("endereco") String endereco,
-                             @RequestParam("role") String roleName, // <-- Recebe a String do <select>
+                             @RequestParam("role") String roleName,
                              RedirectAttributes redirectAttributes) {
 
         try {
             Usuario usuario = userRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-            UserEnum novoRole = UserEnum.valueOf(roleName); // Converte a String (ex: "ROLE_RESTAURANTE") para o Enum
+            UserEnum novoRole = UserEnum.valueOf(roleName);
 
-            // Lógica de proteção do último admin
             if (usuario.getRole() == UserEnum.ROLE_ADMIN && novoRole != UserEnum.ROLE_ADMIN) {
-                // Se o usuário ATUAL é ADMIN e o NOVO papel NÃO é ADMIN (ou seja, um rebaixamento)
                 long totalAdmins = userRepository.countByRole(UserEnum.ROLE_ADMIN);
                 if (totalAdmins <= 1) {
-                    // Impede o rebaixamento
                     throw new RuntimeException("Não é possível rebaixar o único administrador do sistema.");
                 }
             }
 
-            // Atualiza os dados
             usuario.setNomeUsuario(nome);
             usuario.setEmailUsuario(email);
             usuario.setEnderecoUsuario(endereco);
-            usuario.setRole(novoRole); // Define o novo papel
+            usuario.setRole(novoRole);
 
             userRepository.save(usuario);
             redirectAttributes.addFlashAttribute("sucesso", "Usuário " + nome + " atualizado com sucesso!");

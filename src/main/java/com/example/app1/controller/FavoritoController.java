@@ -35,19 +35,16 @@ public class FavoritoController {
 	private final FavoritoService favoritoService;
     private final UserRepository userRepository;
     
-    // CAMPOS NOVOS
     private final RestauranteService restauranteService;
     private final AvaliacaoRepository avaliacaoRepository;
     
     @Autowired
     public FavoritoController(FavoritoService favoritoService, 
                               UserRepository userRepository,
-                              // INJEÇÕES NOVAS
                               RestauranteService restauranteService,
                               AvaliacaoRepository avaliacaoRepository) {
         this.favoritoService = favoritoService;
         this.userRepository = userRepository;
-        // ATRIBUIÇÕES NOVAS
         this.restauranteService = restauranteService;
         this.avaliacaoRepository = avaliacaoRepository;
     }
@@ -68,23 +65,19 @@ public class FavoritoController {
         Map<Long, Double> mapaDeMedias = new HashMap<>();
         Map<Long, Long> mapaDeContagem = new HashMap<>();
         
-        for (Restaurante r : restaurantesOrdenados) { // <-- MUDANÇA AQUI
+        for (Restaurante r : restaurantesOrdenados) {
             Long id = r.getId();
             mapaDeMedias.put(id, restauranteService.getMediaDeAvaliacoes(id)); 
             mapaDeContagem.put(id, avaliacaoRepository.countByRestauranteId(id));
         }
 
-        model.addAttribute("favoritos", restaurantesOrdenados); // <-- MUDANÇA AQUI
+        model.addAttribute("favoritos", restaurantesOrdenados);
         
         model.addAttribute("mapaDeMedias", mapaDeMedias);
         model.addAttribute("mapaDeContagem", mapaDeContagem);
 
         return "favoritos";
     }
-
-    // ======================================================
-    // O RESTO DO SEU CONTROLLER (Sem mudanças)
-    // ======================================================
 
     @PostMapping("/favoritos/add")
     @ResponseBody

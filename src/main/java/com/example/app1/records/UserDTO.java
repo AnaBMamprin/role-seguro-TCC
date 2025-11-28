@@ -7,13 +7,11 @@ public class UserDTO {
     private String email;
     private String endereco;
     private String senha;
-    private boolean admin; // checkbox admin
+    private boolean admin;
 
-    // Construtor vazio
     public UserDTO() {
     }
 
-    // Construtor com parâmetros
     public UserDTO(Long id, String nome, String email, String endereco, String senha, boolean admin) {
     	this.id = id;
         this.nome = nome;
@@ -23,7 +21,6 @@ public class UserDTO {
         this.admin = admin;
     }
 
-    // Getters e setters
     
     public Long getId() {
     	return id; 
