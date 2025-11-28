@@ -8,6 +8,6 @@ public class ErrorController {
 
     @GetMapping("/erro403")
     public String acessoNegado() {
-        return "erro403"; // retorna o Thymeleaf
+        return "erro403";
     }
 }

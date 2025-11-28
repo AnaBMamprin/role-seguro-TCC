@@ -39,11 +39,10 @@ public class SecurityConfig {
 	            .permitAll()
 	        )
 	        .logout(logout -> logout
-	        	    .logoutUrl("/logout")  // Correto: URL para trigger do logout
-	        	    .logoutSuccessUrl("/login?logout")  // Página após logout
-	        	    .invalidateHttpSession(true)  // Encerra a sessão
-	        	    .deleteCookies("JSESSIONID")  // Remove cookies
-	        	    .permitAll() 
+	        	    .logoutUrl("/logout")
+	        	    .logoutSuccessUrl("/login?logout")
+	        	    .invalidateHttpSession(true)
+	        	    .deleteCookies("JSESSIONID")
 	        	    )
 	        .exceptionHandling(ex -> ex
 	          .accessDeniedPage("/erro403") 
@@ -51,10 +50,6 @@ public class SecurityConfig {
 	    return http.build();
 	}
        
-	
-	 
-
-    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

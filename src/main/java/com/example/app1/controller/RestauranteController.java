@@ -49,25 +49,23 @@ public class RestauranteController {
     @Value("${google.maps.api.key}")
     private String apiKey;
     
-    @Autowired // O @Autowired no construtor é opcional nas versões mais recentes do Spring, mas bom para clareza
+    @Autowired
     public RestauranteController(RestauranteRepository repository, 
                                  RestauranteService service, 
-                                 FavoritoService favoritoService, // Adicionado
-                                 UserRepository userRepository) { // Adicionado
+                                 FavoritoService favoritoService,
+                                 UserRepository userRepository) {
     	this.reposi = repository;
         this.service = service;
-        this.favoritoService = favoritoService; // Inicializa
-        this.userRepository = userRepository;   // Inicializa
+        this.favoritoService = favoritoService;
+        this.userRepository = userRepository;
     }
     
     @GetMapping("/inicial")
     public String paginaInicial(Model model) {
 
-        // --- Lógica de Culinárias ---
         List<String> culinariasDisponiveis = reposi.findDistinctCulinarias();
         model.addAttribute("culinarias", culinariasDisponiveis);
 
-        // --- Lógica de Usuário ---
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)) {
              Object principal = auth.getPrincipal();
@@ -77,13 +75,11 @@ public class RestauranteController {
              } else if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
                  email = ((org.springframework.security.oauth2.core.user.OAuth2User) principal).getAttribute("email");
              }
-             // Você pode querer adicionar o nome do usuário ao model também
              if (email != null) {
                   userRepository.findByEmailUsuario(email).ifPresent(usuario -> {
-                      model.addAttribute("nomeUsuarioLogado", usuario.getNomeUsuario()); // Ajuste getNomeUsuario se necessário
+                      model.addAttribute("nomeUsuarioLogado", usuario.getNomeUsuario());
                   });
              }
-             // model.addAttribute("email", email); // Se precisar do email na view
         }
         
         List<Avaliacao> avaliacoesRecentes = avaliacaoRepository.findTop6ByOrderByDataAvaliacaoDesc();
@@ -122,17 +118,15 @@ public class RestauranteController {
             @RequestParam(name = "sortParam", defaultValue = "nome,ASC") String sortParam,
             Model model) {
 
-        // 2. LÓGICA DE ORDENAÇÃO (para "quebrar" o sortParam)
-        String[] sortParts = sortParam.split(","); // "nome,ASC" vira ["nome", "ASC"]
+        String[] sortParts = sortParam.split(",");
         String sortField = sortParts[0];
         String direction = sortParts[1];
 
         Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sortField);
         Pageable pageable = PageRequest.of(page, size, sortOrder);
 
-        Page<Restaurante> paginaRestaurantes; // Declara a página
+        Page<Restaurante> paginaRestaurantes;
 
-        // 2. ÁRVORE DE DECISÃO PARA OS FILTROS
         boolean temCulinaria = (culinaria != null && !culinaria.isEmpty());
         boolean temTipo = (tipoDePrato != null && !tipoDePrato.isEmpty());
 
@@ -143,10 +137,9 @@ public class RestauranteController {
         } else if (temTipo) {
             paginaRestaurantes = reposi.findByTipodepratoContaining(tipoDePrato, pageable);
         } else {
-            paginaRestaurantes = reposi.findAll(pageable); // Sem filtros
+            paginaRestaurantes = reposi.findAll(pageable);
         }
 
-        // --- 3. (Lógica de Favoritos, Média e Contagem - Sem alteração) ---
         Long usuarioId = getCurrentUserId(); 
         Set<Long> idsFavoritos = (usuarioId != null) ? favoritoService.getFavoritoIds(usuarioId) : Collections.emptySet();
         
@@ -161,22 +154,16 @@ public class RestauranteController {
             mapaDeContagem.put(id, avaliacaoRepository.countByRestauranteId(id));
         }
 
-        // --- 4. ENVIAR OS FILTROS E OPÇÕES PARA O HTML ---
-        
-        // Pega as culinárias únicas (Verifique se seu 'reposi' tem esse método)
         model.addAttribute("culinariasUnicas", reposi.findDistinctCulinarias());
         
-        // Lista fixa dos tipos de prato
         List<String> tiposDePratoUnicos = List.of("Rodízio", "Self Service", "A la Carte");
         model.addAttribute("tiposDePratoUnicos", tiposDePratoUnicos);
         
-        // Envia os valores selecionados de volta
         model.addAttribute("culinariaSelecionada", culinaria);
         model.addAttribute("tipoDePratoSelecionado", tipoDePrato);
         model.addAttribute("sortParam", sortParam);
 
-        // Envia os dados principais
-        model.addAttribute("paginaRestaurantes", paginaRestaurantes); // <-- AQUI!
+        model.addAttribute("paginaRestaurantes", paginaRestaurantes);
         model.addAttribute("idsFavoritos", idsFavoritos); 
         model.addAttribute("mapaDeMedias", mapaDeMedias);
         model.addAttribute("mapaDeContagem", mapaDeContagem);
@@ -186,7 +173,7 @@ public class RestauranteController {
         
     @GetMapping("/modelo-restaurante")
     public String detalhesRestaurante(
-            @RequestParam("id") Long id, // <-- @RequestParam pega o "?id=45"
+            @RequestParam("id") Long id,
             Model model
         ) {
         
@@ -198,18 +185,16 @@ public class RestauranteController {
             Long usuarioId = getCurrentUserId();
             boolean isFavorito = (usuarioId != null) && favoritoService.isFavorito(usuarioId, id);
             
-            // O método que criamos (agora vai funcionar)
             boolean podeAvaliar = verificarSePodeAvaliar(usuarioId, id);
             
             model.addAttribute("restaurante", restaurante);
             model.addAttribute("isFavorito", isFavorito);
-            model.addAttribute("googleMapsApiKey", service.getGoogleMapsApiKey()); // ou getGoogleMapsApiKey()
+            model.addAttribute("googleMapsApiKey", service.getGoogleMapsApiKey());
             model.addAttribute("podeAvaliar", podeAvaliar); 
 
-            // A linha mais importante para o seu formulário de avaliação
             model.addAttribute("novaAvaliacao", new com.example.app1.records.AvaliacaoDTO());
             
-            Double media = service.getMediaDeAvaliacoes(id); // Chama o novo método do service
+            Double media = service.getMediaDeAvaliacoes(id);
             model.addAttribute("mediaAvaliacoes", media);
 
             List<Avaliacao> avaliacoes = avaliacaoRepository.findByRestauranteIdOrderByDataAvaliacaoDesc(id);
@@ -219,18 +204,12 @@ public class RestauranteController {
                 avaliacoes.removeIf(java.util.Objects::isNull);
             }
         	
-            // Diz ao Spring para carregar o ARQUIVO "modelo-restaurante.html"
             return "modelo-restaurante"; 
         } else {
-            // Se o ID não existir, volta para a lista
             return "redirect:/restaurantes";
         }
     }
     
-
-    // ======================================================
-    // COPIE O MÉTODO AUXILIAR PARA CÁ TAMBÉM
-    // ======================================================
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
          if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
@@ -254,16 +233,12 @@ public class RestauranteController {
         return null;
     }
     private boolean verificarSePodeAvaliar(Long usuarioId, Long restauranteId) {
-        // 1. Se o usuário não está logado, ele não pode avaliar.
         if (usuarioId == null) {
             return false;
         }
         
-        // 2. Pergunta ao repositório se já existe uma avaliação com essa combinação.
-        // (Vamos ter que criar este método no repositório no próximo passo).
         boolean jaAvaliou = avaliacaoRepository.existsByUsuario_IdUsuarioAndRestaurante_Id(usuarioId, restauranteId);
         
-        // 3. Ele "pode avaliar" se ele "NÃO" ( ! ) "já avaliou".
         return !jaAvaliou;
     }
     
@@ -273,22 +248,16 @@ public class RestauranteController {
     
     @GetMapping("/buscar")
     public String buscar(
-            @RequestParam("q") String query, // O texto digitado na navbar
+            @RequestParam("q") String query,
             Model model) {
 
-        // 1. Se a busca for vazia, redireciona para a lista completa
         if (query == null || query.trim().isEmpty()) {
             return "redirect:/restaurantes";
         }
 
-        // 2. Configura paginação simples (pode ajustar o tamanho se quiser)
         Pageable pageable = PageRequest.of(0, 20); 
 
-        // 3. Realiza a busca no banco
         Page<Restaurante> resultados = reposi.findByNomeContainingIgnoreCase(query, pageable);
-
-        // 4. Lógica de Médias, Contagem e Favoritos (ESSENCIAL para o card não quebrar)
-        // (Copiamos a lógica do método /restaurantes para cá)
         
         List<Long> idsDaPagina = resultados.getContent().stream()
                                     .map(Restaurante::getId)
@@ -305,20 +274,16 @@ public class RestauranteController {
         Long usuarioId = getCurrentUserId();
         Set<Long> idsFavoritos = (usuarioId != null) ? favoritoService.getFavoritoIds(usuarioId) : Collections.emptySet();
 
-        // 5. Envia tudo para o Model
-        model.addAttribute("paginaRestaurantes", resultados); // A lista filtrada
+        model.addAttribute("paginaRestaurantes", resultados);
         model.addAttribute("mapaDeMedias", mapaDeMedias);
         model.addAttribute("mapaDeContagem", mapaDeContagem);
         model.addAttribute("idsFavoritos", idsFavoritos);
         
-        // Envia também os dados para o filtro (para não quebrar o topo da página)
         model.addAttribute("culinariasUnicas", reposi.findDistinctCulinarias());
         model.addAttribute("tiposDePratoUnicos", List.of("Rodízio", "Self Service", "A la Carte"));
-        
-        // Adiciona o termo buscado para mostrarmos na tela
+
         model.addAttribute("termoBusca", query);
 
-        // 6. Retorna a MESMA página de lista
         return "restaurantes";
     }
 }

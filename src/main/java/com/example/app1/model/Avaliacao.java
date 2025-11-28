@@ -23,37 +23,27 @@ public class Avaliacao {
  @Column(name = "Titulo_de_avalição")
 	private String TituloAvaliacao;
 	
- // Recomendo usar columnDefinition = "TEXT" para textos longos
 	@Column(name = "Texto_de_avalição", columnDefinition = "TEXT")
 	private String TextoAvaliacao;
-	
- // --- CAMPO NOVO: NOTA ---
- @Column(nullable = false) // Uma avaliação deve ter nota
- private Integer nota; // (Ex: 1, 2, 3, 4, 5)
- 
- // --- CAMPO NOVO: DATA ---
+
+ @Column(nullable = false)
+ private Integer nota;
+
  @Column(nullable = false, updatable = false, name = "data_avaliacao")
  private LocalDateTime dataAvaliacao;
- 
- // --- RELACIONAMENTO: USUÁRIO ---
- // Muitas avaliações (@Many) podem ser de Um usuário (@ToOne)
- @ManyToOne(fetch = FetchType.LAZY) // LAZY = só carrega o usuário se você pedir
- @JoinColumn(name = "usuario_id", nullable = false) // Chave estrangeira
- private Usuario usuario;
- 
- // --- RELACIONAMENTO: RESTAURANTE ---
- // Muitas avaliações (@Many) podem ser de Um restaurante (@ToOne)
+
  @ManyToOne(fetch = FetchType.LAZY)
- @JoinColumn(name = "restaurante_id", nullable = false) // Chave estrangeira
+ @JoinColumn(name = "usuario_id", nullable = false)
+ private Usuario usuario;
+
+ @ManyToOne(fetch = FetchType.LAZY)
+ @JoinColumn(name = "restaurante_id", nullable = false)
  private Restaurante restaurante;
 	
  
- // --- CONSTRUTORES ---
 	public Avaliacao() {	
 	}
 	
-	
-  
  public Avaliacao(Long idAvaliacao, String tituloAvaliacao, String textoAvaliacao, Integer nota, LocalDateTime dataAvaliacao,
 		Usuario usuario, Restaurante restaurante) {
 	super();
@@ -66,17 +56,11 @@ public class Avaliacao {
 	this.restaurante = restaurante;
 }
 
-
-
-// --- LÓGICA DA DATA ---
- // Este método é chamado automaticamente ANTES de salvar no banco
  @PrePersist
  protected void onCreate() {
      dataAvaliacao = LocalDateTime.now();
  }
  
-
-	// --- GETTERS E SETTERS ---
 
 	public Long getIdAvaliacao() {
 		return idAvaliacao;

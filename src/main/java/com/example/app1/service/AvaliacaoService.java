@@ -27,32 +27,22 @@ public class AvaliacaoService {
 	private RestauranteRepository restauranteRepository;
 	
 	public Avaliacao SalvarAvaliacao(AvaliacaoDTO avDTO) {
-		 
-        // 1. Buscar as entidades "pai" (Quem escreveu e Para qual restaurante)
-        
-        // --- CORREÇÃO 1 (ESTA É A LINHA 40) ---
-        // Usar o ID do usuário que veio no DTO
+
         Usuario usuario = usuarioRepository.findById(avDTO.getUsuarioId()) 
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + avDTO.getUsuarioId()));
-        
-        // --- CORREÇÃO 2 ---
-        // Usar o ID do restaurante que veio no DTO
+
         Restaurante restaurante = restauranteRepository.findById(avDTO.getRestauranteId()) 
                 .orElseThrow(() -> new RuntimeException("Restaurante não encontrado com ID: " + avDTO.getRestauranteId()));
-		
-        // 2. Criar a nova avaliação
+
 		 Avaliacao novaAvaliacao = new Avaliacao();
-		 
-        // 3. Preencher os dados
+
 		 novaAvaliacao.setTituloAvaliacao(avDTO.getTituloAvaliação()); 
 		 novaAvaliacao.setTextoAvaliacao(avDTO.getTextoAvaliação());
-         novaAvaliacao.setNota(avDTO.getNota()); // Salva a nota
-		 
-        // 4. Ligar a avaliação ao usuário e ao restaurante
+         novaAvaliacao.setNota(avDTO.getNota());
+
         novaAvaliacao.setUsuario(usuario);
         novaAvaliacao.setRestaurante(restaurante);
-        
-        // 5. Salvar no banco
+
 		 return repo.save(novaAvaliacao);
 	}
 	
@@ -66,12 +56,11 @@ public class AvaliacaoService {
 	}
 	
 	public Avaliacao EditarAvaliacao (Long id, AvaliacaoDTO avDTO) { 
-		Avaliacao avaliacaoExistente = LerAvaliacao(id); // Reutiliza o método de busca
-		
-       // Ao editar, geralmente só atualizamos o conteúdo, não o autor ou o restaurante
+		Avaliacao avaliacaoExistente = LerAvaliacao(id);
+
 		avaliacaoExistente.setTituloAvaliacao(avDTO.getTituloAvaliação());
 		avaliacaoExistente.setTextoAvaliacao(avDTO.getTextoAvaliação());
-       avaliacaoExistente.setNota(avDTO.getNota()); // <-- Permitir editar a nota também
+       avaliacaoExistente.setNota(avDTO.getNota());
 		
 		return repo.save(avaliacaoExistente);
 	}

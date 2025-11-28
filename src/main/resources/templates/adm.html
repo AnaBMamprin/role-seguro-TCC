@@ -266,7 +266,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-		// Script de confirmação de exclusão de usuário
 		function confirmExcluir(role, totalAdmins) {
 		    if(role === 'ROLE_ADMIN' && totalAdmins === 1){
 		        alert("Não é possível excluir o único usuário admin!");
@@ -275,14 +274,13 @@
 		    return confirm("Tem certeza que deseja excluir este usuário?");
 		}
 
-		// Script de buscar CEP
 		function buscarCEP(valor) {
 		      const cep = valor.replace(/\D/g, '');
 		      if (cep.length === 8) {
 		          document.getElementById('rua').value = "...";
 		          document.getElementById('bairro').value = "...";
 		          document.getElementById('modalRestauranteCidade').value = "...";
-		          document.getElementById('estado').value = "..."; // Limpa o estado
+		          document.getElementById('estado').value = "...";
 		          
 		          fetch(`https://viacep.com.br/ws/${cep}/json/`)
 		              .then(response => response.json())
@@ -294,13 +292,13 @@
 		                      document.getElementById('rua').value = data.logradouro;
 		                      document.getElementById('bairro').value = data.bairro;
 		                      document.getElementById('modalRestauranteCidade').value = data.localidade;
-		                      document.getElementById('estado').value = data.uf; // Salva o UF (ex: "SP")
+		                      document.getElementById('estado').value = data.uf;
 		                      document.getElementById('numero').focus();
 		                  }
 		              })
 		              .catch(error => {
 		                  alert("Erro ao buscar CEP. Tente novamente.");
-		                  limparFormularioCEP(true); // Limpa mantendo a cidade
+		                  limparFormularioCEP(true);
 		              });
 		      } else if (cep.length > 0) {
 		          alert("CEP inválido. Deve conter 8 números.");
@@ -311,13 +309,12 @@
 		  function limparFormularioCEP(manterCidade = false) {
 		      document.getElementById('rua').value = "";
 		      document.getElementById('bairro').value = "";
-		      document.getElementById('estado').value = ""; // Limpar o estado também
+		      document.getElementById('estado').value = "";
 		      if (!manterCidade) {
 		          document.getElementById('modalRestauranteCidade').value = "";
 		      }
 		  }
 
-		  // Script de Culinária
 		  function atualizarCampoCulinaria() {
 		      const select = document.getElementById('selectCulinaria');
 		      const inputNova = document.getElementById('inputNovaCulinaria');
@@ -335,7 +332,6 @@
 			      }
 			  }
 
-			  // Script do Modal
 			  const modalRestaurante = document.getElementById('modalRestaurante');
 			  modalRestaurante.addEventListener('show.bs.modal', event => {
 			      
@@ -345,7 +341,6 @@
 			      
 			      const id = button.getAttribute('data-bs-id');
 			      
-			      // Pega os elementos do formulário
 			      const inputId = document.getElementById('modalRestauranteId');
 			      const inputNome = document.getElementById('modalRestauranteNome');
 			      const inputHorario = document.getElementById('modalRestauranteHorario');
@@ -359,11 +354,10 @@
 			      const checkAlacarte = document.getElementById('checkAlacarte');
 
 			      if (id) {
-			          // --- MODO EDIÇÃO ---
+
 			          title.textContent = 'Editar Restaurante';
 			          form.action = '/adm/restauranteEditar';
 
-			          // Pega os dados do botão
 			          const nome = button.getAttribute('data-bs-nome');
 			          const horario = button.getAttribute('data-bs-horario');
 			          const culinaria = button.getAttribute('data-bs-culinaria');
@@ -372,25 +366,21 @@
 			          const endereco = button.getAttribute('data-bs-endereco');
 			          const site = button.getAttribute('data-bs-site');
 
-			          // Preenche TODOS os campos
 			          inputId.value = id;
 			          inputNome.value = nome;
 			          inputHorario.value = horario;
 			          inputCidade.value = cidade;
 			          inputSite.value = site || ''; 
 
-			          // Preenche a Culinária
 			          campoEscondidoCulinaria.value = culinaria; 
 			          selectCulinaria.value = culinaria; 
 			          inputNovaCulinaria.style.display = 'none';
 			          inputNovaCulinaria.value = '';
 
-			          // Preenche os Checkboxes
 			          checkRodizio.checked = (tipodeprato && tipodeprato.includes('Rodízio'));
 			          checkSelfService.checked = (tipodeprato && tipodeprato.includes('Self Service'));
 			          checkAlacarte.checked = (tipodeprato && tipodeprato.includes('A la Carte'));
-			          
-			          // Limpa os campos do CEP
+
 			          document.getElementById('cep').value = "";
 			          document.getElementById('rua').value = "";
 			          document.getElementById('numero').value = "";
@@ -401,13 +391,11 @@
 			          document.getElementById('rua').placeholder = "Endereço atual: " + endereco; 
 
 			      } else {
-			          // --- MODO ADICIONAR ---
 			          title.textContent = 'Adicionar Restaurante';
 			          form.action = '/adm/restauranteCadastrar'; 
 			          
 			          form.reset(); 
-			          
-			          // Garante que os campos hidden e de estado sejam limpos
+
 			          inputId.value = ''; 
 			          campoEscondidoCulinaria.value = ''; 
 			          inputNovaCulinaria.style.display = 'none';

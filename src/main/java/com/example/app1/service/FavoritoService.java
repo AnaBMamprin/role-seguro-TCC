@@ -29,7 +29,7 @@ public class FavoritoService {
     @Autowired
     private RestauranteRepository restauranteRepository;
 
-    @Transactional(readOnly = true) // Boa prática adicionar readOnly para buscas
+    @Transactional(readOnly = true)
     public List<Restaurante> listarFavoritosPorUsuarioId(Long usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + usuarioId));
@@ -40,16 +40,12 @@ public class FavoritoService {
                 .toList();
     }
 
-    // ======================================================
-    // MÉTODO PARA ADICIONAR FAVORITO
-    // ======================================================
     @Transactional
     public boolean addFavorito(Long usuarioId, Long restauranteId) {
         Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
         Restaurante restaurante = restauranteRepository.findById(restauranteId).orElse(null);
 
         if (usuario != null && restaurante != null) {
-            // Verifica se já não é favorito
             if (!favoritoRepository.existsByUsuarioAndRestaurante(usuario, restaurante)) {
                 Favorito novoFavorito = new Favorito();
                 novoFavorito.setUsuario(usuario);
@@ -57,34 +53,23 @@ public class FavoritoService {
                 favoritoRepository.save(novoFavorito);
                 return true;
             }
-            // Já era favorito, não faz nada mas retorna sucesso (ou false se preferir)
             return true; 
         }
-        return false; // Usuário ou Restaurante não encontrado
+        return false;
     }
 
-    // ======================================================
-    // MÉTODO PARA REMOVER FAVORITO
-    // ======================================================
     @Transactional
     public boolean removeFavorito(Long usuarioId, Long restauranteId) {
         Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
         Restaurante restaurante = restauranteRepository.findById(restauranteId).orElse(null);
 
         if (usuario != null && restaurante != null) {
-            // Deleta diretamente usando o método do repositório
             favoritoRepository.deleteByUsuarioAndRestaurante(usuario, restaurante);
-            // Ou, alternativamente:
-            // Optional<Favorito> favOpt = favoritoRepository.findByUsuarioAndRestaurante(usuario, restaurante);
-            // favOpt.ifPresent(favoritoRepository::delete);
             return true;
         }
         return false;
     }
 
-    // ======================================================
-    // MÉTODO PARA VERIFICAR SE É FAVORITO (para o front-end)
-    // ======================================================
     @Transactional(readOnly = true)
     public boolean isFavorito(Long usuarioId, Long restauranteId) {
         Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
@@ -96,16 +81,13 @@ public class FavoritoService {
         return false;
     }
 
-    // ======================================================
-    // MÉTODO PARA PEGAR IDs DOS FAVORITOS (para o front-end)
-    // ======================================================
     @Transactional(readOnly = true)
     public Set<Long> getFavoritoIds(Long usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
         if (usuario != null) {
             return favoritoRepository.findByUsuario(usuario)
                     .stream()
-                    .map(favorito -> favorito.getRestaurante().getId()) // Pega o ID do Restaurante
+                    .map(favorito -> favorito.getRestaurante().getId())
                     .collect(Collectors.toSet());
         }
         return Collections.emptySet();

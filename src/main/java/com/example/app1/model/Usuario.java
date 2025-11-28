@@ -63,11 +63,9 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Avaliacao> avaliacoes;
 
-    // Se deletar o usuário, apaga todos os favoritos dele
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Favorito> favoritos;
 
-    // Getters e Setters
     public Long getIdUsuario() {
         return idUsuario;
     }

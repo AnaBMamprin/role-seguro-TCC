@@ -34,12 +34,8 @@ public class Cupom {
     @Column(nullable = false)
     private Boolean usado = false;
     
-    @Column(length = 30) // <-- Adicione esta linha
-    private String tipoCupom; // <-- E esta linha
-
-    // Getters e Setters
-    
-    
+    @Column(length = 30)
+    private String tipoCupom;
     
     public Long getId() {
         return id;

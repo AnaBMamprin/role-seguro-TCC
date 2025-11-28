@@ -11,7 +11,6 @@ public interface CupomRepository extends JpaRepository<Cupom, Long> {
         Usuario usuario, LocalDateTime inicio, LocalDateTime fim
     );
 
-    // MÉTODO CORRIGIDO:
     boolean existsByUsuarioIdUsuarioAndRestauranteIdAndTipoCupom(
         Long idUsuario, Long idRestaurante, String tipoCupom
     );
