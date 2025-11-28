@@ -19,23 +19,11 @@ public class RestauranteDataLoader implements CommandLineRunner {
     
     @Override
     public void run(String... args) throws Exception {
-        
-        salvarSeNaoExistir(
-            "Vó Lenka", "Guarulhos", "SP", "Brasileira", "Self Service", "11h às 16h", 
-            "Av. Paulo Faccini", "123", "Jardim Maia",
-            "https://volenka.com.br"
-        );
 
         salvarSeNaoExistir(
             "NenoPizzaria", "Guarulhos", "SP", "Pizzas", "Rodízio, A La Carte", "18h às 00h", 
             "Rua Josephina Mandotti", "229", "Jardim Maia",
             "https://nenopizzaria.com"
-        );
-
-        salvarSeNaoExistir(
-            "Bom de Prato", "Guarulhos", "SP", "Brasileira", "Self Service, A La Carte", "11h às 16h", 
-            "Av. Paulo Faccini", "1317", "Macedo",
-            "https://bomdeprato.com.br"
         );
 
     }
