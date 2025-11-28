@@ -21,19 +21,19 @@ public class RestauranteDataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         
         salvarSeNaoExistir(
-            "Vó Lenka", "Guarulhos", "SP", "Brasileira", "10h às 23h", 
+            "Vó Lenka", "Guarulhos", "SP", "Brasileira", "Self Service", "11h às 16h", 
             "Av. Paulo Faccini", "123", "Jardim Maia",
             "https://volenka.com.br"
         );
 
         salvarSeNaoExistir(
-            "NenoPizzaria", "Guarulhos", "SP", "Pizzas", "18h às 00h", 
+            "NenoPizzaria", "Guarulhos", "SP", "Pizzas", "Rodízio, A La Carte", "18h às 00h", 
             "Rua Josephina Mandotti", "229", "Jardim Maia",
             "https://nenopizzaria.com"
         );
 
         salvarSeNaoExistir(
-            "Bom de Prato", "Guarulhos", "SP", "Brasileira", "11h às 23h", 
+            "Bom de Prato", "Guarulhos", "SP", "Brasileira", "Self Service, A La Carte", "11h às 16h", 
             "Av. Paulo Faccini", "1317", "Macedo",
             "https://bomdeprato.com.br"
         );
@@ -42,7 +42,7 @@ public class RestauranteDataLoader implements CommandLineRunner {
 
     private void salvarSeNaoExistir(
             String nome, String cidade, String estado, String culinaria,
-            String horario,
+            String tipodePrato, String horario,
             String rua, String numero, String bairro, String site) {
         
         if (repository.findByNome(nome).isEmpty()) {
@@ -52,6 +52,7 @@ public class RestauranteDataLoader implements CommandLineRunner {
             dto.setCidade(cidade);
             dto.setEstado(estado);
             dto.setCulinaria(culinaria);
+            dto.setTipodeprato(tipodePrato);
             dto.setHorario(horario);
             dto.setSite(site);
             
