@@ -46,7 +46,7 @@ public class RestauranteService {
     // PARTE 1: ADICIONE ESTE NOVO MÉTODO DE ATUALIZAÇÃO
     // ========================================================================
     @Transactional
-    public void atualizarRestaurante(Long id, RestauranteDTO dto, Long idDono) {
+    public void atualizarRestaurante(Long id, RestauranteDTO dto) {
         
         // Dica: Usar orElseThrow é mais seguro para garantir que o restaurante existe
         Restaurante restaurante = repo.findById(id)
@@ -133,23 +133,13 @@ public class RestauranteService {
             System.out.println("[SERVICE ATUALIZAR] Campo 'rua' vazio. Endereço antigo mantido.");
         }
         
-        // 7. Se foi passado um idDono, tenta setar o dono
-   /*     if (idDono != null) {
-            usuarioRepository.findById(idDono).ifPresent(restaurante::setUsuario);
-        }
-*/
         // 8. Salva o restaurante (com ou sem o endereço novo)
         repo.save(restaurante);
         repo.flush();
     }
     
     @Transactional
-    public void salvarRestaurante(RestauranteDTO dto, Long idDoUsuarioDono) {
-
-        // 1. BUSCAR O DONO (O Usuário JÁ DEVE EXISTIR)
-        // Não vamos mais criar um 'new Usuario()'
-        Usuario dono = usuarioRepository.findById(idDoUsuarioDono)
-                .orElseThrow(() -> new RuntimeException("Usuário 'Dono' não encontrado com ID: " + idDoUsuarioDono));
+    public void salvarRestaurante(RestauranteDTO dto) {
 
         // 2. BUSCAR COORDENADAS (LÓGICA DO GEOCODING CORRIGIDA)
         double latitude = 0.0;
@@ -215,9 +205,6 @@ public class RestauranteService {
         // Dados do Geocoding
         restaurante.setLatitude(latitude);
         restaurante.setLongitude(longitude);
-
-        // 5. ATRELAR O DONO AO RESTAURANTE (A MÁGICA DO @ManyToOne)
-     //   restaurante.setUsuario(dono);
         
         // 6. SALVAR
         // O JPA vai salvar o restaurante e preencher a chave estrangeira 'usuario_id'

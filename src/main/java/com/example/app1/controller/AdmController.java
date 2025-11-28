@@ -101,7 +101,6 @@ public class AdmController {
     @PostMapping("/restauranteCadastrar")
     public String cadastrarRestaurante(
             @ModelAttribute RestauranteDTO dto,
-            @RequestParam("idDoUsuarioDono") Long idDono, 
             @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile, RedirectAttributes redirectAttributes
         ) { 
     	
@@ -128,7 +127,7 @@ public class AdmController {
             }
 
             // 6. Manda o DTO (com ou sem foto) para o service
-            restauranteService.salvarRestaurante(dto, idDono); 
+            restauranteService.salvarRestaurante(dto); 
             
             redirectAttributes.addFlashAttribute("sucesso", "Restaurante cadastrado com sucesso!");
 
@@ -145,7 +144,6 @@ public class AdmController {
 	public String editarRestaurante(
 	        @ModelAttribute RestauranteDTO dto,  // O 'id' já está dentro do dto (dto.getId())
 	        // @RequestParam("id") Long id,  // <-- REMOVIDO (esta era a causa do bug)
-	        @RequestParam(value = "idDoUsuarioDono", required = false) Long idDono,
 	        @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile,
 	        RedirectAttributes redirectAttributes) { 
 	    
@@ -173,7 +171,7 @@ public class AdmController {
 	        }
 	        
 	        // 6. Manda para o service atualizar (usando o ID do DTO)
-	        restauranteService.atualizarRestaurante(idDoRestaurante, dto, idDono);
+	        restauranteService.atualizarRestaurante(idDoRestaurante, dto);
 	        
 	        redirectAttributes.addFlashAttribute("sucesso", "Restaurante atualizado com sucesso!");
 
