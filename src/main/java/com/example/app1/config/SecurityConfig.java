@@ -15,21 +15,31 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		
-		
 	    http
-	    
-	    	.csrf(csrf -> csrf.disable())
+	        .csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(authz -> authz
-	        		.requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**", "/webjars/**").permitAll()
-	                
-	                .requestMatchers("/", "/inicial", "/restaurantes", "/modelo-restaurante", "/buscar").permitAll()
-	                .requestMatchers("/login", "/cadastro", "/cadastrar", "/sobre").permitAll()
-	                
-	                .requestMatchers("/favoritos/add", "/favoritos/remove").permitAll()
-	                
-	                .requestMatchers("/adm/**").hasRole("ADMIN")
-	                .requestMatchers("/favoritos", "/perfil/**").authenticated()
+	            // Arquivos estáticos
+	            .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**", "/webjars/**").permitAll()
+	            
+	            // Páginas públicas
+	            .requestMatchers("/", "/inicial", "/restaurantes", "/modelo-restaurante", "/buscar").permitAll()
+	            .requestMatchers("/login", "/cadastro", "/cadastrar", "/sobre").permitAll()
+	            
+	            // PÁGINAS DE ERRO (O segredo está aqui)
+	            .requestMatchers("/erro404").permitAll()
+	            .requestMatchers("/erro-usuario-duplicado").permitAll()
+	            .requestMatchers("/error").permitAll()
+	            .requestMatchers("/erro403").permitAll() // <--- ADICIONE ESTA LINHA OBRIGATORIAMENTE!
+	            
+	            // Funcionalidades
+	            .requestMatchers("/favoritos/add", "/favoritos/remove").permitAll()
+	            
+	            // Restrições
+	            .requestMatchers("/adm/**").hasRole("ADMIN")
+	            .requestMatchers("/favoritos", "/perfil/**").authenticated()
+	            
+	            // Qualquer outra coisa precisa de login
+	            .anyRequest().authenticated()
 	        )
 	        .formLogin(form -> form
 	            .loginPage("/login")
@@ -39,15 +49,16 @@ public class SecurityConfig {
 	            .permitAll()
 	        )
 	        .logout(logout -> logout
-	        	    .logoutUrl("/logout")  // Correto: URL para trigger do logout
-	        	    .logoutSuccessUrl("/login?logout")  // Página após logout
-	        	    .invalidateHttpSession(true)  // Encerra a sessão
-	        	    .deleteCookies("JSESSIONID")  // Remove cookies
-	        	    .permitAll() 
-	        	    )
+	            .logoutUrl("/logout")
+	            .logoutSuccessUrl("/login?logout")
+	            .invalidateHttpSession(true)
+	            .deleteCookies("JSESSIONID")
+	            .permitAll() 
+	        )
 	        .exceptionHandling(ex -> ex
-	          .accessDeniedPage("/erro403") 
-	        	);
+	            .accessDeniedPage("/erro403") // Como você definiu aqui, precisa liberar lá em cima
+	        );
+
 	    return http.build();
 	}
        

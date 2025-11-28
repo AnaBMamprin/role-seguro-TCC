@@ -311,11 +311,16 @@
 		                 th:field="*{tituloAvaliação}" required>
 		        </div>
 		        
-		        <div class="mb-3">
-		          <label for="textoAvaliacao" class="form-label">Sua avaliação</label>
-		          <textarea class="form-control" id="textoAvaliacao" rows="4" 
-		                    th:field="*{textoAvaliação}" required></textarea>
-		        </div>
+				<div class="mb-3">
+
+					<label for="textoAvaliacao" class="form-label">Sua avaliação</label>
+
+					<textarea class="form-control" id="textoAvaliacao" rows="4"
+
+					th:field="*{textoAvaliação}" required></textarea>
+
+				</div>
+				</div>
 		        
 		        <div class="mb-3">
 		          <label for="notaAvaliacao" class="form-label">Sua nota</label>
@@ -340,6 +345,16 @@
 		      
 		    </form> </div>
 		</div>
+		
+		<script>
+		    function atualizarContador(campo) {
+		        // Pega o tamanho do texto que está sendo digitado
+		        var tamanhoAtual = campo.value.length;
+		        
+		        // Atualiza o número dentro do <span>
+		        document.getElementById('contadorCaracteres').innerText = tamanhoAtual;
+		    }
+		</script>
 			
 	</body>
 </html>
