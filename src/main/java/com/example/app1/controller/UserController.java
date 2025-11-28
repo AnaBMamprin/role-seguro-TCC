@@ -2,6 +2,7 @@ package com.example.app1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,9 @@ import com.example.app1.model.Usuario;
 import com.example.app1.records.UserDTO;
 import com.example.app1.repository.UserRepository;
 import com.example.app1.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 
 
@@ -91,7 +95,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("erro", "Não foi possível excluir sua conta.");
             return "redirect:/perfil";
         }
-    }
+    } 
 
 
     @GetMapping("/cadastro")
@@ -110,9 +114,55 @@ public class UserController {
     } */
     
     // Método para deletar usuário
-    @PostMapping("/adm/deleteUser")
+   /* @PostMapping("/adm/deleteUser")
     public String deleteUser(@RequestParam("id") Long id) {
         userService.deleteUser(id); // ✅ chama o service
+        return "redirect:/adm";
+    }*/
+    
+   /* @PostMapping("/adm/deleteUser")
+    public String excluirPerfil(Authentication authentication, 
+                                RedirectAttributes redirectAttributes, 
+                                HttpServletRequest request) { // <--- 1. Injete o Request aqui
+        try {
+            String email = authentication.getName();
+            Usuario usuarioParaExcluir = usuarioRepository.findByEmailUsuario(email)
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            
+            // 2. Deleta o usuário do banco
+            userService.deleteUser(usuarioParaExcluir.getIdUsuario());
+            
+            // 3. LIMPEZA MANUAL DA SESSÃO (O Pulo do Gato 🐈)
+            SecurityContextHolder.clearContext(); // Remove a autenticação do Spring Security
+            
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate(); // Destroi o cookie de sessão (JSESSIONID)
+            }
+            
+            return "redirect:/login?logout"; // Agora sim, redireciona limpo
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erro", "Não foi possível excluir sua conta.");
+            return "redirect:/perfil";
+        }
+    }*/
+    
+    @PostMapping("/adm/deleteUser")
+    public String deleteUser(@RequestParam("id") Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
+        
+        // 1. Descobre quem é o Admin logado
+        String emailLogado = authentication.getName();
+        Usuario adminLogado = usuarioRepository.findByEmailUsuario(emailLogado).get();
+
+        // 2. Proteção: Se o Admin tentar se deletar por aqui, bloqueia
+        if (adminLogado.getIdUsuario().equals(id)) {
+            redirectAttributes.addFlashAttribute("erro", "Você não pode se excluir pelo painel administrativo!");
+            return "redirect:/adm";
+        }
+
+        // 3. Se for outro usuário, deleta normal
+        userService.deleteUser(id); 
         return "redirect:/adm";
     }
 }

@@ -56,6 +56,9 @@ public class Usuario implements UserDetails {
             orphanRemoval = true // Se remover um restaurante da lista, ele é deletado
         ) 
         private List<Restaurante> restaurantes;  */
+   
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true) // <--- Adicione isso
+    private List<Cupom> cupons;
     
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Avaliacao> avaliacoes;
