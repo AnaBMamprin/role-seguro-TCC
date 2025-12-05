@@ -24,6 +24,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.example.app1.model.Avaliacao;
 import com.example.app1.model.Restaurante;
@@ -64,6 +68,7 @@ public class RestauranteController {
     public String paginaInicial(Model model) {
 
         List<String> culinariasDisponiveis = reposi.findDistinctCulinarias();
+        Collections.sort(culinariasDisponiveis);
         model.addAttribute("culinarias", culinariasDisponiveis);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -212,24 +217,30 @@ public class RestauranteController {
     
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-         if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
-            String email;
+        
+        // Verifica se tem autenticação e se não é um usuário anônimo
+        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
+            
             Object principal = authentication.getPrincipal();
+            String email = null;
 
+            // CASO 1: Login Clássico (Cadastro do site)
             if (principal instanceof UserDetails) {
                 email = ((UserDetails) principal).getUsername();
-            } else if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
-                 email = ((org.springframework.security.oauth2.core.user.OAuth2User) principal).getAttribute("email");
-            }
-             else {
-                 return null; 
+            } 
+            // CASO 2: Login Social (Google)
+            else if (principal instanceof OAuth2User) {
+                email = ((OAuth2User) principal).getAttribute("email");
             }
 
+            // Se conseguiu extrair um email, busca no banco
             if (email != null) {
-                Optional<Usuario> userOpt = userRepository.findByEmailUsuario(email); 
-                return userOpt.map(Usuario::getIdUsuario).orElse(null); 
+                return userRepository.findByEmailUsuario(email)
+                        .map(Usuario::getIdUsuario) // Pega o ID se o usuário existir
+                        .orElse(null);              // Retorna null se não achar
             }
         }
+        
         return null;
     }
     private boolean verificarSePodeAvaliar(Long usuarioId, Long restauranteId) {

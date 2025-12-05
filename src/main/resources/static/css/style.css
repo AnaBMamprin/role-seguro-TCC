@@ -554,3 +554,27 @@ body, html {
 html {
   overflow-y: scroll;
 }
+
+.btn-laranja {
+    background-color: #FF6B35;
+    border-color: #FF6B35;
+    color: white;
+}
+
+.btn-laranja:hover {
+    background-color: #e55a2b;
+    border-color: #e55a2b;
+    color: white;
+}
+
+.btn-marinho {
+    background-color: #003049;
+    border-color: #003049;
+    color: white;
+}
+
+.btn-marinho:hover {
+    background-color: rgb(0, 28, 43);
+    border-color: rgb(0, 28, 43);
+    color: white;
+}

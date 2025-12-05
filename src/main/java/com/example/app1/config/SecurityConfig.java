@@ -1,4 +1,5 @@
 package com.example.app1.config;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -13,6 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+	@Autowired
+    private com.example.app1.service.CustomOAuth2UserService customOAuth2UserService;
+	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    http
@@ -48,6 +52,15 @@ public class SecurityConfig {
 	            .defaultSuccessUrl("/inicial", true) 
 	            .permitAll()
 	        )
+	        
+	        .oauth2Login(oauth2 -> oauth2
+	                .loginPage("/login") // Usa a mesma página de login
+	                .userInfoEndpoint(userInfo -> userInfo
+	                    .userService(customOAuth2UserService) // Usa nosso serviço que salva no banco
+	                )
+	                .defaultSuccessUrl("/inicial", true) // Para onde vai depois de logar
+	            )
+	        
 	        .logout(logout -> logout
 
 	            .logoutUrl("/logout")

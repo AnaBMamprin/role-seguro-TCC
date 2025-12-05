@@ -3,7 +3,9 @@ package com.example.app1.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,36 +39,77 @@ public class UserController {
     
     
     @GetMapping("/perfil")
-    public String verPerfil(Model model, Authentication authentication) {
+    public String verPerfil(Model model) {
         
-        String email = authentication.getName(); 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String emailTemp = null; // Variável temporária
 
-        Usuario usuario = usuarioRepository.findByEmailUsuario(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
 
-        model.addAttribute("usuario", usuario); 
-        
+            // CASO 1: Login com Senha
+            if (principal instanceof UserDetails) {
+                emailTemp = ((UserDetails) principal).getUsername();
+            } 
+            // CASO 2: Login com Google
+            else if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
+                emailTemp = ((org.springframework.security.oauth2.core.user.OAuth2User) principal).getAttribute("email");
+            }
+        }
+
+        if (emailTemp == null) {
+            return "redirect:/login";
+        }
+
+        // --- A CORREÇÃO MÁGICA ---
+        // Criamos uma variável final (constante) com o valor encontrado.
+        // O Java aceita usar ESTA variável dentro do lambda.
+        final String emailFinal = emailTemp;
+
+        Usuario usuario = usuarioRepository.findByEmailUsuario(emailFinal)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o email: " + emailFinal));
+
+        model.addAttribute("usuario", usuario);
         return "perfil";
     }
 
     @PostMapping("/perfil/atualizar")
-    public String atualizarPerfil(
-            @ModelAttribute("usuario") Usuario usuarioForm,
-            Authentication authentication,
-            RedirectAttributes redirectAttributes) {
+    public String atualizarPerfil(@ModelAttribute Usuario usuarioForm, RedirectAttributes redirectAttributes) {
         
+        // 1. Descobre quem é o usuário logado (pelo E-mail)
+        String emailLogado = getEmailUsuarioLogado();
+
+        if (emailLogado == null) {
+            return "redirect:/login";
+        }
+
         try {
-            String emailDoUsuarioLogado = authentication.getName();
+            // 2. Chama o SEU serviço passando o e-mail e os dados do form
+            userService.atualizarPerfil(emailLogado, usuarioForm);
             
-            userService.atualizarPerfil(emailDoUsuarioLogado, usuarioForm);
-            
-            redirectAttributes.addFlashAttribute("sucesso", "Perfil atualizado!");
+            redirectAttributes.addFlashAttribute("sucesso", "Perfil atualizado com sucesso!");
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("erro", "Não foi possível atualizar o perfil.");
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("erro", "Erro ao atualizar perfil: " + e.getMessage());
         }
-        
+
         return "redirect:/perfil";
+    }
+
+    // --- Método Auxiliar para pegar o E-mail (Copie isso para dentro da classe também) ---
+    private String getEmailUsuarioLogado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                return ((UserDetails) principal).getUsername();
+            } 
+            else if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
+                return ((org.springframework.security.oauth2.core.user.OAuth2User) principal).getAttribute("email");
+            }
+        }
+        return null;
     }
 
 

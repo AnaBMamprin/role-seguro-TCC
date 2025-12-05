@@ -60,11 +60,14 @@ public class UserService {
         Usuario usuarioParaAtualizar = userRepository.findByEmailUsuario(emailUsuarioLogado)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o email: " + emailUsuarioLogado));
 
+        // 1. Atualiza o Nome
         usuarioParaAtualizar.setNomeUsuario(dadosDoFormulario.getNomeUsuario());
         
-        // Permitir mudar o endereço do usuário
-        // usuarioParaAtualizar.setEndereco(dadosDoFormulario.getEndereco()); 
+        // 2. Atualiza o Endereço (CORRIGIDO)
+        // (Verifique se o método é getEndereco() ou getEnderecoUsuario() na sua classe Usuario)
+        usuarioParaAtualizar.setEnderecoUsuario(dadosDoFormulario.getEnderecoUsuario()); 
 
+        // 3. Salva
         userRepository.save(usuarioParaAtualizar);
     }
     

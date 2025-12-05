@@ -56,7 +56,7 @@
         <section class="mb-5">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3>Restaurantes</h3>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRestaurante">Adicionar Restaurante</button>
+                <button class="btn btn-laranja" data-bs-toggle="modal" data-bs-target="#modalRestaurante">Adicionar Restaurante</button>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped table-hover bg-light rounded shadow-sm">
@@ -148,7 +148,7 @@
                                     </select>
                                 </td>
                                 <td class="text-center d-flex justify-content-center gap-2">
-                                    <button type="submit" class="btn btn-sm btn-primary">Salvar</button>
+                                    <button type="submit" class="btn btn-sm btn-marinho">Salvar</button>
                                     <button type="submit" class="btn btn-sm btn-danger"
                                             th:formaction="@{/adm/deleteUser}"
                                             th:disabled="${user.role.name() == 'ROLE_ADMIN' and totalAdmins == 1}"
@@ -257,7 +257,7 @@
 					</div>
 
 	                <div class="modal-footer">
-					    <button class="btn btn-primary w-100" type="submit">Salvar</button>
+					    <button class="btn btn-marinho w-100" type="submit">Salvar</button>
 	                </div>
 					
 				</form> </div>
