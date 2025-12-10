@@ -110,11 +110,11 @@ public class AdmController {
             	
                 String nomeArquivo = fileStorageService.salvarFotoRestaurante(fotoFile);
                 
-                System.out.println("[ADM CONTROLLER] Foto salva no servidor com nome: " + nomeArquivo); // <-- PONTO CRÍTICO 1
+                System.out.println("[ADM CONTROLLER] Foto salva no servidor com nome: " + nomeArquivo);
                 
                 dto.setCaminhoFoto(nomeArquivo); 
                 
-                System.out.println("[ADM CONTROLLER] DTO agora tem a foto: " + dto.getCaminhoFoto()); // <-- PONTO CRÍTICO 2
+                System.out.println("[ADM CONTROLLER] DTO agora tem a foto: " + dto.getCaminhoFoto());
                 
             } else {
                 System.out.println("[ADM CONTROLLER] Nenhuma foto foi enviada no cadastro.");
@@ -135,7 +135,7 @@ public class AdmController {
     
     @PostMapping("/restauranteEditar")
 	public String editarRestaurante(
-	        @ModelAttribute RestauranteDTO dto,  // O 'id' já está dentro do dto (dto.getId())
+	        @ModelAttribute RestauranteDTO dto,
 	        @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile,
 	        RedirectAttributes redirectAttributes) { 
 	    

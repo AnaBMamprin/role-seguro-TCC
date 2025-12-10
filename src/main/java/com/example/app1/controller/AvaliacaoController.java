@@ -38,37 +38,30 @@ public class AvaliacaoController {
 		model.addAttribute("novaAvaliacao", new AvaliacaoDTO());
 		return "restaurantes"; 
 	}
-	
-    // --- MÉTODO CORRIGIDO ---
+
 	@PostMapping("/salvar")
 	public String salvarAvaliacao(@ModelAttribute AvaliacaoDTO ava) { 
-		
-        // 1. Recupera a autenticação atual
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailLogado = null;
 
         if (authentication != null) {
             Object principal = authentication.getPrincipal();
 
-            // Verifica se é Login por Senha (UserDetails)
             if (principal instanceof UserDetails) {
                 emailLogado = ((UserDetails) principal).getUsername();
             } 
-            // Verifica se é Login pelo Google (OAuth2User)
             else if (principal instanceof OAuth2User) {
-                // AQUI ESTÁ A CORREÇÃO: Pegamos o atributo "email" em vez do ID numérico
                 emailLogado = ((OAuth2User) principal).getAttribute("email");
             }
         }
-        
-        // Se por algum motivo não achou o email (sessão expirou, etc)
+
         if (emailLogado == null) {
             return "redirect:/login";
         }
 
         final String emailFinal = emailLogado;
 
-        // 2. Busca o usuário usando a variável FINAL
 		Usuario usuarioLogado = userRepository.findByEmailUsuario(emailFinal)
 	            .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o email: " + emailFinal));
         

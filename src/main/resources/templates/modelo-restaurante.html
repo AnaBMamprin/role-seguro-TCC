@@ -206,7 +206,6 @@
 		const restauranteNome = /*[[${restaurante.nome}]]*/ "Restaurante";
 
 		async function toggleFavorito(element, restauranteId) {
-			// ... (Seu script de favorito que já funcionava) ...
             const icon = element.querySelector('i');
             const isFavorito = icon.classList.contains('bi-heart-fill');
             const url = isFavorito ? '/favoritos/remove' : '/favoritos/add';
