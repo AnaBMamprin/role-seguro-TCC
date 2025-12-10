@@ -30,7 +30,7 @@
 <body>
 <div class="cadastro-page">
     <div class="cadastro-container">
-        <h2>Cadastro de Cliente</h2>
+        <h2>Cadastro</h2>
         <form th:action="@{/cadastrar}" method="post" th:object="${userDTO}">
             <input type="text" th:field="*{nome}" placeholder="Nome"  required>
             <input type="email" th:field="*{email}" placeholder="Email" required>

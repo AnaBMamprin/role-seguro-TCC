@@ -23,7 +23,7 @@ public class SecurityConfig {
 	        .csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(authz -> authz
 	            // Arquivos estáticos
-	            .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**", "/webjars/**").permitAll()
+	            .requestMatchers("/css/**", "/js/**", "/imagens/**", "/uploads/**", "/webjars/**").permitAll()
 	            
 	            // Páginas públicas
 	            .requestMatchers("/", "/inicial", "/restaurantes", "/modelo-restaurante", "/buscar").permitAll()
