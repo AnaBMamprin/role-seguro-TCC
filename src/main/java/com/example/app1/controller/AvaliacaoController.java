@@ -1,9 +1,12 @@
 package com.example.app1.controller;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +27,7 @@ public class AvaliacaoController {
 	
 	@Autowired
 	AvaliacaoService serv;
+	
 	@Autowired
     private UserRepository userRepository;
 	
@@ -35,16 +39,45 @@ public class AvaliacaoController {
 		return "restaurantes"; 
 	}
 	
+    // --- MÉTODO CORRIGIDO ---
 	@PostMapping("/salvar")
-	public String salvarAvaliacao( @ModelAttribute AvaliacaoDTO ava, Principal principal) { 
-		Usuario usuarioLogado = userRepository.findByEmailUsuario(principal.getName())
-	            .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + principal.getName()));
-			ava.setUsuarioId(usuarioLogado.getIdUsuario()); 
-	        // 8. SALVAR
-			serv.SalvarAvaliacao(ava);
+	public String salvarAvaliacao(@ModelAttribute AvaliacaoDTO ava) { 
+		
+        // 1. Recupera a autenticação atual
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String emailLogado = null;
+
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
+
+            // Verifica se é Login por Senha (UserDetails)
+            if (principal instanceof UserDetails) {
+                emailLogado = ((UserDetails) principal).getUsername();
+            } 
+            // Verifica se é Login pelo Google (OAuth2User)
+            else if (principal instanceof OAuth2User) {
+                // AQUI ESTÁ A CORREÇÃO: Pegamos o atributo "email" em vez do ID numérico
+                emailLogado = ((OAuth2User) principal).getAttribute("email");
+            }
+        }
+        
+        // Se por algum motivo não achou o email (sessão expirou, etc)
+        if (emailLogado == null) {
+            return "redirect:/login";
+        }
+
+        final String emailFinal = emailLogado;
+
+        // 2. Busca o usuário usando a variável FINAL
+		Usuario usuarioLogado = userRepository.findByEmailUsuario(emailFinal)
+	            .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o email: " + emailFinal));
+        
+		ava.setUsuarioId(usuarioLogado.getIdUsuario()); 
+	        
+		serv.SalvarAvaliacao(ava);
 			
-			return "redirect:/modelo-restaurante?id=" + ava.getRestauranteId();
-		}
+		return "redirect:/modelo-restaurante?id=" + ava.getRestauranteId();
+	}
 	
 	@GetMapping("/deletar/avaliacao/{id}")
 	public String deletarAvaliacao(@PathVariable("id") Long id) {
