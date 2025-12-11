@@ -42,16 +42,14 @@ public class UserController {
     public String verPerfil(Model model) {
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String emailTemp = null; // Variável temporária
+        String emailTemp = null;
 
         if (authentication != null) {
             Object principal = authentication.getPrincipal();
 
-            // CASO 1: Login com Senha
             if (principal instanceof UserDetails) {
                 emailTemp = ((UserDetails) principal).getUsername();
             } 
-            // CASO 2: Login com Google
             else if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
                 emailTemp = ((org.springframework.security.oauth2.core.user.OAuth2User) principal).getAttribute("email");
             }
@@ -61,9 +59,6 @@ public class UserController {
             return "redirect:/login";
         }
 
-        // --- A CORREÇÃO MÁGICA ---
-        // Criamos uma variável final (constante) com o valor encontrado.
-        // O Java aceita usar ESTA variável dentro do lambda.
         final String emailFinal = emailTemp;
 
         Usuario usuario = usuarioRepository.findByEmailUsuario(emailFinal)
@@ -75,8 +70,7 @@ public class UserController {
 
     @PostMapping("/perfil/atualizar")
     public String atualizarPerfil(@ModelAttribute Usuario usuarioForm, RedirectAttributes redirectAttributes) {
-        
-        // 1. Descobre quem é o usuário logado (pelo E-mail)
+
         String emailLogado = getEmailUsuarioLogado();
 
         if (emailLogado == null) {
@@ -84,7 +78,6 @@ public class UserController {
         }
 
         try {
-            // 2. Chama o SEU serviço passando o e-mail e os dados do form
             userService.atualizarPerfil(emailLogado, usuarioForm);
             
             redirectAttributes.addFlashAttribute("sucesso", "Perfil atualizado com sucesso!");
@@ -97,7 +90,6 @@ public class UserController {
         return "redirect:/perfil";
     }
 
-    // --- Método Auxiliar para pegar o E-mail (Copie isso para dentro da classe também) ---
     private String getEmailUsuarioLogado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {

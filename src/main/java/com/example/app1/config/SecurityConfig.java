@@ -22,27 +22,16 @@ public class SecurityConfig {
 	    http
 	        .csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(authz -> authz
-	            // Arquivos estáticos
 	            .requestMatchers("/css/**", "/js/**", "/imagens/**", "/uploads/**", "/webjars/**").permitAll()
-	            
-	            // Páginas públicas
 	            .requestMatchers("/", "/inicial", "/restaurantes", "/modelo-restaurante", "/buscar").permitAll()
 	            .requestMatchers("/login", "/cadastro", "/cadastrar", "/sobre").permitAll()
-	            
-	            // PÁGINAS DE ERRO (O segredo está aqui)
 	            .requestMatchers("/erro404").permitAll()
 	            .requestMatchers("/erro-usuario-duplicado").permitAll()
 	            .requestMatchers("/error").permitAll()
-	            .requestMatchers("/erro403").permitAll() // <--- ADICIONE ESTA LINHA OBRIGATORIAMENTE!
-	            
-	            // Funcionalidades
+	            .requestMatchers("/erro403").permitAll()
 	            .requestMatchers("/favoritos/add", "/favoritos/remove").permitAll()
-	            
-	            // Restrições
 	            .requestMatchers("/adm/**").hasRole("ADMIN")
 	            .requestMatchers("/favoritos", "/perfil/**").authenticated()
-	            
-	            // Qualquer outra coisa precisa de login
 	            .anyRequest().authenticated()
 	        )
 	        .formLogin(form -> form
@@ -54,11 +43,11 @@ public class SecurityConfig {
 	        )
 	        
 	        .oauth2Login(oauth2 -> oauth2
-	                .loginPage("/login") // Usa a mesma página de login
+	                .loginPage("/login")
 	                .userInfoEndpoint(userInfo -> userInfo
-	                    .userService(customOAuth2UserService) // Usa nosso serviço que salva no banco
+	                    .userService(customOAuth2UserService)
 	                )
-	                .defaultSuccessUrl("/inicial", true) // Para onde vai depois de logar
+	                .defaultSuccessUrl("/inicial", true)
 	            )
 	        
 	        .logout(logout -> logout

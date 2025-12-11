@@ -217,7 +217,7 @@ public class RestauranteController {
     
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+
         if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
             
             Object principal = authentication.getPrincipal();
@@ -226,15 +226,14 @@ public class RestauranteController {
             if (principal instanceof UserDetails) {
                 email = ((UserDetails) principal).getUsername();
             } 
-            // CASO 2: Login Social (Google)
             else if (principal instanceof OAuth2User) {
                 email = ((OAuth2User) principal).getAttribute("email");
             }
 
             if (email != null) {
                 return userRepository.findByEmailUsuario(email)
-                        .map(Usuario::getIdUsuario) // Pega o ID se o usuário existir
-                        .orElse(null);              // Retorna null se não achar
+                        .map(Usuario::getIdUsuario)
+                        .orElse(null);      
             }
         }
         
