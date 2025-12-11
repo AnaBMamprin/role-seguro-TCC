@@ -23,7 +23,7 @@ public class RestauranteDataLoader implements CommandLineRunner {
         salvarSeNaoExistir(
             "NenoPizzaria", "Guarulhos", "SP", "Pizzas", "Rodízio, A La Carte", "18h às 00h", 
             "Rua Josephina Mandotti", "229", "Jardim Maia",
-            "https://nenopizzaria.com"
+            "https://nenopizzaria.com", "1199999-9999"
         );
 
     }
@@ -31,7 +31,7 @@ public class RestauranteDataLoader implements CommandLineRunner {
     private void salvarSeNaoExistir(
             String nome, String cidade, String estado, String culinaria,
             String tipodePrato, String horario,
-            String rua, String numero, String bairro, String site) {
+            String rua, String numero, String bairro, String site, String telefone) {
         
         if (repository.findByNome(nome).isEmpty()) {
             
@@ -47,6 +47,7 @@ public class RestauranteDataLoader implements CommandLineRunner {
             dto.setRua(rua);
             dto.setNumero(numero);
             dto.setBairro(bairro);
+            dto.setTelefone(telefone);
             
             service.converteRestaurantes(dto); 
         }

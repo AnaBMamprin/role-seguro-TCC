@@ -49,6 +49,7 @@ public class RestauranteService {
         restaurante.setTipodeprato(dto.getTipodeprato());
         restaurante.setHorario(dto.getHorario());
         restaurante.setSite(dto.getSite());
+        restaurante.setTelefone(dto.getTelefone());
         
         if (dto.getCaminhoFoto() != null && !dto.getCaminhoFoto().isEmpty()) {
             restaurante.setCaminhoFoto(dto.getCaminhoFoto());
@@ -163,13 +164,15 @@ public class RestauranteService {
         restaurante.setSite(dto.getSite());
         restaurante.setTipodeprato(dto.getTipodeprato());
         restaurante.setCaminhoFoto(dto.getCaminhoFoto());
-
+        restaurante.setTelefone(dto.getTelefone());
+        
         restaurante.setEndereco(enderecoCompletoParaSalvar);
         restaurante.setCidade(dto.getCidade());
         restaurante.setEstado(dto.getEstado());
 
         restaurante.setLatitude(latitude);
         restaurante.setLongitude(longitude);
+        
 
         repo.save(restaurante);
     }
@@ -229,6 +232,7 @@ public class RestauranteService {
         restaurante.setHorario(dto.getHorario());
         restaurante.setEndereco(enderecoParaSalvar);
         restaurante.setSite(dto.getSite());
+        restaurante.setTelefone(dto.getTelefone());
         restaurante.setCep(dto.getCep());
         restaurante.setBairro(dto.getBairro());
         restaurante.setLatitude(latitude);
