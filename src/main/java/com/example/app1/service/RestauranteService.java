@@ -10,6 +10,8 @@ import com.example.app1.model.Restaurante;
 import com.example.app1.model.Usuario;
 import com.example.app1.records.RestauranteDTO;
 import com.example.app1.repository.AvaliacaoRepository;
+import com.example.app1.repository.CupomRepository;
+import com.example.app1.repository.FavoritoRepository;
 import com.example.app1.repository.RestauranteRepository;
 import com.example.app1.repository.UserRepository;
 import com.example.app1.usuarioEnums.UserEnum;
@@ -31,6 +33,10 @@ public class RestauranteService {
 	private UserRepository usuarioRepository;
 	@Autowired 
     private AvaliacaoRepository avaliacaoRepository;
+	@Autowired
+    private FavoritoRepository favoritoRepository;
+	@Autowired
+    private CupomRepository cupomRepository;
 
     @Value("${google.maps.api.key}")
     private String apiKey;

@@ -50,6 +50,9 @@ public class AdmController {
     @Autowired
     private FileStorageService fileStorageService;
     
+    @Autowired
+    private com.example.app1.repository.CupomRepository cupomRepository;
+    
     
     
     @GetMapping
@@ -172,15 +175,15 @@ public class AdmController {
 	}
 
     @PostMapping("/restauranteExcluir")
+    @Transactional
     public String excluirRestaurante(@RequestParam("id") Long id, RedirectAttributes redirect) {
         try {
             Restaurante restaurante = restauranteRepository.findById(id).orElse(null);
             
             if (restaurante != null) {
                 favoritoRepository.deleteByRestaurante(restaurante);
-                
                 avaliacaoRepository.deleteByRestaurante(restaurante);
-
+                cupomRepository.deleteByRestaurante(restaurante);
                 restauranteRepository.delete(restaurante);
                 
                 redirect.addFlashAttribute("sucesso", "Restaurante e seus dados vinculados foram excluídos!");
