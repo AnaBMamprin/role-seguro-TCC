@@ -84,6 +84,21 @@
 				<p><strong>Culinária:</strong> <span th:text="${restaurante.culinaria ?: 'Não informado'}"></span></p>
 				<p><strong>Tipo de prato:</strong> <span th:text="${restaurante.tipodeprato ?: 'Não informado'}"></span></p>
 				<p><strong>Horário:</strong> <span th:text="${restaurante.horario ?: 'Não informado'}"></span></p>
+				<p><strong>Telefone:</strong> 
+				    <span th:text="${restaurante.telefone ?: 'Não informado'}"></span>
+					<a th:if="${restaurante.telefone != null}" 
+					       th:href="'tel:' + ${restaurante.telefone}" 
+					       class="btn btn-sm btn-outline-secondary ms-2"
+					       title="Ligar para o restaurante">
+					       <i class="bi bi-telephone-fill"></i>
+					    </a>
+
+					    <a th:if="${restaurante.telefone != null}" 
+					       th:href="'https://wa.me/55' + ${restaurante.telefone.replaceAll('[^0-9]', '')}" 
+					       class="btn btn-sm btn-success ms-1" target="_blank">
+					       <i class="bi bi-whatsapp"></i> Zap
+					    </a>
+					</p>
 				<p><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'Não informado'}"></span></p>
 				<p><strong>Site:</strong>
 					<a th:href="${restaurante.site ?: '#'}" th:text="${restaurante.site ?: 'Não disponível'}" target="_blank" th:if="${restaurante.site != null and !restaurante.site.isEmpty()}"></a>

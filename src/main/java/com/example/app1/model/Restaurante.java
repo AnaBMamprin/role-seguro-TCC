@@ -53,6 +53,8 @@ public class Restaurante {
 	private String cep;
 	@Column(name = "bairro")
 	private String bairro;
+	@Column (name = "telefone")
+	private String telefone;
 	
 	
 /*	@ManyToOne(fetch = FetchType.LAZY) // "MUITOS" Restaurantes para "UM" Usuário
@@ -68,7 +70,7 @@ public class Restaurante {
 	
 	public Restaurante( String nome, String cidade, String estado, String culinaria, String tipodeprato,
 			String horario, String endereco, String site, Double latitude, Double longitude, String caminhoFoto,
-			String rua, String numero, String cep, String bairro) {
+			String rua, String numero, String cep, String bairro, String telefone) {
 		super();
 		this.nome = nome;
 		this.cidade = cidade;
@@ -85,6 +87,7 @@ public class Restaurante {
 		this.numero = numero;
 		this.cep = cep;
 		this.bairro = bairro;
+		this.telefone = telefone;
 	}
 
 	
@@ -243,5 +246,15 @@ public class Restaurante {
     public void setCaminhoFoto(String caminhoFoto) {
         this.caminhoFoto = caminhoFoto;
     }
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+    
+    
 	
 }
