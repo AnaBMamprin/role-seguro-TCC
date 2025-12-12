@@ -98,7 +98,12 @@
                                                  data-bs-cidade=${restaurante.cidade},
                                                  data-bs-tipodeprato=${restaurante.tipodeprato},
                                                  data-bs-endereco=${restaurante.endereco},
-                                                 data-bs-site=${restaurante.site}">
+                                                 data-bs-site=${restaurante.site},
+												 data-bs-telefone=${restaurante.telefone},
+												 data-bs-cep=${restaurante.cep},       
+												 data-bs-rua=${restaurante.rua},       
+												 data-bs-numero=${restaurante.numero}, 
+												 data-bs-bairro=${restaurante.bairro}">
                                     Editar
                                 </button>
 
@@ -230,12 +235,6 @@
 						               placeholder="Número" required>
 						    </div>
 						</div>
-						
-						<div class="mb-3">
-						    <label for="telefoneRestaurante" class="form-label">Telefone de Contato</label>
-						    <input type="text" class="form-control" id="telefoneRestaurante" 
-						           name="telefone" placeholder="(11) 99999-9999">
-						</div>
 
 						<div class="row g-2 mb-2">
 						    <div class="col-md-6">
@@ -246,6 +245,13 @@
 						        <input class="form-control" type="text" name="cidade" 
 						               id="modalRestauranteCidade" placeholder="Cidade" readonly>
 						    </div>
+							
+						</div>
+						
+						<div class="mb-3">
+						    <label for="telefoneRestaurante" class="form-label">Telefone de Contato</label>
+						    <input type="text" class="form-control" id="telefoneRestaurante" 
+						           name="telefone" placeholder="(11) 99999-9999">
 						</div>
 
 	                    <input type="hidden" id="estado" name="estado">
@@ -361,6 +367,8 @@
 			      const checkRodizio = document.getElementById('checkRodizio');
 			      const checkSelfService = document.getElementById('checkSelfService');
 			      const checkAlacarte = document.getElementById('checkAlacarte');
+				  
+				  const inputTelefone = document.getElementById('telefoneRestaurante');
 
 			      if (id) {
 
@@ -374,12 +382,18 @@
 			          const tipodeprato = button.getAttribute('data-bs-tipodeprato');
 			          const endereco = button.getAttribute('data-bs-endereco');
 			          const site = button.getAttribute('data-bs-site');
+					  const telefone = button.getAttribute('data-bs-telefone');
+					  const cep = button.getAttribute('data-bs-cep');
+					  const rua = button.getAttribute('data-bs-rua');
+					  const numero = button.getAttribute('data-bs-numero');
+					  const bairro = button.getAttribute('data-bs-bairro');
 
 			          inputId.value = id;
 			          inputNome.value = nome;
 			          inputHorario.value = horario;
 			          inputCidade.value = cidade;
 			          inputSite.value = site || ''; 
+					  inputTelefone.value = telefone || '';
 
 			          campoEscondidoCulinaria.value = culinaria; 
 			          selectCulinaria.value = culinaria; 
@@ -395,9 +409,14 @@
 			          document.getElementById('numero').value = "";
 			          document.getElementById('bairro').value = "";
 			          document.getElementById('estado').value = ""; 
+					  document.getElementById('cep').value = cep || "";
+					  document.getElementById('rua').value = rua || "";
+					  document.getElementById('numero').value = numero || "";
+					  document.getElementById('bairro').value = bairro || "";
+					  document.getElementById('estado').value = button.getAttribute('data-bs-estado') || "";
 			          
-			          document.getElementById('cep').placeholder = "Digite um NOVO CEP para alterar o endereço";
-			          document.getElementById('rua').placeholder = "Endereço atual: " + endereco; 
+					  document.getElementById('cep').placeholder = "CEP (00000-000)";
+					  document.getElementById('rua').placeholder = "Rua / Logradouro";
 
 			      } else {
 			          title.textContent = 'Adicionar Restaurante';
@@ -405,6 +424,7 @@
 			          
 			          form.reset(); 
 
+					  if(inputTelefone) inputTelefone.value = '';
 			          inputId.value = ''; 
 			          campoEscondidoCulinaria.value = ''; 
 			          inputNovaCulinaria.style.display = 'none';

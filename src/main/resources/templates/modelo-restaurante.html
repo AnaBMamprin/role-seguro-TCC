@@ -96,7 +96,7 @@
 					    <a th:if="${restaurante.telefone != null}" 
 					       th:href="'https://wa.me/55' + ${restaurante.telefone.replaceAll('[^0-9]', '')}" 
 					       class="btn btn-sm btn-success ms-1" target="_blank">
-					       <i class="bi bi-whatsapp"></i> Zap
+					       <i class="bi bi-whatsapp"></i> Whatsapp
 					    </a>
 					</p>
 				<p><strong>Endereço:</strong> <span th:text="${restaurante.endereco ?: 'Não informado'}"></span></p>
